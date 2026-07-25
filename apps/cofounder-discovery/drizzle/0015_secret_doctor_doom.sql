@@ -1,0 +1,1 @@
+ALTER TABLE `prospects` ADD `current_company` varchar(255);
