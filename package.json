@@ -16,5 +16,10 @@
     "db:migrate": "pnpm --dir apps/cofounder-discovery db:migrate",
     "doctor": "pnpm --dir apps/cofounder-discovery doctor",
     "verify": "pnpm --dir apps/cofounder-discovery verify"
+  },
+  "pnpm": {
+    "overrides": {
+      "tailwindcss>nanoid": "3.3.8"
+    }
   }
 }
