@@ -8,6 +8,7 @@ import {
   boolean,
   json,
   float,
+  index,
   unique,
 } from "drizzle-orm/mysql-core";
 
@@ -17,6 +18,7 @@ export const users = mysqlTable("users", {
   name: text("name"),
   email: varchar("email", { length: 320 }),
   loginMethod: varchar("loginMethod", { length: 64 }),
+  passwordHash: varchar("password_hash", { length: 255 }),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -91,6 +93,9 @@ export const userProfiles = mysqlTable("user_profiles", {
 
 export const prospects = mysqlTable("prospects", {
   id: int("id").autoincrement().primaryKey(),
+  // Nullable only so pre-hardening rows can be quarantined during migration.
+  // Every application-created prospect is required to carry an owner.
+  userId: int("user_id").references(() => users.id),
   name: varchar("name", { length: 255 }).notNull(),
   title: varchar("title", { length: 255 }),
   location: varchar("location", { length: 255 }),
@@ -109,6 +114,17 @@ export const prospects = mysqlTable("prospects", {
   // Source Platform
   platform: varchar("platform", { length: 50 }),
   profileUrl: varchar("profile_url", { length: 500 }),
+  sourceKind: mysqlEnum("source_kind", ["manual", "csv", "provider"])
+    .default("manual")
+    .notNull(),
+  consentStatus: mysqlEnum("consent_status", [
+    "unknown",
+    "legitimate_interest",
+    "opted_in",
+    "opted_out",
+  ])
+    .default("unknown")
+    .notNull(),
 
   // Enrichment Data
   enrichmentScore: int("enrichment_score").default(0),
@@ -120,7 +136,11 @@ export const prospects = mysqlTable("prospects", {
   // Metadata
   importedAt: timestamp("imported_at").defaultNow().notNull(),
   lastUpdated: timestamp("last_updated").defaultNow().onUpdateNow().notNull(),
-});
+  archivedAt: timestamp("archived_at"),
+}, table => ({
+  uniqueOwnedProfile: unique().on(table.userId, table.profileUrl),
+  ownerImportedIndex: index("prospects_owner_imported_idx").on(table.userId, table.importedAt),
+}));
 
 export const matches = mysqlTable("matches", {
   id: int("id").autoincrement().primaryKey(),
@@ -174,7 +194,13 @@ export const matches = mysqlTable("matches", {
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
-});
+}, table => ({
+  ownerStatusScoreIndex: index("matches_owner_status_score_idx").on(
+    table.userId,
+    table.status,
+    table.overallScore
+  ),
+}));
 
 export const campaigns = mysqlTable("campaigns", {
   id: int("id").autoincrement().primaryKey(),
@@ -228,6 +254,112 @@ export type Match = typeof matches.$inferSelect;
 export type InsertMatch = typeof matches.$inferInsert;
 export type Campaign = typeof campaigns.$inferSelect;
 export type InsertCampaign = typeof campaigns.$inferInsert;
+
+/**
+ * The canonical, assisted-outreach state machine. No row means a message was
+ * delivered; only a user confirmation may move a record to confirmed_sent.
+ */
+export const outreachRecords = mysqlTable(
+  "outreach_records",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("user_id")
+      .notNull()
+      .references(() => users.id),
+    prospectId: int("prospect_id")
+      .notNull()
+      .references(() => prospects.id),
+    matchId: int("match_id").references(() => matches.id),
+    subject: varchar("subject", { length: 255 }),
+    body: text("body").notNull(),
+    state: mysqlEnum("state", [
+      "draft",
+      "pending_review",
+      "approved",
+      "manual_action_required",
+      "confirmed_sent",
+      "responded",
+      "follow_up_due",
+      "closed",
+      "cancelled",
+    ])
+      .default("draft")
+      .notNull(),
+    generationMode: mysqlEnum("generation_mode", ["template", "ai"])
+      .default("template")
+      .notNull(),
+    destinationUrl: varchar("destination_url", { length: 1000 }),
+    idempotencyKey: varchar("idempotency_key", { length: 80 }).notNull(),
+    externalReference: varchar("external_reference", { length: 500 }),
+    reviewNotes: text("review_notes"),
+    approvedAt: timestamp("approved_at"),
+    confirmedSentAt: timestamp("confirmed_sent_at"),
+    responseRecordedAt: timestamp("response_recorded_at"),
+    followUpAt: timestamp("follow_up_at"),
+    closedAt: timestamp("closed_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  },
+  table => ({
+    uniqueUserIdempotency: unique().on(table.userId, table.idempotencyKey),
+    ownerStateUpdatedIndex: index("outreach_owner_state_updated_idx").on(
+      table.userId,
+      table.state,
+      table.updatedAt
+    ),
+  })
+);
+
+export type OutreachRecord = typeof outreachRecords.$inferSelect;
+export type InsertOutreachRecord = typeof outreachRecords.$inferInsert;
+
+export const auditEvents = mysqlTable("audit_events", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("user_id").references(() => users.id),
+  requestId: varchar("request_id", { length: 64 }).notNull(),
+  action: varchar("action", { length: 100 }).notNull(),
+  entityType: varchar("entity_type", { length: 64 }),
+  entityId: varchar("entity_id", { length: 64 }),
+  outcome: mysqlEnum("outcome", ["success", "rejected", "failed"])
+    .notNull(),
+  metadata: json("metadata").$type<Record<string, unknown>>(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, table => ({
+  ownerIdIndex: index("audit_owner_id_idx").on(table.userId, table.id),
+  ownerCreatedIndex: index("audit_owner_created_idx").on(table.userId, table.createdAt),
+}));
+
+export type AuditEvent = typeof auditEvents.$inferSelect;
+export type InsertAuditEvent = typeof auditEvents.$inferInsert;
+
+/** Durable replay protection for operations that are not represented by one row. */
+export const idempotencyRecords = mysqlTable(
+  "idempotency_records",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("user_id")
+      .notNull()
+      .references(() => users.id),
+    operation: varchar("operation", { length: 100 }).notNull(),
+    idempotencyKey: varchar("idempotency_key", { length: 80 }).notNull(),
+    result: json("result").$type<Record<string, unknown>>().notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  table => ({
+    uniqueOwnerOperationKey: unique().on(
+      table.userId,
+      table.operation,
+      table.idempotencyKey
+    ),
+    ownerCreatedIndex: index("idempotency_owner_created_idx").on(
+      table.userId,
+      table.createdAt
+    ),
+  })
+);
+
+export type IdempotencyRecord = typeof idempotencyRecords.$inferSelect;
+export type InsertIdempotencyRecord = typeof idempotencyRecords.$inferInsert;
 
 /**
  * Messages table for real-time messaging between users and prospects

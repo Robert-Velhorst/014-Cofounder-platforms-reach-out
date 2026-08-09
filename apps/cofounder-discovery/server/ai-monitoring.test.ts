@@ -3,7 +3,7 @@
  * Tests for real-time AI activity monitoring and metrics
  */
 
-import { describe, it, expect, beforeAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { getDb } from "../server/db";
 import {
   users,
@@ -21,6 +21,7 @@ describe("AI Monitoring Router", () => {
   let testUserId: number;
   let testCampaignId: number;
   let testMatchId: number;
+  let testProspectId: number;
 
   beforeAll(async () => {
     const db = await getDb();
@@ -67,6 +68,7 @@ describe("AI Monitoring Router", () => {
     const [prospect] = await db
       .insert(prospects)
       .values({
+        userId: testUserId,
         name: "Test Prospect",
         title: "Software Engineer",
         location: "San Francisco, CA",
@@ -75,6 +77,7 @@ describe("AI Monitoring Router", () => {
         platform: "test",
       })
       .$returningId();
+    testProspectId = prospect.id;
 
     // Create test match
     const [match] = await db
@@ -89,6 +92,18 @@ describe("AI Monitoring Router", () => {
       })
       .$returningId();
     testMatchId = match.id;
+  });
+
+  afterAll(async () => {
+    const db = await getDb();
+    if (!db || !testUserId) return;
+    await db.delete(approvalQueue).where(eq(approvalQueue.userId, testUserId));
+    await db.delete(aiActivityLog).where(eq(aiActivityLog.userId, testUserId));
+    await db.delete(matches).where(eq(matches.userId, testUserId));
+    await db.delete(campaigns).where(eq(campaigns.userId, testUserId));
+    await db.delete(userProfiles).where(eq(userProfiles.userId, testUserId));
+    if (testProspectId) await db.delete(prospects).where(eq(prospects.id, testProspectId));
+    await db.delete(users).where(eq(users.id, testUserId));
   });
 
   describe("Activity Metrics", () => {
@@ -332,9 +347,10 @@ describe("AI Monitoring Router", () => {
       // Create pending approval
       await db.insert(approvalQueue).values({
         userId: testUserId,
-        actionType: "send_message",
-        targetProspectId: 1,
-        proposedAction: JSON.stringify({ message: "Test outreach" }),
+        matchId: testMatchId,
+        messageType: "first_contact",
+        messageContent: "Test outreach",
+        platform: "manual",
         status: "pending",
         createdAt: new Date(),
       });
@@ -357,14 +373,14 @@ describe("AI Monitoring Router", () => {
       await db.insert(matches).values([
         {
           userId: testUserId,
-          prospectId: 2,
+          prospectId: testProspectId,
           overallScore: 88,
           status: "contacted",
           createdAt: weekStart,
         },
         {
           userId: testUserId,
-          prospectId: 3,
+          prospectId: testProspectId,
           overallScore: 92,
           status: "interested",
           createdAt: new Date(),

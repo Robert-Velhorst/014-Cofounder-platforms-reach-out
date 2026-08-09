@@ -1,0 +1,53 @@
+services:
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: cofounder
+      MYSQL_USER: cofounder
+      MYSQL_PASSWORD: cofounder-local-only
+      MYSQL_ROOT_PASSWORD: root-local-only
+    volumes:
+      - cofounder_mysql:/var/lib/mysql
+    ports:
+      - "127.0.0.1:3317:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot-local-only"]
+      interval: 5s
+      timeout: 3s
+      retries: 90
+
+  app:
+    build:
+      context: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      APP_MODE: ${APP_MODE:-development}
+      HOST: 0.0.0.0
+      PORT: 3000
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:3014}
+      DATABASE_URL: mysql://cofounder:cofounder-local-only@db:3306/cofounder
+      JWT_SECRET: ${JWT_SECRET:-local-compose-session-secret-change-before-hosting-2026}
+      CREDENTIAL_ENCRYPTION_SECRET: ${CREDENTIAL_ENCRYPTION_SECRET:-local-compose-credential-secret-change-before-hosting}
+      ENABLE_REGISTRATION: ${ENABLE_REGISTRATION:-true}
+      ENABLE_PLATFORM_AUTOMATION: "false"
+      ENABLE_UNSAFE_LEGACY_ROUTES: "false"
+      OUTREACH_PAUSED: "false"
+      TRUST_PROXY: ${TRUST_PROXY:-false}
+      HAI_CONNECTOR_TOKEN: ${HAI_CONNECTOR_TOKEN:-}
+      HAI_CONNECTOR_USER_ID: ${HAI_CONNECTOR_USER_ID:-}
+      HAI_CONNECTOR_INCLUDE_CONTENT: ${HAI_CONNECTOR_INCLUDE_CONTENT:-false}
+    ports:
+      - "127.0.0.1:3014:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  cofounder_mysql:

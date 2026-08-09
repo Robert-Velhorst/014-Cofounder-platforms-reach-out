@@ -1,12 +1,28 @@
-# Co-founder platforms reach-out
+# Co-founder Outreach
 
-This repository now carries two separate applications:
+The supported product is the local-first assisted-outreach application in
+apps/cofounder-discovery. The old Electron files remain only as historical source
+material; they are not installed, built, or exposed by the production server.
 
-- `apps/cofounder-discovery` is the TypeScript/Vite co-founder discovery platform
-  recovered from the supplied demo archive. Its setup and safety requirements are
-  in [its README](apps/cofounder-discovery/README.md).
-- The repository root remains the existing Electron outreach demo. Its original
-  instructions are retained in `README-FIXED.md`.
+## Windows 11 quick start
 
-Keeping the applications separate preserves the working legacy desktop demo while
-making the more complete discovery platform available on `main` for continued work.
+Install Docker Desktop, start its engine, and run:
+
+    .\scripts\start-windows.ps1 -OpenBrowser
+
+The app is available only on http://localhost:3014. Data is stored in the named
+MySQL Docker volume. Re-running the launcher preserves that data and applies pending
+migrations.
+
+## Verify
+
+    pnpm install --frozen-lockfile
+    pnpm check
+    pnpm test
+    $env:DATABASE_URL = "mysql://cofounder:cofounder-local-only@127.0.0.1:3317/cofounder"
+    pnpm test:integration
+    pnpm build
+    pnpm audit --prod --audit-level high
+
+Operational, security, ngrok, HAI, backup, and acceptance details are in
+[the operator runbook](docs/OPERATOR_RUNBOOK.md).

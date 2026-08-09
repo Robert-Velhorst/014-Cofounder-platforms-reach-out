@@ -11,5 +11,10 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["server/**/*.test.ts", "server/**/*.spec.ts"],
+    // Database suites share one intentionally small local MySQL service. Running
+    // files serially prevents connection storms and makes fixture cleanup reliable.
+    fileParallelism: false,
+    hookTimeout: 30_000,
+    testTimeout: 15_000,
   },
 });

@@ -43,6 +43,7 @@ beforeAll(async () => {
   const [prospect] = await db
     .insert(prospects)
     .values({
+      userId: testUserId,
       name: `Auto Test Prospect ${testRunId}`,
       title: "CTO",
       location: "San Francisco",
@@ -301,6 +302,18 @@ describe("Greedy Score Ordering", () => {
 });
 
 describe("Platform Credential Encryption", () => {
+  const previousSecret = process.env.CREDENTIAL_ENCRYPTION_SECRET;
+
+  beforeAll(() => {
+    process.env.CREDENTIAL_ENCRYPTION_SECRET =
+      "integration-test-only-encryption-secret-32-characters";
+  });
+
+  afterAll(() => {
+    if (previousSecret === undefined) delete process.env.CREDENTIAL_ENCRYPTION_SECRET;
+    else process.env.CREDENTIAL_ENCRYPTION_SECRET = previousSecret;
+  });
+
   it("should encrypt and decrypt credentials", async () => {
     const { encrypt, decrypt } = await import("./encryption");
 

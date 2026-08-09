@@ -1,9 +1,31 @@
-import { describe, it, expect } from "vitest";
+import { afterAll, beforeAll, describe, it, expect } from "vitest";
+import { eq } from "drizzle-orm";
+import { userProfiles, users } from "../../drizzle/schema";
 import * as db from "../db";
 
 describe("Profile Update", () => {
-  // Use existing user ID from seed data
-  const testUserId = 1;
+  let testUserId: number;
+
+  beforeAll(async () => {
+    const database = await db.getDb();
+    if (!database) throw new Error("Database not available");
+    const [created] = await database
+      .insert(users)
+      .values({
+        openId: `profile-test-${Date.now()}-${Math.random()}`,
+        email: `profile-${Date.now()}@test.invalid`,
+        loginMethod: "test",
+      })
+      .$returningId();
+    testUserId = created.id;
+  });
+
+  afterAll(async () => {
+    const database = await db.getDb();
+    if (!database || !testUserId) return;
+    await database.delete(userProfiles).where(eq(userProfiles.userId, testUserId));
+    await database.delete(users).where(eq(users.id, testUserId));
+  });
 
   it("should create or update profile with all fields", async () => {
     const profile = await db.createOrUpdateProfile(testUserId, {
