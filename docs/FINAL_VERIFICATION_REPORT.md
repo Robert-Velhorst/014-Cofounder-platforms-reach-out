@@ -14,13 +14,16 @@ Updated: 2026-08-09
 | Windows production bundle | Pass: health/readiness, auth, MySQL, critical-path UI |
 | Browser desktop | Pass: register, import, qualify, draft, review, approve, manual-action gate |
 | Browser mobile | Pass at 390x844: no overflow, no console errors; visually inspected |
-| Docker runtime | Blocked: Docker DNS/build backend failed twice; network-free assembly timed out |
+| Docker runtime | Production stack smoke gate added to CI; local Docker Desktop rebuild was not reliable enough to use as evidence |
 | In-app Browser tool | Blocked: runtime initialization timed out twice; regular Playwright fallback passed |
-| ngrok public URL | External gate: ngrok account/authtoken and operator secret required |
-| Live HAI registration | External gate: operator token, owner ID, and HAI host allowlist required |
+| ngrok public URL | Pass: dedicated HTTPS endpoint, public readiness, hosted login, secure cookie, and HAI feed |
+| HAI connector contract | Pass: HAI account-feed parser/ledger suite plus authenticated live feed and cursor replay |
+| Live HAI registration | External gate: registering the feed in an operator's HAI workspace still needs its owner approval/host allowlist |
 
 No live platform delivery was attempted or claimed.
 
 The Dockerfile defect found during fallback assembly (pnpm workspace deployment
-mode) is fixed with the explicit legacy deploy flag, but a complete rebuilt image
-still requires a stable Docker Desktop backend to verify.
+mode) is fixed with the explicit legacy deploy flag. CI now treats a complete image
+build, Compose startup, database-backed readiness, safety status, and disabled HAI
+state as a release gate so local Docker Desktop instability cannot produce a false
+pass.
