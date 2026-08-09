@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { sql } from "drizzle-orm";
 import { getConfig, publicRuntimeStatus } from "../server/config";
-import { getDb } from "../server/db";
+import { closeDb, getDb } from "../server/db";
 
 const allowMissing = process.argv.includes("--allow-missing-runtime");
 const checks: Array<{ name: string; status: "pass" | "warn" | "fail"; detail: string }> = [];
@@ -38,6 +38,7 @@ async function main() {
       add("database", false, error instanceof Error ? error.message : String(error), allowMissing);
     }
   }
+  await closeDb();
 
   const ok = checks.every(check => check.status !== "fail");
   console.log(JSON.stringify({ ok, runtime: publicRuntimeStatus(config), checks }, null, 2));

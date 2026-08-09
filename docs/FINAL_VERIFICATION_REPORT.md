@@ -11,7 +11,7 @@ Updated: 2026-08-09
 | Production build | Pass: main 372.09 KB / 113.82 KB gzip |
 | Production dependency audit | Pass: no known vulnerabilities |
 | Migrations | Pass: 0020 and 0021 applied to MySQL 8.4 |
-| Windows production bundle | Pass: health/readiness, auth, MySQL, critical-path UI |
+| Windows production bundle | Pass: migrate-to-server lifecycle, health/readiness, auth, MySQL, critical-path UI |
 | Browser desktop | Pass: register, import, qualify, draft, review, approve, manual-action gate |
 | Browser mobile | Pass at 390x844: no overflow, no console errors; visually inspected |
 | Docker runtime | Production stack smoke gate added to CI; local Docker Desktop rebuild was not reliable enough to use as evidence |

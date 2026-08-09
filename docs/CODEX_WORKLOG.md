@@ -11,6 +11,8 @@
   cursor feed; HAI's own generic-feed parser and ledger tests pass read-only.
 - Added a CI production-container gate that rebuilds the image, starts MySQL and the
   app with Compose, and checks readiness and fail-closed runtime status.
+- Closed the migration/doctor database pool explicitly so one-shot commands exit
+  promptly and the container can advance from migrations to server startup.
 - Reduced the main browser entry to 372.09 KB (113.82 KB gzip) using route splitting.
 - Production audit currently reports no known vulnerabilities.
 - Verification history and remaining external gates are recorded in

@@ -56,6 +56,19 @@ export async function getDb() {
   return _db;
 }
 
+export async function closeDb() {
+  const db = _db;
+  _db = null;
+  if (!db) return;
+
+  await new Promise<void>((resolve, reject) => {
+    db.$client.end(error => {
+      if (error) reject(error);
+      else resolve();
+    });
+  });
+}
+
 // ===== User Management =====
 
 export async function upsertUser(user: InsertUser): Promise<void> {
