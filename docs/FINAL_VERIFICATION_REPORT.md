@@ -5,7 +5,7 @@ Updated: 2026-08-09
 | Check | Result |
 |---|---|
 | TypeScript | Pass |
-| Unit tests | Pass: 14 files, 190 tests; config regression suite 9/9 after final fix |
+| Unit tests | Pass: 14 files, 191 tests; config regression suite 9/9 after final fix |
 | MySQL legacy integration | Pass: 4 files, 33 executed tests |
 | Critical-path integration | Pass: import replay, owner isolation, assisted send flow |
 | Production build | Pass: main 372.09 KB / 113.82 KB gzip |

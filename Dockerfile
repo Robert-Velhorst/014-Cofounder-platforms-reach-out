@@ -15,7 +15,9 @@ ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /prod/app/package.json ./package.json
 COPY --from=build /prod/app/node_modules ./node_modules
-COPY --from=build /prod/app/dist ./dist
-COPY --from=build /prod/app/drizzle ./drizzle
+# pnpm deploy intentionally follows package/ignore rules, so compiled output and
+# migrations come from the verified workspace build while dependencies stay pruned.
+COPY --from=build /app/apps/cofounder-discovery/dist ./dist
+COPY --from=build /app/apps/cofounder-discovery/drizzle ./drizzle
 EXPOSE 3000
 CMD ["sh", "-c", "node dist/migrate.js && node dist/index.js"]
