@@ -12,9 +12,12 @@ services:
     ports:
       - "127.0.0.1:3317:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot-local-only"]
+      # The official image briefly runs a temporary initialization server. Two
+      # successful pings separated by five seconds prevent that server from
+      # releasing the app before the final MySQL process is stable.
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -proot-local-only --silent && sleep 5 && mysqladmin ping -h localhost -proot-local-only --silent"]
       interval: 5s
-      timeout: 3s
+      timeout: 8s
       retries: 90
 
   app:

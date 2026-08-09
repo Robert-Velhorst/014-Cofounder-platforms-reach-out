@@ -3,10 +3,14 @@ import fs from "fs";
 import { type Server } from "http";
 import { randomUUID } from "node:crypto";
 import path from "path";
-import { createServer as createViteServer } from "vite";
-import viteConfig from "../../vite.config";
 
 export async function setupVite(app: Express, server: Server) {
+  // Keep development-only Vite and its plugins out of the pruned production
+  // runtime. Variable specifiers prevent the server bundler from hoisting them.
+  const viteModule = "vite";
+  const configModule = "../../vite.config";
+  const [{ createServer: createViteServer }, { default: viteConfig }] =
+    await Promise.all([import(viteModule), import(configModule)]);
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },
