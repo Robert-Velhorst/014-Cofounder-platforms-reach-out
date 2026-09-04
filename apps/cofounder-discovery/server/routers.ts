@@ -1,7 +1,8 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
+import { SESSION_DURATION_MS, sdk } from "./_core/sdk";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { adminProcedure, publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import * as db from "./db";
@@ -50,6 +51,11 @@ import { aiMonitoringRouter } from "./ai-monitoring-router";
 import { automationRouter } from "./automation-router";
 import { platformCredentialsRouter } from "./platform-credentials-router";
 import { outreachRouter } from "./outreach-router";
+import { randomUUID } from "node:crypto";
+import { getConfig } from "./config";
+import { hashPassword, validatePassword, verifyPassword } from "./auth-password";
+import { consumeRateLimit } from "./rate-limit";
+import { criticalPathRouter } from "./critical-path-router";
 
 // Legacy compatibility wrapper
 function calculateCompatibility(userProfile: any, prospect: any) {
@@ -91,9 +97,56 @@ function calculateCompatibility(userProfile: any, prospect: any) {
 
 export const appRouter = router({
   system: systemRouter,
+  criticalPath: criticalPathRouter,
 
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
+    register: publicProcedure
+      .input(
+        z.object({
+          name: z.string().trim().min(2).max(100),
+          email: z.string().trim().toLowerCase().email().max(320),
+          password: z.string().min(1).max(128),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        if (!getConfig().ENABLE_REGISTRATION) {
+          throw new TRPCError({ code: "FORBIDDEN", message: "Registration is disabled by the operator" });
+        }
+        const rate = consumeRateLimit(`register:${ctx.req.ip}`, { limit: 5, windowMs: 60 * 60 * 1000 });
+        if (!rate.allowed) throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "Try again later" });
+        const passwordError = validatePassword(input.password);
+        if (passwordError) throw new TRPCError({ code: "BAD_REQUEST", message: passwordError });
+        if (await db.getUserByEmail(input.email)) {
+          throw new TRPCError({ code: "CONFLICT", message: "An account already exists for this email" });
+        }
+        const openId = `local:${randomUUID()}`;
+        const user = await db.createLocalUser({
+          openId,
+          name: input.name,
+          email: input.email,
+          passwordHash: await hashPassword(input.password),
+          loginMethod: "local",
+          emailVerified: 1,
+        });
+        if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Account creation failed" });
+        const token = await sdk.createSessionToken(openId, { name: user.name, expiresInMs: SESSION_DURATION_MS });
+        ctx.res.cookie(COOKIE_NAME, token, { ...getSessionCookieOptions(ctx.req), maxAge: SESSION_DURATION_MS });
+        return { id: user.id, name: user.name, email: user.email };
+      }),
+    login: publicProcedure
+      .input(z.object({ email: z.string().trim().toLowerCase().email(), password: z.string().min(1).max(128) }))
+      .mutation(async ({ ctx, input }) => {
+        const rate = consumeRateLimit(`login:${ctx.req.ip}`, { limit: 10, windowMs: 15 * 60 * 1000 });
+        if (!rate.allowed) throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "Too many attempts. Try again later." });
+        const user = await db.getUserByEmail(input.email);
+        if (!user?.passwordHash || !(await verifyPassword(input.password, user.passwordHash))) {
+          throw new TRPCError({ code: "UNAUTHORIZED", message: "Email or password is incorrect" });
+        }
+        const token = await sdk.createSessionToken(user.openId, { name: user.name, expiresInMs: SESSION_DURATION_MS });
+        ctx.res.cookie(COOKIE_NAME, token, { ...getSessionCookieOptions(ctx.req), maxAge: SESSION_DURATION_MS });
+        return { id: user.id, name: user.name, email: user.email };
+      }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
@@ -197,8 +250,8 @@ export const appRouter = router({
   }),
 
   prospects: router({
-    list: publicProcedure.query(async () => {
-      return await db.getAllProspects();
+    list: protectedProcedure.query(async ({ ctx }) => {
+      return await db.getAllProspects(ctx.user.id);
     }),
 
     create: protectedProcedure
@@ -217,8 +270,8 @@ export const appRouter = router({
           profileUrl: z.string().optional(),
         })
       )
-      .mutation(async ({ input }) => {
-        return await db.createProspect(input);
+      .mutation(async ({ input, ctx }) => {
+        return await db.createProspect({ ...input, userId: ctx.user.id, sourceKind: "manual" });
       }),
   }),
 
@@ -233,7 +286,7 @@ export const appRouter = router({
         throw new Error("Please complete your profile first");
       }
 
-      const allProspects = await db.getAllProspects();
+      const allProspects = await db.getAllProspects(ctx.user.id);
       const matches = [];
 
       for (const prospect of allProspects.slice(0, 10)) {
@@ -273,8 +326,8 @@ export const appRouter = router({
           ]),
         })
       )
-      .mutation(async ({ input }) => {
-        await db.updateMatchStatus(input.matchId, input.status);
+      .mutation(async ({ input, ctx }) => {
+        await db.updateMatchStatus(input.matchId, input.status, ctx.user.id);
         return { success: true };
       }),
   }),
@@ -378,7 +431,7 @@ export const appRouter = router({
             message: "Profile not found",
           });
 
-        const prospect = await db.getProspectById(input.prospectId);
+        const prospect = await db.getProspectById(input.prospectId, ctx.user.id);
         if (!prospect)
           throw new TRPCError({
             code: "NOT_FOUND",
@@ -451,8 +504,8 @@ Write a compelling outreach message that highlights our complementary skills and
 
     messages: protectedProcedure
       .input(z.object({ conversationId: z.number() }))
-      .query(async ({ input }) => {
-        return await db.getConversationMessages(input.conversationId);
+      .query(async ({ input, ctx }) => {
+        return await db.getConversationMessages(input.conversationId, ctx.user.id);
       }),
 
     send: protectedProcedure
@@ -465,6 +518,11 @@ Write a compelling outreach message that highlights our complementary skills and
         })
       )
       .mutation(async ({ ctx, input }) => {
+        const prospect = await db.getProspectById(input.prospectId, ctx.user.id);
+        if (!prospect) throw new TRPCError({ code: "NOT_FOUND", message: "Prospect not found" });
+        if (prospect.consentStatus === "opted_out") {
+          throw new TRPCError({ code: "FORBIDDEN", message: "This prospect opted out" });
+        }
         // Get or create conversation
         const conversation = await db.getOrCreateConversation(
           ctx.user.id,
@@ -478,24 +536,24 @@ Write a compelling outreach message that highlights our complementary skills and
           prospectId: input.prospectId,
           senderId: ctx.user.id,
           recipientId: input.prospectId,
+          conversationId: conversation.id,
           content: input.body,
           body: input.body,
-          status: "sent",
-          sentAt: new Date(),
+          status: "draft",
         });
 
         // Update conversation
         await db.updateConversation(conversation.id, {
           lastMessageAt: new Date(),
-        });
+        }, ctx.user.id);
 
-        return message;
+        return { ...message, deliveryState: "manual_action_required" as const, providerConfirmed: false };
       }),
 
     markAsRead: protectedProcedure
       .input(z.object({ messageId: z.number() }))
-      .mutation(async ({ input }) => {
-        await db.markMessageAsRead(input.messageId);
+      .mutation(async ({ input, ctx }) => {
+        await db.markMessageAsRead(input.messageId, ctx.user.id);
         return { success: true };
       }),
   }),
@@ -509,43 +567,11 @@ Write a compelling outreach message that highlights our complementary skills and
             .optional(),
         })
       )
-      .mutation(async ({ input, ctx }) => {
-        const userProfile = await db.getUserProfile(ctx.user.id);
-
-        const searchParams = {
-          skills: userProfile?.lookingFor || [],
-          industries: userProfile?.targetIndustries || [],
-          location: userProfile?.location || undefined,
-          limit: 50,
-        };
-
-        const scrapeResult = await scrapeAllPlatforms(searchParams);
-
-        // Deduplicate profiles across platforms
-        const uniqueProfiles = deduplicateProfiles(
-          scrapeResult.results.flatMap((r: ScrapeResult) => r.profiles)
-        );
-
-        // Save prospects to database
-        for (const profile of uniqueProfiles) {
-          try {
-            await db.createProspect(profile);
-          } catch (error) {
-            console.error("Failed to save prospect:", error);
-          }
-        }
-
-        return {
-          success: true,
-          totalProfiles: scrapeResult.totalProfiles,
-          uniqueProfiles: uniqueProfiles.length,
-          platforms: scrapeResult.results.map((r: ScrapeResult) => ({
-            platform: r.platform,
-            success: r.success,
-            count: r.profiles.length,
-            errors: r.errors,
-          })),
-        };
+      .mutation(async () => {
+        throw new TRPCError({
+          code: "PRECONDITION_FAILED",
+          message: "Unapproved platform scraping is disabled. Use the owned CSV/manual import in the Outreach Console.",
+        });
       }),
   }),
 
@@ -693,8 +719,8 @@ Write a compelling outreach message that highlights our complementary skills and
           companyName: z.string().optional(),
         })
       )
-      .mutation(async ({ input }) => {
-        const prospect = await db.getProspectById(input.prospectId);
+      .mutation(async ({ input, ctx }) => {
+        const prospect = await db.getProspectById(input.prospectId, ctx.user.id);
         if (!prospect) {
           throw new TRPCError({
             code: "NOT_FOUND",
@@ -815,35 +841,35 @@ Write a compelling outreach message that highlights our complementary skills and
   }),
 
   scheduler: router({
-    status: protectedProcedure.query(async () => {
+    status: adminProcedure.query(async () => {
       return getSchedulerStatus();
     }),
 
-    start: protectedProcedure.mutation(async () => {
+    start: adminProcedure.mutation(async () => {
       await initializeScheduler();
       return { success: true, message: "Scheduler started" };
     }),
 
-    stop: protectedProcedure.mutation(async () => {
+    stop: adminProcedure.mutation(async () => {
       stopScheduler();
       return { success: true, message: "Scheduler stopped" };
     }),
 
-    triggerJob: protectedProcedure
+    triggerJob: adminProcedure
       .input(z.object({ jobId: z.string() }))
       .mutation(async ({ input }) => {
         await campaignScheduler.triggerJob(input.jobId);
         return { success: true, message: `Job ${input.jobId} triggered` };
       }),
 
-    startJob: protectedProcedure
+    startJob: adminProcedure
       .input(z.object({ jobId: z.string() }))
       .mutation(async ({ input }) => {
         const success = campaignScheduler.startJob(input.jobId);
         return { success, message: success ? "Job started" : "Job not found" };
       }),
 
-    stopJob: protectedProcedure
+    stopJob: adminProcedure
       .input(z.object({ jobId: z.string() }))
       .mutation(async ({ input }) => {
         const success = campaignScheduler.stopJob(input.jobId);
@@ -1076,7 +1102,7 @@ Write a compelling outreach message that highlights our complementary skills and
         }
 
         // Get prospect
-        const prospect = await db.getProspectById(input.prospectId);
+        const prospect = await db.getProspectById(input.prospectId, ctx.user.id);
         if (!prospect) {
           throw new TRPCError({
             code: "NOT_FOUND",
@@ -1181,7 +1207,7 @@ Write a compelling outreach message that highlights our complementary skills and
           });
         }
 
-        const prospect = await db.getProspectById(input.prospectId);
+        const prospect = await db.getProspectById(input.prospectId, ctx.user.id);
         if (!prospect) {
           throw new TRPCError({
             code: "NOT_FOUND",
@@ -1567,7 +1593,7 @@ Write a compelling outreach message that highlights our complementary skills and
 
   // Admin Analytics Router
   admin: router({
-    getAnalytics: protectedProcedure
+    getAnalytics: adminProcedure
       .input(
         z.object({
           dateRange: z.enum(["7d", "30d", "90d", "all"]).default("30d"),

@@ -1,2 +1,49 @@
-node_modules
+# Dependencies and build output
+node_modules/
+dist/
+build/
+coverage/
+test-results/
+playwright-report/
+*.tsbuildinfo
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs and runtime state
+*.log
+output/playwright/
+.playwright-cli/
+.docker-deploy/
+*.pid
+data/
+backups/
+debug-bundles/
+
+# Generated packages
+*.exe
+*.zip
+*.dmg
+*.AppImage
+
+# Editor and operating-system residue
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Shell and sandbox residue
+.bash_history
+.bash_logout
+.bashrc
+.profile
+.zshrc
+sandbox.txt
+
+# Legacy npm root lock; pnpm is canonical
 package-lock.json

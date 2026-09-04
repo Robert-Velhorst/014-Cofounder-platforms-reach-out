@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_DATABASE: cofounder_test
+          MYSQL_USER: cofounder
+          MYSQL_PASSWORD: cofounder
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -proot"
+          --health-interval=5s
+          --health-timeout=3s
+          --health-retries=30
+    env:
+      NODE_ENV: test
+      APP_MODE: test
+      DATABASE_URL: mysql://cofounder:cofounder@127.0.0.1:3306/cofounder_test
+      JWT_SECRET: ci-session-secret-with-at-least-thirty-two-characters
+      ENABLE_REGISTRATION: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.4.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --dir apps/cofounder-discovery check
+      - run: pnpm --dir apps/cofounder-discovery test:unit
+      - run: pnpm --dir apps/cofounder-discovery db:migrate
+      - run: pnpm --dir apps/cofounder-discovery test:integration
+      - run: pnpm --dir apps/cofounder-discovery build
+      - run: pnpm audit --prod --audit-level high
+
+  container-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      APP_MODE: production
+      PUBLIC_ORIGIN: http://localhost:3014
+      JWT_SECRET: ci-container-session-secret-with-at-least-thirty-two-characters
+      CREDENTIAL_ENCRYPTION_SECRET: ci-container-credential-secret-with-at-least-thirty-two-characters
+      ENABLE_REGISTRATION: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and start the production stack
+        run: docker compose up --build --detach --wait --wait-timeout 300
+      - name: Verify the container runtime contract
+        run: |
+          curl --fail --silent --show-error http://127.0.0.1:3014/api/ready | jq --exit-status '.status == "ready"'
+          curl --fail --silent --show-error http://127.0.0.1:3014/api/health | jq --exit-status '
+            .status == "ok"
+            and .mode == "production"
+            and .databaseConfigured == true
+            and .platformAutomation == "disabled"
+            and .legacyRoutes == "disabled"'
+          test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:3014/api/integrations/hai/feed)" = "503"
+      - name: Show container diagnostics
+        if: always()
+        run: docker compose ps && docker compose logs --no-color --tail 200
+      - name: Stop the CI stack
+        if: always()
+        run: docker compose down --volumes --remove-orphans

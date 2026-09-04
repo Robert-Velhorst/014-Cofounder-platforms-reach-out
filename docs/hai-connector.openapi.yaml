@@ -1,0 +1,30 @@
+openapi: 3.1.0
+info:
+  title: Cofounder Outreach HAI Connector
+  version: 1.0.0
+paths:
+  /api/integrations/hai/feed:
+    get:
+      summary: Read owner-scoped workflow events in HAI Generic JSON Feed format
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cursor
+          in: query
+          schema:
+            type: string
+            pattern: "^[0-9]+$"
+      responses:
+        "200":
+          description: Feed page
+        "401":
+          description: Missing or invalid token
+        "429":
+          description: Rate limited
+        "503":
+          description: Connector or database unavailable
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

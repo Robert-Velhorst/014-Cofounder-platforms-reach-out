@@ -23,6 +23,9 @@ import {
   conversationStartersHistory,
   successMetrics,
   timelineEvents,
+  outreachRecords,
+  auditEvents,
+  idempotencyRecords,
 } from "../drizzle/schema";
 import type {
   InsertUser,
@@ -33,6 +36,9 @@ import type {
   InsertMessage,
   InsertConversation,
   InsertSavedSearch,
+  InsertOutreachRecord,
+  InsertAuditEvent,
+  InsertIdempotencyRecord,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -48,6 +54,19 @@ export async function getDb() {
     }
   }
   return _db;
+}
+
+export async function closeDb() {
+  const db = _db;
+  _db = null;
+  if (!db) return;
+
+  await new Promise<void>((resolve, reject) => {
+    db.$client.end(error => {
+      if (error) reject(error);
+      else resolve();
+    });
+  });
 }
 
 // ===== User Management =====
@@ -109,6 +128,24 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     console.error("[Database] Failed to upsert user:", error);
     throw error;
   }
+}
+
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, email.trim().toLowerCase()))
+    .limit(1);
+  return result[0] ?? null;
+}
+
+export async function createLocalUser(user: InsertUser) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(users).values(user);
+  return getUserByOpenId(user.openId);
 }
 
 export async function getUserByOpenId(openId: string) {
@@ -181,31 +218,37 @@ export async function getUserProfile(userId: number) {
 export async function createProspect(prospectData: InsertProspect) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+  if (!prospectData.userId) throw new Error("Prospect owner is required");
 
   await db.insert(prospects).values(prospectData);
   const allProspects = await db
     .select()
     .from(prospects)
+    .where(eq(prospects.userId, prospectData.userId))
     .orderBy(desc(prospects.id))
     .limit(1);
   return allProspects[0];
 }
 
-export async function getAllProspects() {
+export async function getAllProspects(userId?: number) {
   const db = await getDb();
-  if (!db) return [];
+  if (!db || !userId) return [];
 
-  return await db.select().from(prospects).orderBy(desc(prospects.importedAt));
+  return await db
+    .select()
+    .from(prospects)
+    .where(and(eq(prospects.userId, userId), isNull(prospects.archivedAt)))
+    .orderBy(desc(prospects.importedAt));
 }
 
-export async function getProspectById(id: number) {
+export async function getProspectById(id: number, userId?: number) {
   const db = await getDb();
-  if (!db) return null;
+  if (!db || !userId) return null;
 
   const result = await db
     .select()
     .from(prospects)
-    .where(eq(prospects.id, id))
+    .where(and(eq(prospects.id, id), eq(prospects.userId, userId), isNull(prospects.archivedAt)))
     .limit(1);
   return result.length > 0 ? result[0] : null;
 }
@@ -244,12 +287,30 @@ export async function getUserMatches(userId: number) {
 
 export async function updateMatchStatus(
   matchId: number,
-  status: "new" | "viewed" | "contacted" | "interested" | "not_interested"
+  status:
+    | "new"
+    | "viewed"
+    | "contacted"
+    | "interested"
+    | "not_interested"
+    | "discovered"
+    | "queued"
+    | "approved"
+    | "rejected"
+    | "responded"
+    | "meeting_scheduled"
+    | "partnership_formed"
+    | "no_response",
+  userId?: number
 ) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+  if (!userId) throw new Error("Match owner is required");
 
-  await db.update(matches).set({ status }).where(eq(matches.id, matchId));
+  await db
+    .update(matches)
+    .set({ status })
+    .where(and(eq(matches.id, matchId), eq(matches.userId, userId)));
 }
 
 // ===== Campaigns Management =====
@@ -348,6 +409,8 @@ export async function getOrCreateConversation(
 ) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+  const prospect = await getProspectById(prospectId, userId);
+  if (!prospect) throw new Error("Prospect not found");
 
   // Try to find existing conversation
   const existing = await db
@@ -388,22 +451,22 @@ export async function getOrCreateConversation(
   return newConv[0];
 }
 
-export async function getConversationMessages(conversationId: number) {
+export async function getConversationMessages(conversationId: number, userId?: number) {
   const db = await getDb();
-  if (!db) return [];
+  if (!db || !userId) return [];
 
   // Find messages by matching conversation's matchId
   const conv = await db
     .select()
     .from(conversations)
-    .where(eq(conversations.id, conversationId))
+    .where(and(eq(conversations.id, conversationId), eq(conversations.userId, userId)))
     .limit(1);
   if (conv.length === 0) return [];
 
   const result = await db
     .select()
     .from(messages)
-    .where(eq(messages.matchId, conv[0].matchId || 0))
+    .where(and(eq(messages.userId, userId), eq(messages.conversationId, conversationId)))
     .orderBy(messages.sentAt);
   return result;
 }
@@ -425,27 +488,138 @@ export async function getUserConversations(userId: number) {
   return result;
 }
 
-export async function markMessageAsRead(messageId: number) {
+export async function markMessageAsRead(messageId: number, userId?: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+  if (!userId) throw new Error("Message owner is required");
 
   await db
     .update(messages)
     .set({ status: "read", readAt: new Date() })
-    .where(eq(messages.id, messageId));
+    .where(and(eq(messages.id, messageId), eq(messages.userId, userId)));
 }
 
 export async function updateConversation(
   conversationId: number,
-  updates: { lastMessageAt?: Date; unreadCount?: number }
+  updates: { lastMessageAt?: Date; unreadCount?: number },
+  userId?: number
 ) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+  if (!userId) throw new Error("Conversation owner is required");
 
   await db
     .update(conversations)
     .set(updates)
-    .where(eq(conversations.id, conversationId));
+    .where(and(eq(conversations.id, conversationId), eq(conversations.userId, userId)));
+}
+
+// ===== Production-safe assisted outreach =====
+
+export async function findOutreachByIdempotency(userId: number, key: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db
+    .select()
+    .from(outreachRecords)
+    .where(and(eq(outreachRecords.userId, userId), eq(outreachRecords.idempotencyKey, key)))
+    .limit(1);
+  return result[0] ?? null;
+}
+
+export async function createOutreachRecord(record: InsertOutreachRecord) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(outreachRecords).values(record);
+  return findOutreachByIdempotency(record.userId, record.idempotencyKey);
+}
+
+export async function getOutreachRecord(id: number, userId: number) {
+  const db = await getDb();
+  if (!db) return null;
+  const result = await db
+    .select()
+    .from(outreachRecords)
+    .where(and(eq(outreachRecords.id, id), eq(outreachRecords.userId, userId)))
+    .limit(1);
+  return result[0] ?? null;
+}
+
+export async function listOutreachRecords(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select({ outreach: outreachRecords, prospect: prospects })
+    .from(outreachRecords)
+    .innerJoin(prospects, eq(outreachRecords.prospectId, prospects.id))
+    .where(and(eq(outreachRecords.userId, userId), eq(prospects.userId, userId)))
+    .orderBy(desc(outreachRecords.updatedAt));
+}
+
+export async function updateOutreachRecord(
+  id: number,
+  userId: number,
+  updates: Partial<InsertOutreachRecord>
+) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db
+    .update(outreachRecords)
+    .set(updates)
+    .where(and(eq(outreachRecords.id, id), eq(outreachRecords.userId, userId)));
+  return getOutreachRecord(id, userId);
+}
+
+export async function createAuditEvent(event: InsertAuditEvent) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(auditEvents).values(event);
+}
+
+export async function getUserAuditEvents(userId: number, limit = 100) {
+  const db = await getDb();
+  if (!db) return [];
+  return db
+    .select()
+    .from(auditEvents)
+    .where(eq(auditEvents.userId, userId))
+    .orderBy(desc(auditEvents.createdAt))
+    .limit(Math.min(Math.max(limit, 1), 500));
+}
+
+export async function getIdempotencyRecord(
+  userId: number,
+  operation: string,
+  key: string
+) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db
+    .select()
+    .from(idempotencyRecords)
+    .where(
+      and(
+        eq(idempotencyRecords.userId, userId),
+        eq(idempotencyRecords.operation, operation),
+        eq(idempotencyRecords.idempotencyKey, key)
+      )
+    )
+    .limit(1);
+  return rows[0] ?? null;
+}
+
+export async function createIdempotencyRecord(record: InsertIdempotencyRecord) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(idempotencyRecords).values(record).onDuplicateKeyUpdate({
+    // Never overwrite the response from the request that won the race.
+    set: { id: sql`${idempotencyRecords.id}` },
+  });
+  return getIdempotencyRecord(
+    record.userId,
+    record.operation,
+    record.idempotencyKey
+  );
 }
 
 // ===== Email Verification =====
