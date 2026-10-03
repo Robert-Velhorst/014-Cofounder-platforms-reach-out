@@ -1,0 +1,74 @@
+# Standalone application definition. Do not merge with docker-compose.yml:
+# that file intentionally contains LOCAL database credentials and defaults.
+# Requires an existing private MySQL service and separately approved TLS proxy.
+services:
+  app:
+    image: ${PRODUCTION_APP_IMAGE:?Set the reviewed application image digest}
+    user: "1000:1000"
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 256
+    cpus: "1.0"
+    mem_limit: 512m
+    memswap_limit: 512m
+    stop_grace_period: 30s
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3014:3000"
+    environment:
+      NODE_ENV: production
+      APP_MODE: production
+      HOST: 0.0.0.0
+      PORT: "3000"
+      NODE_OPTIONS: --max-old-space-size=320
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:?Set the approved HTTPS public origin}
+      DATABASE_URL_FILE: /run/secrets/database_url
+      JWT_SECRET_FILE: /run/secrets/jwt_secret
+      ENABLE_REGISTRATION: "false"
+      ENABLE_ACCOUNT_DELETION_REQUESTS: "false"
+      ENABLE_PLATFORM_AUTOMATION: "false"
+      ENABLE_UNSAFE_LEGACY_ROUTES: "false"
+      ENABLE_ACCOUNT_MAIL_WORKER: "false"
+      ENABLE_ACCOUNT_MAIL_RETENTION: "false"
+      ENABLE_OWNER_NOTIFICATIONS: "false"
+      OUTREACH_PAUSED: "true"
+      TRUST_PROXY: ${TRUST_PROXY:-false}
+      API_MAX_ACTIVE_WORK: ${API_MAX_ACTIVE_WORK-32}
+      CAPACITY_ACCOUNTS: ${CAPACITY_ACCOUNTS-100}
+      CAPACITY_SESSIONS_PER_ACCOUNT: ${CAPACITY_SESSIONS_PER_ACCOUNT-10}
+      CAPACITY_PROSPECTS_TOTAL: ${CAPACITY_PROSPECTS_TOTAL-50000}
+      CAPACITY_PROSPECTS_PER_ACCOUNT: ${CAPACITY_PROSPECTS_PER_ACCOUNT-1000}
+      CAPACITY_OUTREACH_TOTAL: ${CAPACITY_OUTREACH_TOTAL-25000}
+      CAPACITY_OUTREACH_PER_ACCOUNT: ${CAPACITY_OUTREACH_PER_ACCOUNT-500}
+      CAPACITY_WORKSPACE_AUDIT_TOTAL: ${CAPACITY_WORKSPACE_AUDIT_TOTAL-100000}
+      CAPACITY_WORKSPACE_AUDIT_PER_ACCOUNT: ${CAPACITY_WORKSPACE_AUDIT_PER_ACCOUNT-10000}
+      ACCOUNT_MAIL_DAILY_ATTEMPTS: ${ACCOUNT_MAIL_DAILY_ATTEMPTS-100}
+      ACCOUNT_MAIL_MONTHLY_ATTEMPTS: ${ACCOUNT_MAIL_MONTHLY_ATTEMPTS-1000}
+    secrets:
+      - database_url
+      - jwt_secret
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/ready',{signal:AbortSignal.timeout(3000)}).then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+secrets:
+  database_url:
+    file: ${DATABASE_URL_SECRET_FILE:?Set an existing protected database URL secret file}
+  jwt_secret:
+    file: ${JWT_SECRET_FILE:?Set an existing protected session secret file}

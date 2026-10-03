@@ -1,0 +1,1 @@
+CREATE INDEX `account_mail_jobs_expiry_idx` ON `account_mail_jobs` (`expires_at`);

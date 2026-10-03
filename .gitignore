@@ -13,8 +13,11 @@ playwright-report/
 !.env.example
 *.pem
 *.key
+*.admin-grant
 
 # Logs and runtime state
+.secrets/
+*.secret
 *.log
 output/playwright/
 .playwright-cli/
@@ -22,6 +25,8 @@ output/playwright/
 *.pid
 data/
 backups/
+*.cfb
+*.partial
 debug-bundles/
 
 # Generated packages
