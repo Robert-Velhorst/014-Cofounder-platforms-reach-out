@@ -7,6 +7,7 @@ import superjson from "superjson";
 import App from "./App";
 import { getLoginUrl } from "./const";
 import "./index.css";
+import { TRPC_MAX_BATCH_ITEMS } from "@shared/trpc-transport";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const trpcClient = trpc.createClient({
   links: [
     httpBatchLink({
       url: "/api/trpc",
+      maxItems: TRPC_MAX_BATCH_ITEMS,
       transformer: superjson,
       fetch(input, init) {
         return globalThis.fetch(input, {

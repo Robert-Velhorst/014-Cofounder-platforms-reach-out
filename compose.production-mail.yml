@@ -1,0 +1,18 @@
+# Explicit opt-in overlay; enable only after sender/inbox and budget acceptance.
+# Does NOT enable public registration, outreach, HAI or retention deletion.
+services:
+  app:
+    environment:
+      RESEND_API_KEY_FILE: /run/secrets/resend_api_key
+      AUTH_MAIL_ENCRYPTION_SECRET_FILE: /run/secrets/auth_mail_encryption_secret
+      AUTH_EMAIL_FROM: ${AUTH_EMAIL_FROM:?Set the verified sender email address}
+      ENABLE_ACCOUNT_MAIL_WORKER: "true"
+    secrets:
+      - resend_api_key
+      - auth_mail_encryption_secret
+
+secrets:
+  resend_api_key:
+    file: ${RESEND_API_KEY_SECRET_FILE:?Set an existing protected mail API secret file}
+  auth_mail_encryption_secret:
+    file: ${AUTH_MAIL_ENCRYPTION_SECRET_FILE:?Set an existing protected independent encryption secret file}

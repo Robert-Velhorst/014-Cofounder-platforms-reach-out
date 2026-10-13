@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { afterEach, beforeEach, describe, it, expect, vi } from "vitest";
 import {
   enrichWithLinkedIn,
   enrichWithGitHub,
@@ -8,6 +8,67 @@ import {
 } from "./enrichment-engine";
 
 describe("Enrichment Engine", () => {
+  // Unit tests must not depend on GitHub availability, rate limits or live
+  // profiles. Only the HTTP transport is replaced; parsing and mapping are real.
+  const requested: string[] = [];
+  const unexpected: string[] = [];
+  beforeEach(() => {
+    requested.length = 0;
+    unexpected.length = 0;
+    vi.stubGlobal("fetch", async (input: string | URL | Request) => {
+      const url = String(input);
+      requested.push(url);
+      if (url === "https://api.github.com/users/testuser") {
+        return Response.json({
+          login: "testuser",
+          name: "Synthetic Developer",
+          bio: "Synthetic bio",
+          company: null,
+          location: "Test City",
+          email: null,
+          blog: "",
+          public_repos: 3,
+          followers: 7,
+          following: 2,
+          html_url: "https://github.com/testuser",
+        });
+      }
+      if (
+        url ===
+        "https://api.github.com/users/testuser/repos?sort=stars&per_page=10"
+      ) {
+        return Response.json([
+          {
+            name: "alpha",
+            description: "Synthetic repo",
+            stargazers_count: 9,
+            language: "TypeScript",
+            html_url: "https://github.com/testuser/alpha",
+          },
+          {
+            name: "beta",
+            description: null,
+            stargazers_count: 4,
+            language: "Rust",
+            html_url: "https://github.com/testuser/beta",
+          },
+          {
+            name: "gamma",
+            description: null,
+            stargazers_count: 1,
+            language: "TypeScript",
+            html_url: "https://github.com/testuser/gamma",
+          },
+        ]);
+      }
+      unexpected.push(url);
+      return Response.json({ message: "Not Found" }, { status: 404 });
+    });
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    expect(unexpected).toEqual([]);
+  });
   describe("LinkedIn Enrichment", () => {
     it("should have enrichWithLinkedIn function", () => {
       expect(typeof enrichWithLinkedIn).toBe("function");
@@ -48,25 +109,79 @@ describe("Enrichment Engine", () => {
 
       for (const url of urls) {
         const result = await enrichWithGitHub(url);
-        expect(result === null || typeof result === "object").toBe(true);
+        expect(result?.username).toBe("testuser");
       }
+      expect(requested).toEqual(
+        Array(3)
+          .fill([
+            "https://api.github.com/users/testuser",
+            "https://api.github.com/users/testuser/repos?sort=stars&per_page=10",
+          ])
+          .flat()
+      );
     });
 
     it("should return null for invalid GitHub URL", async () => {
-      const result = await enrichWithGitHub("invalid-url");
+      const result = await enrichWithGitHub(
+        "https://example.invalid/not-github"
+      );
       expect(result).toBeNull();
+      expect(requested).toEqual([]);
     });
 
-    it("should fetch real GitHub data for valid user", async () => {
-      // Test with a known public GitHub user
-      const result = await enrichWithGitHub("https://github.com/torvalds");
+    it("maps provider profile and repository data without relying on a live account", async () => {
+      const result = await enrichWithGitHub("https://github.com/testuser");
+      expect(result).toMatchObject({
+        username: "testuser",
+        name: "Synthetic Developer",
+        bio: "Synthetic bio",
+        company: null,
+        location: "Test City",
+        email: null,
+        blog: "",
+        publicRepos: 3,
+        followers: 7,
+        following: 2,
+        topLanguages: ["TypeScript", "Rust"],
+        githubUrl: "https://github.com/testuser",
+      });
+      expect(result?.topRepositories).toEqual([
+        {
+          name: "alpha",
+          description: "Synthetic repo",
+          stars: 9,
+          language: "TypeScript",
+          url: "https://github.com/testuser/alpha",
+        },
+        {
+          name: "beta",
+          description: null,
+          stars: 4,
+          language: "Rust",
+          url: "https://github.com/testuser/beta",
+        },
+        {
+          name: "gamma",
+          description: null,
+          stars: 1,
+          language: "TypeScript",
+          url: "https://github.com/testuser/gamma",
+        },
+      ]);
+    });
 
-      if (result) {
-        expect(result.username).toBeDefined();
-        expect(result.githubUrl).toBeDefined();
-        expect(typeof result.publicRepos).toBe("number");
-      }
-      // If API fails, result will be null which is acceptable
+    it("returns no enrichment when the provider rejects access", async () => {
+      vi.stubGlobal("fetch", async () =>
+        Response.json({ message: "rate limited" }, { status: 403 })
+      );
+      expect(await enrichWithGitHub("https://github.com/testuser")).toBeNull();
+    });
+
+    it("returns no enrichment when the provider connection fails", async () => {
+      vi.stubGlobal("fetch", async () => {
+        throw new Error("synthetic network failure");
+      });
+      expect(await enrichWithGitHub("https://github.com/testuser")).toBeNull();
     });
   });
 
@@ -128,7 +243,7 @@ describe("Enrichment Engine", () => {
       };
 
       const result = await enrichProspect(mockProspect, {
-        githubUrl: "https://github.com/torvalds",
+        githubUrl: "https://github.com/testuser",
       });
 
       expect(result).toBeDefined();

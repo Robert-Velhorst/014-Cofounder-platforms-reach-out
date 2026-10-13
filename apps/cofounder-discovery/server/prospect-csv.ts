@@ -2,6 +2,8 @@ import { z } from "zod";
 
 export const MAX_CSV_BYTES = 512 * 1024;
 export const MAX_CSV_ROWS = 1_000;
+export const MAX_CSV_EXPORT_ROWS = 10_000;
+export const MAX_CSV_EXPORT_BYTES = 8 * 1024 * 1024;
 
 const rowSchema = z.object({
   name: z.string().trim().min(1).max(255),
@@ -19,69 +21,159 @@ const rowSchema = z.object({
 
 export type ImportedProspect = z.infer<typeof rowSchema>;
 
-function parseLine(line: string): string[] {
-  const values: string[] = [];
+function parseRecords(csv: string): string[][] {
+  const records: string[][] = [];
+  let cells: string[] = [];
   let value = "";
   let quoted = false;
-  for (let index = 0; index < line.length; index += 1) {
-    const char = line[index];
-    if (char === '"') {
-      if (quoted && line[index + 1] === '"') {
+  let closedQuote = false;
+  let hasContent = false;
+  const finishCell = () => {
+    cells.push(value);
+    value = "";
+    closedQuote = false;
+  };
+  const finishRecord = () => {
+    finishCell();
+    if (hasContent) records.push(cells);
+    if (records.length > MAX_CSV_ROWS + 1)
+      throw new Error(`CSV exceeds ${MAX_CSV_ROWS} data rows`);
+    cells = [];
+    hasContent = false;
+  };
+  for (let index = 0; index < csv.length; index += 1) {
+    const char = csv[index];
+    if (quoted) {
+      if (char === '"' && csv[index + 1] === '"') {
         value += '"';
         index += 1;
-      } else {
-        quoted = !quoted;
-      }
-    } else if (char === "," && !quoted) {
-      values.push(value);
+      } else if (char === '"') {
+        quoted = false;
+        closedQuote = true;
+      } else value += char;
+      continue;
+    }
+    if (char === ",") {
+      hasContent = true;
+      finishCell();
+    } else if (char === "\n" || char === "\r") {
+      if (char === "\r" && csv[index + 1] === "\n") index += 1;
+      finishRecord();
+    } else if (closedQuote) {
+      if (char !== " " && char !== "\t")
+        throw new Error("CSV contains text after a closing quote");
+    } else if (char === '"') {
+      if (value.trim())
+        throw new Error("CSV contains a quote in an unquoted field");
       value = "";
+      quoted = true;
+      hasContent = true;
     } else {
       value += char;
+      if (char.trim()) hasContent = true;
     }
   }
   if (quoted) throw new Error("CSV contains an unclosed quoted field");
-  values.push(value);
-  return values;
+  finishRecord();
+  return records;
 }
 
 export function parseProspectCsv(csv: string): ImportedProspect[] {
   if (Buffer.byteLength(csv, "utf8") > MAX_CSV_BYTES) {
     throw new Error(`CSV exceeds ${MAX_CSV_BYTES} bytes`);
   }
-  const lines = csv.replace(/^\uFEFF/, "").split(/\r?\n/).filter(line => line.trim());
-  if (lines.length < 2) return [];
-  if (lines.length - 1 > MAX_CSV_ROWS) throw new Error(`CSV exceeds ${MAX_CSV_ROWS} data rows`);
+  const records = parseRecords(csv.replace(/^\uFEFF/, ""));
+  if (records.length < 2)
+    throw new Error("CSV requires a header and at least one data row");
 
-  const headers = parseLine(lines[0]).map(header => header.trim());
+  const headers = records[0].map(header => header.trim());
+  if (new Set(headers).size !== headers.length)
+    throw new Error("CSV contains duplicate column names");
   const required = headers.indexOf("name");
   if (required < 0) throw new Error("CSV requires a name column");
   const allowed = new Set([
-    "name", "title", "location", "bio", "skills", "industries", "platform", "profileUrl", "consentStatus",
+    "name",
+    "title",
+    "location",
+    "bio",
+    "skills",
+    "industries",
+    "platform",
+    "profileUrl",
+    "consentStatus",
   ]);
   const unexpected = headers.filter(header => !allowed.has(header));
-  if (unexpected.length) throw new Error(`Unsupported CSV columns: ${unexpected.join(", ")}`);
+  if (unexpected.length)
+    throw new Error(`Unsupported CSV columns: ${unexpected.join(", ")}`);
 
-  return lines.slice(1).map((line, rowIndex) => {
-    const cells = parseLine(line);
-    const raw = Object.fromEntries(headers.map((header, index) => [header, cells[index]?.trim() || undefined]));
+  return records.slice(1).map((cells, rowIndex) => {
+    if (cells.length !== headers.length)
+      throw new Error(
+        `CSV record ${rowIndex + 2}: expected ${headers.length} cells, found ${cells.length}`
+      );
+    const raw = Object.fromEntries(
+      headers.map((header, index) => [
+        header,
+        cells[index]?.trim() || undefined,
+      ])
+    );
     const parsed = rowSchema.safeParse({
       ...raw,
-      skills: raw.skills?.split("|").map(value => value.trim()).filter(Boolean) ?? [],
-      industries: raw.industries?.split("|").map(value => value.trim()).filter(Boolean) ?? [],
+      skills:
+        raw.skills
+          ?.split("|")
+          .map(value => value.trim())
+          .filter(Boolean) ?? [],
+      industries:
+        raw.industries
+          ?.split("|")
+          .map(value => value.trim())
+          .filter(Boolean) ?? [],
     });
     if (!parsed.success) {
-      throw new Error(`CSV row ${rowIndex + 2}: ${parsed.error.issues[0]?.message ?? "invalid data"}`);
+      throw new Error(
+        `CSV row ${rowIndex + 2}: ${parsed.error.issues[0]?.message ?? "invalid data"}`
+      );
     }
     return parsed.data;
   });
 }
 
+const spreadsheetRisk = new RegExp("^[\\s\\p{Cc}\\p{Cf}'=+\\-@＝＋－＠]", "u");
 function quote(value: unknown): string {
   const text = Array.isArray(value) ? value.join("|") : String(value ?? "");
-  return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+  // A visible literal prefix survives removal of spreadsheet quote/escape
+  // markers. This is a human-readable export, not a lossless backup format.
+  const display = spreadsheetRisk.test(text) ? `text: ${text}` : text;
+  return `"${display.replaceAll('"', '""')}"`;
 }
 
 export function prospectsToCsv(rows: ImportedProspect[]): string {
-  const headers = ["name", "title", "location", "bio", "skills", "industries", "platform", "profileUrl", "consentStatus"] as const;
-  return [headers.join(","), ...rows.map(row => headers.map(header => quote(row[header])).join(","))].join("\r\n");
+  if (rows.length > MAX_CSV_EXPORT_ROWS)
+    throw new RangeError(
+      `CSV export exceeds ${MAX_CSV_EXPORT_ROWS} active candidates; no partial file was produced.`
+    );
+  const headers = [
+    "name",
+    "title",
+    "location",
+    "bio",
+    "skills",
+    "industries",
+    "platform",
+    "profileUrl",
+    "consentStatus",
+  ] as const;
+  const records = [headers.join(",")];
+  let bytes = Buffer.byteLength(records[0], "utf8");
+  for (const row of rows) {
+    const record = headers.map(header => quote(row[header])).join(",");
+    bytes += 2 + Buffer.byteLength(record, "utf8");
+    if (bytes > MAX_CSV_EXPORT_BYTES)
+      throw new RangeError(
+        `CSV export exceeds ${MAX_CSV_EXPORT_BYTES} bytes; no partial file was produced.`
+      );
+    records.push(record);
+  }
+  return records.join("\r\n");
 }

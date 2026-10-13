@@ -12,17 +12,39 @@ services:
     ports:
       - "127.0.0.1:3317:3306"
     healthcheck:
-      # The official image briefly runs a temporary initialization server. Two
-      # successful pings separated by five seconds prevent that server from
-      # releasing the app before the final MySQL process is stable.
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -proot-local-only --silent && sleep 5 && mysqladmin ping -h localhost -proot-local-only --silent"]
+      # Authenticated application-user TCP queries exclude the official image's
+      # temporary socket-only initialization server and reject unusable credentials.
+      test:
+        [
+          "CMD",
+          "mysql",
+          "--no-defaults",
+          "--host=127.0.0.1",
+          "--protocol=TCP",
+          "--connect-timeout=2",
+          "--user=cofounder",
+          "--password=cofounder-local-only",
+          "cofounder",
+          "--execute=SELECT 1",
+        ]
       interval: 5s
-      timeout: 8s
+      timeout: 5s
       retries: 90
 
   app:
     build:
       context: .
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    # Longer than the application's 25-second drain and final log flush.
+    stop_grace_period: 30s
     restart: unless-stopped
     depends_on:
       db:
@@ -34,9 +56,25 @@ services:
       PORT: 3000
       PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:3014}
       DATABASE_URL: mysql://cofounder:cofounder-local-only@db:3306/cofounder
+      MIGRATION_LOCK_TIMEOUT_SECONDS: ${MIGRATION_LOCK_TIMEOUT_SECONDS-60}
       JWT_SECRET: ${JWT_SECRET:-local-compose-session-secret-change-before-hosting-2026}
       CREDENTIAL_ENCRYPTION_SECRET: ${CREDENTIAL_ENCRYPTION_SECRET:-local-compose-credential-secret-change-before-hosting}
       ENABLE_REGISTRATION: ${ENABLE_REGISTRATION:-true}
+      ENABLE_ACCOUNT_DELETION_REQUESTS: ${ENABLE_ACCOUNT_DELETION_REQUESTS:-false}
+      API_MAX_ACTIVE_WORK: ${API_MAX_ACTIVE_WORK-32}
+      CAPACITY_ACCOUNTS: ${CAPACITY_ACCOUNTS-100}
+      CAPACITY_PROSPECTS_TOTAL: ${CAPACITY_PROSPECTS_TOTAL-50000}
+      CAPACITY_PROSPECTS_PER_ACCOUNT: ${CAPACITY_PROSPECTS_PER_ACCOUNT-1000}
+      CAPACITY_OUTREACH_TOTAL: ${CAPACITY_OUTREACH_TOTAL-25000}
+      CAPACITY_OUTREACH_PER_ACCOUNT: ${CAPACITY_OUTREACH_PER_ACCOUNT-500}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      AUTH_EMAIL_FROM: ${AUTH_EMAIL_FROM:-}
+      AUTH_MAIL_ENCRYPTION_SECRET: ${AUTH_MAIL_ENCRYPTION_SECRET:-}
+      ENABLE_ACCOUNT_MAIL_WORKER: ${ENABLE_ACCOUNT_MAIL_WORKER:-false}
+      ENABLE_ACCOUNT_MAIL_RETENTION: ${ENABLE_ACCOUNT_MAIL_RETENTION:-false}
+      ENABLE_OWNER_NOTIFICATIONS: "false"
+      ACCOUNT_MAIL_DAILY_ATTEMPTS: ${ACCOUNT_MAIL_DAILY_ATTEMPTS-100}
+      ACCOUNT_MAIL_MONTHLY_ATTEMPTS: ${ACCOUNT_MAIL_MONTHLY_ATTEMPTS-1000}
       ENABLE_PLATFORM_AUTOMATION: "false"
       ENABLE_UNSAFE_LEGACY_ROUTES: "false"
       OUTREACH_PAUSED: "false"
@@ -47,7 +85,13 @@ services:
     ports:
       - "127.0.0.1:3014:3000"
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3000/api/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))",
+        ]
       interval: 10s
       timeout: 5s
       retries: 20

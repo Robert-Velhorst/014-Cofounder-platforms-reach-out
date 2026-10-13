@@ -1,0 +1,5389 @@
+{
+  "format": "cofounder-privacy-schema-observation/v1",
+  "observedDate": "2026-10-02",
+  "controllerApproved": false,
+  "legalBasisAssessed": false,
+  "nestedPayloadContentAssessed": false,
+  "liveDatabaseInspected": false,
+  "scope": "current_drizzle_schema_and_export_projection_metadata_cross_checked_against_deletion_manifest",
+  "tableCount": 43,
+  "fieldCount": 505,
+  "note": "Projection membership is not a promise of download inclusion, deletion eligibility or GDPR access sufficiency; service categories are omitted by the export operation. No record values or secrets were read.",
+  "tables": [
+    {
+      "schemaKey": "accountDeletionRequests",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "attempts",
+          "sqlName": "attempts",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "attemptWindowExpiresAt",
+          "sqlName": "attempt_window_expires_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "requestedAt",
+          "sqlName": "requested_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "requestKey",
+          "sqlName": "request_key",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "revision",
+          "sqlName": "revision",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "status",
+          "sqlName": "status",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "withdrawnAt",
+          "sqlName": "withdrawn_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "account_deletion_requests",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"],
+          "onDelete": "cascade"
+        }
+      ]
+    },
+    {
+      "schemaKey": "accountExportQuotas",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "attempts",
+          "sqlName": "attempts",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "expiresAt",
+          "sqlName": "expires_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "account_export_quotas",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"],
+          "onDelete": "cascade"
+        }
+      ]
+    },
+    {
+      "schemaKey": "accountMailJobs",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "attempts",
+          "sqlName": "attempts",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "availableAt",
+          "sqlName": "available_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "expiresAt",
+          "sqlName": "expires_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "kind",
+          "sqlName": "kind",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "leaseUntil",
+          "sqlName": "lease_until",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "payload",
+          "sqlName": "payload",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": "Security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "providerId",
+          "sqlName": "provider_id",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "quotaKey",
+          "sqlName": "quota_key",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": "Security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "state",
+          "sqlName": "state",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "account_mail_jobs",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"],
+          "onDelete": "cascade"
+        }
+      ]
+    },
+    {
+      "schemaKey": "accountMailQuotas",
+      "scope": "service",
+      "ownerField": "userId",
+      "reason": "Shared or pseudonymous anti-abuse counters cannot be attributed safely to this account.",
+      "fields": [
+        {
+          "key": "expiresAt",
+          "sqlName": "expires_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "key",
+          "sqlName": "quota_key",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "used",
+          "sqlName": "used",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "account_mail_quotas",
+      "deletionManifestReferences": []
+    },
+    {
+      "schemaKey": "accountSessions",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "adminVerifiedUntil",
+          "sqlName": "admin_verified_until",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "expiresAt",
+          "sqlName": "expires_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "tokenDigest",
+          "sqlName": "token_digest",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": "Security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "account_sessions",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"],
+          "onDelete": "cascade"
+        }
+      ]
+    },
+    {
+      "schemaKey": "adminMfaState",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "attempts",
+          "sqlName": "attempts",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "attemptWindowExpiresAt",
+          "sqlName": "attempt_window_expires_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "bootstrapDigest",
+          "sqlName": "bootstrap_digest",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "bootstrapExpiresAt",
+          "sqlName": "bootstrap_expires_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "challenge",
+          "sqlName": "challenge",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "challengeExpiresAt",
+          "sqlName": "challenge_expires_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "challengeId",
+          "sqlName": "challenge_id",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "origin",
+          "sqlName": "origin",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "purpose",
+          "sqlName": "purpose",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": true,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "sessionDigest",
+          "sqlName": "session_digest",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "userHandle",
+          "sqlName": "user_handle",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "admin_mfa_state",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"],
+          "onDelete": "cascade"
+        }
+      ]
+    },
+    {
+      "schemaKey": "adminPasskeys",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "backedUp",
+          "sqlName": "backed_up",
+          "dataType": "boolean",
+          "columnType": "MySqlBoolean",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "counter",
+          "sqlName": "counter",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "credentialDigest",
+          "sqlName": "credential_digest",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "credentialId",
+          "sqlName": "credential_id",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "deviceType",
+          "sqlName": "device_type",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "keyId",
+          "sqlName": "key_id",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "label",
+          "sqlName": "label",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastUsedAt",
+          "sqlName": "last_used_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "publicKey",
+          "sqlName": "public_key",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "transports",
+          "sqlName": "transports",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": "Authenticator security material is not downloadable.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "admin_passkeys",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"],
+          "onDelete": "cascade"
+        }
+      ]
+    },
+    {
+      "schemaKey": "aiActivityLog",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "activityDescription",
+          "sqlName": "activity_description",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "activityType",
+          "sqlName": "activity_type",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "aiDecision",
+          "sqlName": "ai_decision",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "campaignId",
+          "sqlName": "campaign_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchId",
+          "sqlName": "match_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "outcome",
+          "sqlName": "outcome",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "ai_activity_log",
+      "deletionManifestReferences": [
+        {
+          "columns": ["campaign_id"],
+          "table": "campaigns",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["match_id"],
+          "table": "matches",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "approvalQueue",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "aiReasoning",
+          "sqlName": "ai_reasoning",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchId",
+          "sqlName": "match_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "messageContent",
+          "sqlName": "message_content",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "messageType",
+          "sqlName": "message_type",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "platform",
+          "sqlName": "platform",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "reviewedAt",
+          "sqlName": "reviewed_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "sentAt",
+          "sqlName": "sent_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "status",
+          "sqlName": "status",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "approval_queue",
+      "deletionManifestReferences": [
+        {
+          "columns": ["match_id"],
+          "table": "matches",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "auditEvents",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "action",
+          "sqlName": "action",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "entityId",
+          "sqlName": "entity_id",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "entityType",
+          "sqlName": "entity_type",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "metadata",
+          "sqlName": "metadata",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": "Unreviewed provider or execution payload may contain credentials or third-party data; requires a separate operator-reviewed access request.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "outcome",
+          "sqlName": "outcome",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "requestId",
+          "sqlName": "request_id",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "audit_events",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "automationJobs",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "attempts",
+          "sqlName": "attempts",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "campaignId",
+          "sqlName": "campaign_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "completedAt",
+          "sqlName": "completed_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "errorMessage",
+          "sqlName": "error_message",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": "Unreviewed provider or execution payload may contain credentials or third-party data; requires a separate operator-reviewed access request.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "jobData",
+          "sqlName": "job_data",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": "Unreviewed provider or execution payload may contain credentials or third-party data; requires a separate operator-reviewed access request.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "jobType",
+          "sqlName": "job_type",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchId",
+          "sqlName": "match_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "maxAttempts",
+          "sqlName": "max_attempts",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "platform",
+          "sqlName": "platform",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "result",
+          "sqlName": "result",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": "Unreviewed provider or execution payload may contain credentials or third-party data; requires a separate operator-reviewed access request.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "scheduledAt",
+          "sqlName": "scheduled_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "startedAt",
+          "sqlName": "started_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "status",
+          "sqlName": "status",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "automation_jobs",
+      "deletionManifestReferences": [
+        {
+          "columns": ["campaign_id"],
+          "table": "campaigns",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["match_id"],
+          "table": "matches",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "billingPeriods",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "closedAt",
+          "sqlName": "closed_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "endDate",
+          "sqlName": "end_date",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "startDate",
+          "sqlName": "start_date",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "status",
+          "sqlName": "status",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "totalBaseCost",
+          "sqlName": "total_base_cost",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "totalMarkedUpCost",
+          "sqlName": "total_marked_up_cost",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "totalUsageCount",
+          "sqlName": "total_usage_count",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "billing_periods",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "campaigns",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "automationMode",
+          "sqlName": "automation_mode",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "autoMessageEnabled",
+          "sqlName": "auto_message_enabled",
+          "dataType": "boolean",
+          "columnType": "MySqlBoolean",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "dailyMatchLimit",
+          "sqlName": "daily_match_limit",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "description",
+          "sqlName": "description",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "filters",
+          "sqlName": "filters",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastRunAt",
+          "sqlName": "last_run_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "messagesSent",
+          "sqlName": "messages_sent",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "messageTemplate",
+          "sqlName": "message_template",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "minCompatibilityScore",
+          "sqlName": "min_compatibility_score",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "name",
+          "sqlName": "name",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "prospectsFound",
+          "sqlName": "prospects_found",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "responsesReceived",
+          "sqlName": "responses_received",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "status",
+          "sqlName": "status",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "targetPlatforms",
+          "sqlName": "target_platforms",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "campaigns",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "capacityLocks",
+      "scope": "service",
+      "ownerField": "userId",
+      "reason": "Service transaction mutexes contain no account records.",
+      "fields": [
+        {
+          "key": "resource",
+          "sqlName": "resource",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "capacity_locks",
+      "deletionManifestReferences": []
+    },
+    {
+      "schemaKey": "conversationAnalytics",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "focusArea",
+          "sqlName": "focus_area",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "hasPersonalization",
+          "sqlName": "has_personalization",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "hasQuestion",
+          "sqlName": "has_question",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "messageId",
+          "sqlName": "message_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "messageLength",
+          "sqlName": "message_length",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "prospectId",
+          "sqlName": "prospect_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "respondedAt",
+          "sqlName": "responded_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "responseQuality",
+          "sqlName": "response_quality",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "responseTime",
+          "sqlName": "response_time",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "sentAt",
+          "sqlName": "sent_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "tone",
+          "sqlName": "tone",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "conversation_analytics",
+      "deletionManifestReferences": [
+        {
+          "columns": ["message_id"],
+          "table": "messages",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["prospect_id"],
+          "table": "prospects",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "conversations",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "createdAt",
+          "sqlName": "createdAt",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastMessageAt",
+          "sqlName": "lastMessageAt",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchId",
+          "sqlName": "matchId",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "prospectId",
+          "sqlName": "prospectId",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "unreadCount",
+          "sqlName": "unreadCount",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updatedAt",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "userId",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "conversations",
+      "deletionManifestReferences": [
+        {
+          "columns": ["matchId"],
+          "table": "matches",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["prospectId"],
+          "table": "prospects",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["userId"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "conversationStartersHistory",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "compatibilityScore",
+          "sqlName": "compatibility_score",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "copiedAt",
+          "sqlName": "copied_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "enrichmentScore",
+          "sqlName": "enrichment_score",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "focusArea",
+          "sqlName": "focus_area",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "generatedAt",
+          "sqlName": "generated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "message",
+          "sqlName": "message",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "prospectId",
+          "sqlName": "prospect_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "reasoning",
+          "sqlName": "reasoning",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "tone",
+          "sqlName": "tone",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "usedAt",
+          "sqlName": "used_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "wasCopied",
+          "sqlName": "was_copied",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "wasUsed",
+          "sqlName": "was_used",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "conversation_starters_history",
+      "deletionManifestReferences": [
+        {
+          "columns": ["prospect_id"],
+          "table": "prospects",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "guardrails",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "isActive",
+          "sqlName": "is_active",
+          "dataType": "boolean",
+          "columnType": "MySqlBoolean",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastTriggered",
+          "sqlName": "last_triggered",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "ruleConfig",
+          "sqlName": "rule_config",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "ruleName",
+          "sqlName": "rule_name",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "ruleType",
+          "sqlName": "rule_type",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "triggeredCount",
+          "sqlName": "triggered_count",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "guardrails",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "idempotencyRecords",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "idempotencyKey",
+          "sqlName": "idempotency_key",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": "Internal replay key; not required to read retained user records.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "operation",
+          "sqlName": "operation",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "result",
+          "sqlName": "result",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": false,
+          "exportExclusion": "Unreviewed provider or execution payload may contain credentials or third-party data; requires a separate operator-reviewed access request.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "idempotency_records",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "invoices",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "billingPeriodId",
+          "sqlName": "billing_period_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "dueDate",
+          "sqlName": "due_date",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "invoiceNumber",
+          "sqlName": "invoice_number",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "issueDate",
+          "sqlName": "issue_date",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lineItems",
+          "sqlName": "line_items",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "paidAt",
+          "sqlName": "paid_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "status",
+          "sqlName": "status",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "subtotal",
+          "sqlName": "subtotal",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "tax",
+          "sqlName": "tax",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "total",
+          "sqlName": "total",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "invoices",
+      "deletionManifestReferences": [
+        {
+          "columns": ["billing_period_id"],
+          "table": "billing_periods",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "leadScores",
+      "scope": "match",
+      "ownerField": "matchId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "actualResponse",
+          "sqlName": "actual_response",
+          "dataType": "boolean",
+          "columnType": "MySqlBoolean",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "engagementScore",
+          "sqlName": "engagement_score",
+          "dataType": "number",
+          "columnType": "MySqlFloat",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "factors",
+          "sqlName": "factors",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchId",
+          "sqlName": "match_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "predicted",
+          "sqlName": "predicted",
+          "dataType": "boolean",
+          "columnType": "MySqlBoolean",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "predictionAccurate",
+          "sqlName": "prediction_accurate",
+          "dataType": "boolean",
+          "columnType": "MySqlBoolean",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "priorityRank",
+          "sqlName": "priority_rank",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "responseLikelihood",
+          "sqlName": "response_likelihood",
+          "dataType": "number",
+          "columnType": "MySqlFloat",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "lead_scores",
+      "deletionManifestReferences": [
+        {
+          "columns": ["match_id"],
+          "table": "matches",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "loginAttemptQuotas",
+      "scope": "service",
+      "ownerField": "userId",
+      "reason": "Shared pseudonymous anti-abuse counters cannot be attributed safely to one account.",
+      "fields": [
+        {
+          "key": "expiresAt",
+          "sqlName": "expires_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "key",
+          "sqlName": "quota_key",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "used",
+          "sqlName": "used",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "login_attempt_quotas",
+      "deletionManifestReferences": []
+    },
+    {
+      "schemaKey": "matches",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "approvedAt",
+          "sqlName": "approved_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "campaignId",
+          "sqlName": "campaign_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "contactedAt",
+          "sqlName": "contacted_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "industryScore",
+          "sqlName": "industry_score",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastScoredAt",
+          "sqlName": "last_scored_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "locationScore",
+          "sqlName": "location_score",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchedAt",
+          "sqlName": "matched_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "meetingScheduledAt",
+          "sqlName": "meeting_scheduled_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "overallScore",
+          "sqlName": "overall_score",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "partnershipFormedAt",
+          "sqlName": "partnership_formed_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "prospectId",
+          "sqlName": "prospect_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "reasoning",
+          "sqlName": "reasoning",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "recommendations",
+          "sqlName": "recommendations",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "rejectedAt",
+          "sqlName": "rejected_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "responseReceivedAt",
+          "sqlName": "response_received_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "skillsScore",
+          "sqlName": "skills_score",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "status",
+          "sqlName": "status",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "successProbability",
+          "sqlName": "success_probability",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "visionScore",
+          "sqlName": "vision_score",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "workStyleScore",
+          "sqlName": "work_style_score",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "matches",
+      "deletionManifestReferences": [
+        {
+          "columns": ["campaign_id"],
+          "table": "campaigns",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["prospect_id"],
+          "table": "prospects",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "messages",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "body",
+          "sqlName": "body",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "content",
+          "sqlName": "content",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "conversationId",
+          "sqlName": "conversation_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "createdAt",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "isFollowUp",
+          "sqlName": "is_follow_up",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchId",
+          "sqlName": "matchId",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "parentMessageId",
+          "sqlName": "parent_message_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "prospectId",
+          "sqlName": "prospect_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "readAt",
+          "sqlName": "readAt",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "recipientId",
+          "sqlName": "recipientId",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "respondedAt",
+          "sqlName": "respondedAt",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "senderId",
+          "sqlName": "senderId",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "sentAt",
+          "sqlName": "sentAt",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "status",
+          "sqlName": "status",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "subject",
+          "sqlName": "subject",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updatedAt",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "messages",
+      "deletionManifestReferences": [
+        {
+          "columns": ["conversation_id"],
+          "table": "conversations",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["matchId"],
+          "table": "matches",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["prospect_id"],
+          "table": "prospects",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["senderId"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "mlModelVersions",
+      "scope": "service",
+      "ownerField": "userId",
+      "reason": "Shared model deployment metadata is not an account-owned data set.",
+      "fields": [
+        {
+          "key": "accuracy",
+          "sqlName": "accuracy",
+          "dataType": "number",
+          "columnType": "MySqlFloat",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "deployedAt",
+          "sqlName": "deployed_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "f1Score",
+          "sqlName": "f1_score",
+          "dataType": "number",
+          "columnType": "MySqlFloat",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "features",
+          "sqlName": "features",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "hyperparameters",
+          "sqlName": "hyperparameters",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "isActive",
+          "sqlName": "is_active",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "modelType",
+          "sqlName": "model_type",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "precisionScore",
+          "sqlName": "precision_score",
+          "dataType": "number",
+          "columnType": "MySqlFloat",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "recallScore",
+          "sqlName": "recall_score",
+          "dataType": "number",
+          "columnType": "MySqlFloat",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "trainingSamples",
+          "sqlName": "training_samples",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "version",
+          "sqlName": "version",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "ml_model_versions",
+      "deletionManifestReferences": []
+    },
+    {
+      "schemaKey": "outreachRecords",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "approvedAt",
+          "sqlName": "approved_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "body",
+          "sqlName": "body",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "closedAt",
+          "sqlName": "closed_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "confirmedSentAt",
+          "sqlName": "confirmed_sent_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "destinationUrl",
+          "sqlName": "destination_url",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "externalReference",
+          "sqlName": "external_reference",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "followUpAt",
+          "sqlName": "follow_up_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "generationMode",
+          "sqlName": "generation_mode",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "idempotencyKey",
+          "sqlName": "idempotency_key",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": "Internal replay key; not required to read retained user records.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "matchId",
+          "sqlName": "match_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "prospectId",
+          "sqlName": "prospect_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "responseRecordedAt",
+          "sqlName": "response_recorded_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "reviewNotes",
+          "sqlName": "review_notes",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "revisesId",
+          "sqlName": "revises_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "sourcePolicy",
+          "sqlName": "source_policy",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "state",
+          "sqlName": "state",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "subject",
+          "sqlName": "subject",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "outreach_records",
+      "deletionManifestReferences": [
+        {
+          "columns": ["match_id"],
+          "table": "matches",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["prospect_id"],
+          "table": "prospects",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["revises_id"],
+          "table": "outreach_records",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "partnershipOutcomes",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "daysToOutcome",
+          "sqlName": "days_to_outcome",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchId",
+          "sqlName": "match_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "notes",
+          "sqlName": "notes",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "outcome",
+          "sqlName": "outcome",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "outcomeDate",
+          "sqlName": "outcome_date",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "prospectId",
+          "sqlName": "prospect_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "totalMeetings",
+          "sqlName": "total_meetings",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "totalMessages",
+          "sqlName": "total_messages",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "partnership_outcomes",
+      "deletionManifestReferences": [
+        {
+          "columns": ["match_id"],
+          "table": "matches",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["prospect_id"],
+          "table": "prospects",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "pipelineStages",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "enteredAt",
+          "sqlName": "entered_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "exitedAt",
+          "sqlName": "exited_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchId",
+          "sqlName": "match_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "notes",
+          "sqlName": "notes",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "stage",
+          "sqlName": "stage",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "pipeline_stages",
+      "deletionManifestReferences": [
+        {
+          "columns": ["match_id"],
+          "table": "matches",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "platformCredentials",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "dailyMessageLimit",
+          "sqlName": "daily_message_limit",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "encryptedPassword",
+          "sqlName": "encrypted_password",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": "Security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "encryptedSessionData",
+          "sqlName": "encrypted_session_data",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": "Security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "encryptedUsername",
+          "sqlName": "encrypted_username",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": "Security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastError",
+          "sqlName": "last_error",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": "Unreviewed provider or execution payload may contain credentials or third-party data; requires a separate operator-reviewed access request.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "lastResetAt",
+          "sqlName": "last_reset_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastTestedAt",
+          "sqlName": "last_tested_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastUsedAt",
+          "sqlName": "last_used_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "messagessentToday",
+          "sqlName": "messages_sent_today",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "platform",
+          "sqlName": "platform",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "sessionExpiresAt",
+          "sqlName": "session_expires_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "status",
+          "sqlName": "status",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "platform_credentials",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "prospectNotes",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "content",
+          "sqlName": "content",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchId",
+          "sqlName": "match_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "prospect_notes",
+      "deletionManifestReferences": [
+        {
+          "columns": ["match_id"],
+          "table": "matches",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "prospects",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "archivedAt",
+          "sqlName": "archived_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "bio",
+          "sqlName": "bio",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "companyData",
+          "sqlName": "company_data",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": "Unreviewed provider or execution payload may contain credentials or third-party data; requires a separate operator-reviewed access request.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "consentStatus",
+          "sqlName": "consent_status",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "currentCompany",
+          "sqlName": "current_company",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "enrichmentScore",
+          "sqlName": "enrichment_score",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "experience",
+          "sqlName": "experience",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "githubData",
+          "sqlName": "github_data",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": "Unreviewed provider or execution payload may contain credentials or third-party data; requires a separate operator-reviewed access request.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "importedAt",
+          "sqlName": "imported_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "importProvenance",
+          "sqlName": "import_provenance",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "industries",
+          "sqlName": "industries",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastEnriched",
+          "sqlName": "last_enriched",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastUpdated",
+          "sqlName": "last_updated",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "linkedInData",
+          "sqlName": "linkedin_data",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": "Unreviewed provider or execution payload may contain credentials or third-party data; requires a separate operator-reviewed access request.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "location",
+          "sqlName": "location",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lookingFor",
+          "sqlName": "looking_for",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "name",
+          "sqlName": "name",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "platform",
+          "sqlName": "platform",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "profileUrl",
+          "sqlName": "profile_url",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "skills",
+          "sqlName": "skills",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "sourceKind",
+          "sqlName": "source_kind",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "startupStage",
+          "sqlName": "startup_stage",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "title",
+          "sqlName": "title",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "prospects",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "prospectTasks",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "completed",
+          "sqlName": "completed",
+          "dataType": "boolean",
+          "columnType": "MySqlBoolean",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "completedAt",
+          "sqlName": "completed_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "description",
+          "sqlName": "description",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "dueDate",
+          "sqlName": "due_date",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchId",
+          "sqlName": "match_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "title",
+          "sqlName": "title",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "prospect_tasks",
+      "deletionManifestReferences": [
+        {
+          "columns": ["match_id"],
+          "table": "matches",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "resourceUsage",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "baseCost",
+          "sqlName": "base_cost",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "markedUpCost",
+          "sqlName": "marked_up_cost",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "metadata",
+          "sqlName": "metadata",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": "Unreviewed provider or execution payload may contain credentials or third-party data; requires a separate operator-reviewed access request.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "quantity",
+          "sqlName": "quantity",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "relatedEntityId",
+          "sqlName": "related_entity_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "relatedEntityType",
+          "sqlName": "related_entity_type",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "resourceType",
+          "sqlName": "resource_type",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "tokenCount",
+          "sqlName": "token_count",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "resource_usage",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "responsePatterns",
+      "scope": "prospect",
+      "ownerField": "prospectId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "avgResponseTime",
+          "sqlName": "avg_response_time",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "dayOfWeek",
+          "sqlName": "day_of_week",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "hourOfDay",
+          "sqlName": "hour_of_day",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastUpdated",
+          "sqlName": "last_updated",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "prospectId",
+          "sqlName": "prospect_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "responseCount",
+          "sqlName": "response_count",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "totalSent",
+          "sqlName": "total_sent",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "response_patterns",
+      "deletionManifestReferences": [
+        {
+          "columns": ["prospect_id"],
+          "table": "prospects",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "savedSearches",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "commitment",
+          "sqlName": "commitment",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "createdAt",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "description",
+          "sqlName": "description",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "emailNotifications",
+          "sqlName": "email_notifications",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "equitySplitPreference",
+          "sqlName": "equity_split_preference",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "experience",
+          "sqlName": "experience",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "fundingStage",
+          "sqlName": "funding_stage",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "industries",
+          "sqlName": "industries",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "isActive",
+          "sqlName": "is_active",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastChecked",
+          "sqlName": "lastChecked",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "location",
+          "sqlName": "location",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchCount",
+          "sqlName": "match_count",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "minCompatibilityScore",
+          "sqlName": "min_compatibility_score",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "name",
+          "sqlName": "name",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "notificationsEnabled",
+          "sqlName": "notifications_enabled",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "remotePreference",
+          "sqlName": "remote_preference",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "skills",
+          "sqlName": "skills",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "startupStage",
+          "sqlName": "startup_stage",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "teamSizeMax",
+          "sqlName": "team_size_max",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "teamSizeMin",
+          "sqlName": "team_size_min",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updatedAt",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "userId",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "saved_searches",
+      "deletionManifestReferences": [
+        {
+          "columns": ["userId"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "stageTransitions",
+      "scope": "match",
+      "ownerField": "matchId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "automated",
+          "sqlName": "automated",
+          "dataType": "boolean",
+          "columnType": "MySqlBoolean",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "fromStage",
+          "sqlName": "from_stage",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "matchId",
+          "sqlName": "match_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "reason",
+          "sqlName": "reason",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "toStage",
+          "sqlName": "to_stage",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "stage_transitions",
+      "deletionManifestReferences": [
+        {
+          "columns": ["match_id"],
+          "table": "matches",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "successMetrics",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "campaignId",
+          "sqlName": "campaign_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "metricType",
+          "sqlName": "metric_type",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "notes",
+          "sqlName": "notes",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "prospectId",
+          "sqlName": "prospect_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "recordedAt",
+          "sqlName": "recorded_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "value",
+          "sqlName": "value",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "success_metrics",
+      "deletionManifestReferences": [
+        {
+          "columns": ["campaign_id"],
+          "table": "campaigns",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["prospect_id"],
+          "table": "prospects",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "timelineEvents",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "campaignId",
+          "sqlName": "campaign_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "description",
+          "sqlName": "description",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "messageId",
+          "sqlName": "message_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "metadata",
+          "sqlName": "metadata",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": "Unreviewed provider or execution payload may contain credentials or third-party data; requires a separate operator-reviewed access request.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "prospectId",
+          "sqlName": "prospect_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "title",
+          "sqlName": "title",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "type",
+          "sqlName": "type",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "timeline_events",
+      "deletionManifestReferences": [
+        {
+          "columns": ["campaign_id"],
+          "table": "campaigns",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["message_id"],
+          "table": "messages",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["prospect_id"],
+          "table": "prospects",
+          "foreignColumns": ["id"]
+        },
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "usagePricing",
+      "scope": "service",
+      "ownerField": "userId",
+      "reason": "Shared service pricing configuration is not an account-owned data set.",
+      "fields": [
+        {
+          "key": "baseCostPerUnit",
+          "sqlName": "base_cost_per_unit",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "description",
+          "sqlName": "description",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "isActive",
+          "sqlName": "is_active",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "markup",
+          "sqlName": "markup",
+          "dataType": "number",
+          "columnType": "MySqlFloat",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "resourceType",
+          "sqlName": "resource_type",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "unitName",
+          "sqlName": "unit_name",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "usage_pricing",
+      "deletionManifestReferences": []
+    },
+    {
+      "schemaKey": "userPreferences",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "acceptCount",
+          "sqlName": "accept_count",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "confidence",
+          "sqlName": "confidence",
+          "dataType": "number",
+          "columnType": "MySqlFloat",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "preferenceKey",
+          "sqlName": "preference_key",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "preferenceType",
+          "sqlName": "preference_type",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "rejectCount",
+          "sqlName": "reject_count",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "weight",
+          "sqlName": "weight",
+          "dataType": "number",
+          "columnType": "MySqlFloat",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "user_preferences",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "userProfiles",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "availability",
+          "sqlName": "availability",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "bio",
+          "sqlName": "bio",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "businessModel",
+          "sqlName": "business_model",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "commitment",
+          "sqlName": "commitment",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "communicationStyle",
+          "sqlName": "communication_style",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "completeness",
+          "sqlName": "completeness",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "createdAt",
+          "sqlName": "created_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "equityExpectation",
+          "sqlName": "equity_expectation",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "experience",
+          "sqlName": "experience",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "fundingPreference",
+          "sqlName": "funding_preference",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "industries",
+          "sqlName": "industries",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "isPublic",
+          "sqlName": "is_public",
+          "dataType": "boolean",
+          "columnType": "MySqlBoolean",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "location",
+          "sqlName": "location",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lookingFor",
+          "sqlName": "looking_for",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "previousRoles",
+          "sqlName": "previous_roles",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "remotePreference",
+          "sqlName": "remote_preference",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "skills",
+          "sqlName": "skills",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "startupStage",
+          "sqlName": "startup_stage",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "targetIndustries",
+          "sqlName": "target_industries",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "timezone",
+          "sqlName": "timezone",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "values",
+          "sqlName": "values",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "workStyle",
+          "sqlName": "work_style",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "user_profiles",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"]
+        }
+      ]
+    },
+    {
+      "schemaKey": "users",
+      "scope": "account",
+      "ownerField": "id",
+      "reason": null,
+      "fields": [
+        {
+          "key": "createdAt",
+          "sqlName": "createdAt",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "deletionFencedAt",
+          "sqlName": "deletion_fenced_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "email",
+          "sqlName": "email",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "emailNotificationsEnabled",
+          "sqlName": "email_notifications_enabled",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "emailVerified",
+          "sqlName": "emailVerified",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "githubAccessToken",
+          "sqlName": "github_access_token",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": "Security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "githubConnectedAt",
+          "sqlName": "github_connected_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "githubId",
+          "sqlName": "github_id",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "githubUsername",
+          "sqlName": "github_username",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "id",
+          "sqlName": "id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "lastSignedIn",
+          "sqlName": "lastSignedIn",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "linkedinAccessToken",
+          "sqlName": "linkedin_access_token",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": "Security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "linkedinConnectedAt",
+          "sqlName": "linkedin_connected_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "linkedinId",
+          "sqlName": "linkedin_id",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "linkedinRefreshToken",
+          "sqlName": "linkedin_refresh_token",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": "Security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "linkedinTokenExpiry",
+          "sqlName": "linkedin_token_expiry",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "loginMethod",
+          "sqlName": "loginMethod",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "name",
+          "sqlName": "name",
+          "dataType": "string",
+          "columnType": "MySqlText",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "notifyMessages",
+          "sqlName": "notify_messages",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "notifyNewMatches",
+          "sqlName": "notify_new_matches",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "openId",
+          "sqlName": "openId",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "passwordHash",
+          "sqlName": "password_hash",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": "Security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "passwordResetToken",
+          "sqlName": "password_reset_token",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": "Security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "passwordResetTokenExpiry",
+          "sqlName": "password_reset_token_expiry",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "role",
+          "sqlName": "role",
+          "dataType": "string",
+          "columnType": "MySqlEnumColumn",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updatedAt",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "verificationEmailDigest",
+          "sqlName": "verification_email_digest",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": "Verification security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "verificationToken",
+          "sqlName": "verificationToken",
+          "dataType": "string",
+          "columnType": "MySqlVarChar",
+          "nullable": true,
+          "exportExclusion": "Security material is never included in downloadable account data.",
+          "inCategoryProjection": false
+        },
+        {
+          "key": "verificationTokenExpiry",
+          "sqlName": "verificationTokenExpiry",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": true,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "weeklySummaryEnabled",
+          "sqlName": "weekly_summary_enabled",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "users",
+      "deletionManifestReferences": []
+    },
+    {
+      "schemaKey": "workspacePresets",
+      "scope": "account",
+      "ownerField": "userId",
+      "reason": null,
+      "fields": [
+        {
+          "key": "revision",
+          "sqlName": "revision",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "settings",
+          "sqlName": "settings",
+          "dataType": "json",
+          "columnType": "MySqlJson",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "updatedAt",
+          "sqlName": "updated_at",
+          "dataType": "date",
+          "columnType": "MySqlTimestamp",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        },
+        {
+          "key": "userId",
+          "sqlName": "user_id",
+          "dataType": "number",
+          "columnType": "MySqlInt",
+          "nullable": false,
+          "exportExclusion": null,
+          "inCategoryProjection": true
+        }
+      ],
+      "sqlTable": "workspace_presets",
+      "deletionManifestReferences": [
+        {
+          "columns": ["user_id"],
+          "table": "users",
+          "foreignColumns": ["id"],
+          "onDelete": "cascade"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "path": "apps/cofounder-discovery/drizzle/schema.ts",
+      "sha256": "da71413735b19845c6371093057897f217ffb599d520ab01c290ddcefdc9b7e8"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/account-export-inventory.ts",
+      "sha256": "ebffbca8de1e563784e20c243082a519160aa1a23aa06d1886238bf7a799bb66"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/account-deletion-schema.json",
+      "sha256": "86c8886cf9c4db3a844f249b3a1a9ea8fe1f1e0c89f7feb335579ae2edbc0684"
+    },
+    {
+      "path": "compose.production.yml",
+      "priorSha256": "6f7cc07631c1e7b9b62ad77dab7087fb3b443f13a64775bf4d67cd80eb8c6a1d",
+      "sha256": "acd9a314a7b30db77d1c555ce4cc80e53c6dbf70792fc8b645e778f654ab5b99",
+      "refreshNote": "Added disabled owner-notification flag; other three source hashes and table observation unchanged. No live data or controller approval."
+    }
+  ],
+  "inventoryDigest": "51fb8564020362c42e6942d0fc5b89e98ef9469c2418f56f3ae47624dd743852"
+}

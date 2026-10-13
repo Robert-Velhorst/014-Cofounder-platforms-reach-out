@@ -1,0 +1,2 @@
+ALTER TABLE `outreach_records` MODIFY COLUMN `generation_mode` enum('template','ai','user_authored') NOT NULL DEFAULT 'template';--> statement-breakpoint
+ALTER TABLE `outreach_records` ADD `source_policy` json;

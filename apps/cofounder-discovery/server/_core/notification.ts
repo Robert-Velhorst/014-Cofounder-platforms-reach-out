@@ -1,19 +1,32 @@
 import { TRPCError } from "@trpc/server";
 import { ENV } from "./env";
+import { getConfig } from "../config";
 
 export type NotificationPayload = {
   title: string;
   content: string;
 };
 
-const TITLE_MAX_LENGTH = 1200;
-const CONTENT_MAX_LENGTH = 20000;
+export const TITLE_MAX_LENGTH = 1200;
+export const CONTENT_MAX_LENGTH = 20000;
+export const OWNER_NOTIFICATION_TIMEOUT_MS = 5000;
 
 const trimValue = (value: string): string => value.trim();
 const isNonEmptyString = (value: unknown): value is string =>
   typeof value === "string" && value.trim().length > 0;
 
 const buildEndpointUrl = (baseUrl: string): string => {
+  // This is operator configuration, never a request-supplied provider URL.
+  // Never forward credentials over plaintext, URL credentials or redirects.
+  const base = new URL(baseUrl);
+  if (
+    base.protocol !== "https:" ||
+    base.username ||
+    base.password ||
+    base.search ||
+    base.hash
+  )
+    throw new Error("notification_endpoint_invalid");
   const normalizedBase = baseUrl.endsWith("/") ? baseUrl : `${baseUrl}/`;
   return new URL(
     "webdevtoken.v1.WebDevService/SendNotification",
@@ -57,34 +70,57 @@ const validatePayload = (input: NotificationPayload): NotificationPayload => {
 
 /**
  * Dispatches a project-owner notification through the Manus Notification Service.
- * Returns `true` if the request was accepted, `false` when the upstream service
- * cannot be reached (callers can fall back to email/slack). Validation errors
- * bubble up as TRPC errors so callers can fix the payload.
+ * Returns true for an accepted HTTP response, not a delivery receipt. A failure
+ * is uncertain: do not automatically retry or fall back to another sending
+ * channel. Disabled/unconfigured/invalid input throws before provider access.
  */
 export async function notifyOwner(
   payload: NotificationPayload
 ): Promise<boolean> {
   const { title, content } = validatePayload(payload);
 
+  if (!getConfig().ENABLE_OWNER_NOTIFICATIONS) {
+    throw new TRPCError({
+      code: "SERVICE_UNAVAILABLE",
+      message: "Owner notifications are disabled.",
+    });
+  }
+
   if (!ENV.forgeApiUrl) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: "Notification service URL is not configured.",
+      message: "Notification service is not configured.",
     });
   }
 
   if (!ENV.forgeApiKey) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: "Notification service API key is not configured.",
+      message: "Notification service is not configured.",
     });
   }
 
-  const endpoint = buildEndpointUrl(ENV.forgeApiUrl);
+  let endpoint: string;
+  try {
+    endpoint = buildEndpointUrl(ENV.forgeApiUrl);
+  } catch {
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Notification service configuration is invalid.",
+    });
+  }
+
+  const controller = new AbortController();
+  const deadline = setTimeout(
+    () => controller.abort(),
+    OWNER_NOTIFICATION_TIMEOUT_MS
+  );
 
   try {
     const response = await fetch(endpoint, {
       method: "POST",
+      redirect: "error",
+      signal: controller.signal,
       headers: {
         accept: "application/json",
         authorization: `Bearer ${ENV.forgeApiKey}`,
@@ -94,19 +130,30 @@ export async function notifyOwner(
       body: JSON.stringify({ title, content }),
     });
 
+    // We do not need the body for acceptance. Cancel it without reading private
+    // provider text, and without waiting on a streaming body or cleanup failure.
+    void response.body?.cancel().catch(() => undefined);
     if (!response.ok) {
-      const detail = await response.text().catch(() => "");
       console.warn(
-        `[Notification] Failed to notify owner (${response.status} ${response.statusText})${
-          detail ? `: ${detail}` : ""
-        }`
+        JSON.stringify({
+          event: "owner_notification_failed",
+          reason: "provider_rejected",
+          status: response.status,
+        })
       );
       return false;
     }
 
     return true;
-  } catch (error) {
-    console.warn("[Notification] Error calling notification service:", error);
+  } catch {
+    console.warn(
+      JSON.stringify({
+        event: "owner_notification_failed",
+        reason: controller.signal.aborted ? "timeout" : "transport_failure",
+      })
+    );
     return false;
+  } finally {
+    clearTimeout(deadline);
   }
 }
