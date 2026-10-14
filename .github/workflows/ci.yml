@@ -80,5 +80,3 @@ jobs:
       - name: Stop the CI stack
         if: always()
         run: docker compose down --volumes --remove-orphans
-
-\n
