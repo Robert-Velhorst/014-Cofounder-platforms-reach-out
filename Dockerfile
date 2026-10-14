@@ -1,6 +1,6 @@
 FROM node:26.11.1-bookworm-slim AS build
 WORKDIR /app
-RUN corepack enable
+RUN npm install --global pnpm@12.13.0
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/cofounder-discovery/package.json ./apps/cofounder-discovery/package.json
 RUN pnpm install --frozen-lockfile

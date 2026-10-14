@@ -105,7 +105,6 @@
     "cross-env": "10.1.0",
     "drizzle-kit": "^0.31.11",
     "esbuild": "^0.28.2",
-    "pnpm": "^12.11.2",
     "postcss": "^8.5.30",
     "prettier": "^3.9.10",
     "tailwindcss": "^4.3.3",
