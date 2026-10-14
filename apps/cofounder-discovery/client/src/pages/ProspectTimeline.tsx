@@ -11,8 +11,7 @@ import {
   Handshake,
   Clock,
   Share2,
-  Twitter,
-  Linkedin,
+  Users,
   CheckCircle2,
   XCircle,
   Send,
@@ -125,11 +124,11 @@ export default function ProspectTimeline() {
             </div>
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={shareToLinkedIn}>
-                <Linkedin className="w-4 h-4 mr-2" />
+                <Users className="w-4 h-4 mr-2" />
                 Share
               </Button>
               <Button variant="outline" size="sm" onClick={shareToTwitter}>
-                <Twitter className="w-4 h-4 mr-2" />
+                <Share2 className="w-4 h-4 mr-2" />
                 Tweet
               </Button>
             </div>
