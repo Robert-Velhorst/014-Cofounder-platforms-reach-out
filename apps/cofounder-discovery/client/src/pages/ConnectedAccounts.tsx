@@ -6,8 +6,8 @@ import {
   Link2,
   Link2Off,
   CheckCircle2,
-  Linkedin,
-  Github,
+  Briefcase,
+  Code,
   Loader2,
 } from "lucide-react";
 import { useState } from "react";
@@ -67,7 +67,7 @@ export default function ConnectedAccounts() {
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-blue-500/10 rounded-lg">
-                  <Linkedin className="w-8 h-8 text-blue-500" />
+                  <Briefcase className="w-8 h-8 text-blue-500" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-bold mb-2">LinkedIn</h3>
@@ -182,7 +182,7 @@ export default function ConnectedAccounts() {
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4">
                 <div className="p-3 bg-purple-500/10 rounded-lg">
-                  <Github className="w-8 h-8 text-purple-500" />
+                  <Code className="w-8 h-8 text-purple-500" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-bold mb-2">GitHub</h3>

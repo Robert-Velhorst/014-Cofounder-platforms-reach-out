@@ -4,8 +4,8 @@ import { Button } from "./ui/button";
 import {
   ChevronDown,
   ChevronUp,
-  Linkedin,
-  Github,
+  Briefcase,
+  Code,
   Building2,
   ExternalLink,
   Star,
@@ -65,7 +65,7 @@ export function EnrichmentData({
           {hasLinkedIn && (
             <div className="p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center gap-2 mb-3">
-                <Linkedin className="w-5 h-5 text-blue-600" />
+                <Briefcase className="w-5 h-5 text-blue-600" />
                 <h4 className="font-semibold">LinkedIn Profile</h4>
                 {enrichmentData.linkedin.linkedInUrl && (
                   <a
@@ -147,7 +147,7 @@ export function EnrichmentData({
           {hasGitHub && (
             <div className="p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center gap-2 mb-3">
-                <Github className="w-5 h-5" />
+                <Code className="w-5 h-5" />
                 <h4 className="font-semibold">GitHub Profile</h4>
                 {enrichmentData.github.githubUrl && (
                   <a
