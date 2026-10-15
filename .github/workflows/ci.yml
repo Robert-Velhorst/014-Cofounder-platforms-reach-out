@@ -34,7 +34,7 @@ jobs:
       JWT_SECRET: ci-session-secret-with-at-least-thirty-two-characters
       ENABLE_REGISTRATION: "true"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
         with:
           version: 12.13.0
@@ -61,7 +61,7 @@ jobs:
       CREDENTIAL_ENCRYPTION_SECRET: ci-container-credential-secret-with-at-least-thirty-two-characters
       ENABLE_REGISTRATION: "false"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build and start the production stack
         run: docker compose up --build --detach --wait --wait-timeout 300
       - name: Verify the container runtime contract
