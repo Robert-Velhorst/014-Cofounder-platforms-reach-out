@@ -1,4 +1,4 @@
-FROM node:26.11.1-bookworm-slim AS build
+FROM node:26.12.0-bookworm-slim AS build
 WORKDIR /app
 RUN npm install --global pnpm@12.13.0
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -10,7 +10,7 @@ RUN pnpm --dir apps/cofounder-discovery check \
  && pnpm --dir apps/cofounder-discovery build \
  && pnpm --filter cofounder-discovery-platform deploy --prod --legacy /prod/app
 
-FROM node:26.11.1-bookworm-slim AS runtime
+FROM node:26.12.0-bookworm-slim AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /prod/app/package.json ./package.json

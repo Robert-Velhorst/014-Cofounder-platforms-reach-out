@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 20
     services:
       mysql:
-        image: mysql:9.7.2
+        image: mysql:9.7.2@sha256:c7cb87a9822f499375287930cbff71d6d3b201e346b45108b1115b435ee2df13
         env:
           MYSQL_DATABASE: cofounder_test
           MYSQL_USER: cofounder
@@ -40,7 +40,7 @@ jobs:
           version: 12.13.0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 26.11.1
+          node-version: 26.12.0
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
