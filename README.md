@@ -27,7 +27,7 @@ Software developers can use this as a production-oriented full-stack codebase:
 
 - React 19 and Vite frontend;
 - Express 5 and tRPC backend;
-- MySQL 26.7 persistence through Drizzle ORM and migrations;
+- MySQL 9.7.2 LTS persistence through Drizzle ORM and migrations;
 - local scrypt password authentication with signed HTTP-only cookies;
 - owner-scoped data access, idempotency records, audit events, and state-machine guarded outreach transitions;
 - Docker Compose runtime for Windows/local operation;
@@ -167,8 +167,8 @@ Backend:
 
 Persistence:
 
-- MySQL 26.7.0;
-- MySQL 8.4 data must be migrated through MySQL 9.7 LTS before 26.7; follow [the staged upgrade guide](docs/MYSQL_8_4_TO_26_7_MIGRATION.md);
+- MySQL 9.7.2 LTS;
+- Before upgrading an existing MySQL 8.4 data set, follow [the upgrade guide](docs/MYSQL_8_4_TO_9_7_2_MIGRATION.md);
 - Drizzle migrations `0000` through `0021`;
 - core tables for users, profiles, prospects, matches, campaigns, outreach records, audit events, idempotency records, messages, conversations, saved searches, timeline events, pipeline stages, tasks, notes, guardrails, platform credentials, and automation jobs.
 
