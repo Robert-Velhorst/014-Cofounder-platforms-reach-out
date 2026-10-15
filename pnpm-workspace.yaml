@@ -2,11 +2,8 @@ packages:
   - apps/*
 
 allowBuilds:
-  esbuild: set this to true or false
-
-onlyBuiltDependencies:
-  - esbuild
-  - "@tailwindcss/oxide"
+  esbuild: true
+  "@tailwindcss/oxide": true
 
 overrides:
   tailwindcss>nanoid: 3.3.8

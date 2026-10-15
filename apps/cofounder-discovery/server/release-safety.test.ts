@@ -4,7 +4,6 @@ import { hashPassword, validatePassword, verifyPassword } from "./auth-password"
 import { parseProspectCsv, prospectsToCsv } from "./prospect-csv";
 import { assertTransition, canTransition, createTemplateMessage } from "./outreach-state";
 import { consumeRateLimit, resetRateLimitsForTests } from "./rate-limit";
-import { getConfig } from "./config";
 import { permitsTrpcUrl } from "./route-policy";
 
 describe("release safety primitives", () => {
