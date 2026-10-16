@@ -27,7 +27,7 @@ Software developers can use this as a production-oriented full-stack codebase:
 
 - React 19 and Vite frontend;
 - Express 5 and tRPC backend;
-- MySQL 8.4 persistence through Drizzle ORM and migrations;
+- MySQL 9.7.2 LTS persistence through Drizzle ORM and migrations;
 - local scrypt password authentication with signed HTTP-only cookies;
 - owner-scoped data access, idempotency records, audit events, and state-machine guarded outreach transitions;
 - Docker Compose runtime for Windows/local operation;
@@ -149,8 +149,8 @@ The current application is a single workspace package under `apps/cofounder-disc
 
 Frontend:
 
-- React 19;
-- Vite 7;
+- React 19.3;
+- Vite 8.3;
 - Wouter routing;
 - TanStack Query plus tRPC client;
 - Radix UI primitives and local UI components;
@@ -158,7 +158,7 @@ Frontend:
 
 Backend:
 
-- Node.js 22 runtime target;
+- Node.js 26.12.0 runtime target;
 - Express 5 server;
 - tRPC API routers;
 - Drizzle ORM with MySQL;
@@ -167,7 +167,8 @@ Backend:
 
 Persistence:
 
-- MySQL 8.4;
+- MySQL 9.7.2 LTS;
+- Before upgrading an existing MySQL 8.4 data set, follow [the upgrade guide](docs/MYSQL_8_4_TO_9_7_2_MIGRATION.md);
 - Drizzle migrations `0000` through `0021`;
 - core tables for users, profiles, prospects, matches, campaigns, outreach records, audit events, idempotency records, messages, conversations, saved searches, timeline events, pipeline stages, tasks, notes, guardrails, platform credentials, and automation jobs.
 
@@ -218,12 +219,12 @@ That removes the local MySQL volume and deletes the app data stored in it.
 
 ## Developer Setup
 
-Use the pinned package manager version. On Windows, `npx.cmd pnpm@10.4.1 ...` is the most reliable form.
+Use the pinned pnpm 12.13.0 package manager. On Windows, invoke the pinned release with `npx.cmd`.
 
 Install dependencies:
 
 ```powershell
-npx.cmd pnpm@10.4.1 install --frozen-lockfile
+npx.cmd pnpm@12.13.0 install --frozen-lockfile
 ```
 
 Copy the environment file:
@@ -243,22 +244,22 @@ CREDENTIAL_ENCRYPTION_SECRET=<32+ random characters>
 Run the development server:
 
 ```powershell
-npx.cmd pnpm@10.4.1 dev
+npx.cmd pnpm@12.13.0 dev
 ```
 
 Run common checks from the repository root:
 
 ```powershell
-npx.cmd pnpm@10.4.1 check
-npx.cmd pnpm@10.4.1 test
-npx.cmd pnpm@10.4.1 build
+npx.cmd pnpm@12.13.0 check
+npx.cmd pnpm@12.13.0 test
+npx.cmd pnpm@12.13.0 build
 ```
 
 Database-backed tests require a real MySQL database and `DATABASE_URL`:
 
 ```powershell
 $env:DATABASE_URL = "mysql://cofounder:cofounder-local-only@127.0.0.1:3317/cofounder"
-npx.cmd pnpm@10.4.1 test:integration
+npx.cmd pnpm@12.13.0 test:integration
 ```
 
 ## Workspace Scripts
@@ -361,7 +362,7 @@ Backups are written under the repository `backups` directory. For real operation
 
 GitHub Actions defines two release gates:
 
-- `verify` - installs with pnpm 10.4.1, runs TypeScript, unit tests, migrations, integration tests, production build, and production dependency audit.
+- `verify` - installs with pnpm 12.13.0, runs TypeScript, unit tests, migrations, integration tests, production build, and production dependency audit.
 - `container-smoke` - builds the production Docker image, starts Docker Compose, waits for MySQL and app readiness, verifies `/api/ready`, verifies `/api/health`, confirms automation and legacy routes are disabled, confirms the HAI feed is disabled by default, prints diagnostics, and tears down the stack.
 
 Latest documented verification evidence is in:
@@ -420,7 +421,7 @@ Database-backed tests fail with `Database not available`:
 
 pnpm behaves differently on Windows:
 
-- Use the pinned version explicitly: `npx.cmd pnpm@10.4.1 ...`.
+- Use the pinned version explicitly: `npx.cmd pnpm@12.13.0 ...`.
 
 HAI feed returns `503`:
 

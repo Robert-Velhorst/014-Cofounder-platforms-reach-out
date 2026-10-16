@@ -4,7 +4,7 @@
   "private": true,
   "description": "Production-safe co-founder discovery and assisted outreach workspace",
   "license": "MIT",
-  "packageManager": "pnpm@10.4.1",
+  "packageManager": "pnpm@12.13.0",
   "scripts": {
     "dev": "pnpm --dir apps/cofounder-discovery dev",
     "build": "pnpm --dir apps/cofounder-discovery build",
@@ -16,10 +16,5 @@
     "db:migrate": "pnpm --dir apps/cofounder-discovery db:migrate",
     "doctor": "pnpm --dir apps/cofounder-discovery doctor",
     "verify": "pnpm --dir apps/cofounder-discovery verify"
-  },
-  "pnpm": {
-    "overrides": {
-      "tailwindcss>nanoid": "3.3.8"
-    }
   }
 }
