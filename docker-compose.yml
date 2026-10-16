@@ -1,6 +1,6 @@
 services:
   db:
-    image: mysql:9.7.2@sha256:c7cb87a9822f499375287930cbff71d6d3b201e346b45108b1115b435ee2df13
+    image: container-registry.oracle.com/mysql/community-server:9.7.3@sha256:bf955135c21e2c1c153417407fbbbb8efa786f487781b1fb6baaf7aba17d4340
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: cofounder
