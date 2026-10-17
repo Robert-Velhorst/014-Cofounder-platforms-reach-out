@@ -15,10 +15,10 @@ runnable products do not overwrite one another.
 
 1. Copy `.env.example` to `.env` and set `DATABASE_URL` and
    `CREDENTIAL_ENCRYPTION_SECRET`.
-2. Install dependencies with `npx.cmd pnpm@10.4.1 install --frozen-lockfile`.
-3. Run `npx.cmd pnpm@10.4.1 dev`.
+2. Install dependencies with `npx.cmd pnpm@12.13.0 install --frozen-lockfile`.
+3. Run `npx.cmd pnpm@12.13.0 dev`.
 
-`npx.cmd pnpm@10.4.1 check` performs the TypeScript check. The database-backed
+`npx.cmd pnpm@12.13.0 check` performs the TypeScript check. The database-backed
 tests require an isolated MySQL database supplied through `DATABASE_URL`.
 
 ## Safety boundary
