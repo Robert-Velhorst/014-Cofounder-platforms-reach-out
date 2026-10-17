@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "description": "Production-safe co-founder discovery and assisted outreach workspace",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "packageManager": "pnpm@12.13.0",
   "scripts": {
     "dev": "pnpm --dir apps/cofounder-discovery dev",
