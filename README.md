@@ -369,7 +369,7 @@ Use Node 22 and pinned pnpm 10.4.1. Docker is needed for isolated database and
 operational checks. On Windows, `npx.cmd` avoids blocked PowerShell shims:
 
 ```powershell
-npx.cmd pnpm@12.13.0 install --frozen-lockfile
+npx.cmd pnpm@12.14.0 install --frozen-lockfile
 ```
 
 Create `apps/cofounder-discovery/.env` from `.env.example` only if no configuration
