@@ -85,7 +85,11 @@ describe("SDK live joined account/session read", () => {
     );
     expect(driver.query).toHaveBeenCalledTimes(40);
     expect(compile).toHaveBeenCalledTimes(1);
-    for (const [n, [query, params]] of driver.query.mock.calls.entries()) {
+    expect(new Set(driver.query.mock.calls.map(([, params]) => params[0])).size).toBe(40);
+    for (const [query, params] of driver.query.mock.calls) {
+      // Concurrent JWT verification may finish out of request order. Bind each digest to its own owner.
+      const n = Number(String(params[0]).slice("synthetic:".length));
+      expect(Number.isInteger(n) && n >= 0 && n < 40).toBe(true);
       expect(query.sql).toMatch(/inner join `account_sessions`/);
       expect(query.sql).toMatch(
         /`users`\.`id` = `account_sessions`\.`user_id`/
