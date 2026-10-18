@@ -296,7 +296,7 @@ The supported app is `apps/cofounder-discovery`, not the historical root demo.
 | ---------- | ------------------------------------------------------------------------------------------------------- |
 | Browser    | React 19, TypeScript, Vite, Wouter, tRPC/React Query                                                    |
 | Server     | Node.js, Express 5, tRPC and validated inputs                                                           |
-| Database   | MySQL 8.4, Drizzle schema and versioned migrations                                                      |
+| Database   | MySQL (Compose pins 26.7.0), Drizzle schema and versioned migrations                                                      |
 | Accounts   | Scrypt passwords, signed HTTP-only cookies and durable sessions                                         |
 | Workspace  | Owner boundaries, account locks, reviewed revisions, atomic audits and retry records                    |
 | Runtime    | Multi-stage Docker image; nonroot, read-only application filesystem                                     |
@@ -365,7 +365,7 @@ failed drain is not a clean restart. See [operator guidance](docs/OPERATOR_RUNBO
 
 ## Developer setup
 
-Use Node 22 and pinned pnpm 10.4.1. Docker is needed for isolated database and
+Use Node 26.12.0 and pinned pnpm 12.14.0. Docker is needed for isolated database and
 operational checks. On Windows, `npx.cmd` avoids blocked PowerShell shims:
 
 ```powershell
@@ -393,8 +393,8 @@ disposable. Use the separate integration stack for tests.
 Apply migrations to the development database, then start:
 
 ```powershell
-npx.cmd pnpm@10.4.1 db:migrate
-npx.cmd pnpm@10.4.1 dev
+npx.cmd pnpm@12.14.0 db:migrate
+npx.cmd pnpm@12.14.0 dev
 ```
 
 Development defaults use `http://localhost:3000`; align `PUBLIC_ORIGIN` with the
@@ -434,7 +434,7 @@ See [production secrets, ingress and migration guidance](docs/PRODUCTION_CONTAIN
 
 Run from the repo root using the pinned package manager:
 The table abbreviates the invocation as `pnpm`; on Windows with blocked shims,
-replace that prefix with `npx.cmd pnpm@10.4.1` as in the setup commands.
+replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
 
 | Command                           | Scope                                                                                                       |
 | --------------------------------- | ----------------------------------------------------------------------------------------------------------- |

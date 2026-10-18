@@ -1,5 +1,5 @@
 import { COOKIE_NAME } from "../shared/const";
-import { parse } from "cookie";
+import { parseCookie } from "cookie";
 import { TRPCError } from "@trpc/server";
 import { sdk } from "./_core/sdk";
 import type { TrpcContext } from "./_core/context";
@@ -14,7 +14,7 @@ export async function adminActor(ctx: TrpcContext): Promise<AdminActor> {
       message: "Verified administrator account required.",
     });
   const session = await sdk.verifySession(
-    parse(ctx.req.headers.cookie ?? "")[COOKIE_NAME]
+    parseCookie(ctx.req.headers.cookie ?? "")[COOKIE_NAME]
   );
   if (!session || session.openId !== ctx.user.openId)
     throw new TRPCError({
