@@ -20,8 +20,6 @@ import {
   ArrowLeft,
   ExternalLink,
   Award,
-  Github,
-  Linkedin,
   Building2,
   ChevronDown,
   ChevronUp,

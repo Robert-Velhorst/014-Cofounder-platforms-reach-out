@@ -1,6 +1,6 @@
 import { COOKIE_NAME } from "@shared/const";
 import { ForbiddenError } from "@shared/_core/errors";
-import { parse as parseCookieHeader } from "cookie";
+import * as cookie from "cookie";
 import type { Request } from "express";
 import { SignJWT, jwtVerify } from "jose";
 import type { User } from "../../drizzle/schema";
@@ -17,6 +17,12 @@ import { TRPCError } from "@trpc/server";
 const SESSION_ISSUER = "cofounder-discovery";
 const SESSION_AUDIENCE = "cofounder-discovery-web";
 export const SESSION_DURATION_MS = 1000 * 60 * 60 * 12;
+
+// cookie@2 provides parseCookie at runtime; the available DefinitelyTyped
+// declaration still describes the older API, so keep the boundary typed here.
+const parseCookieHeader = (cookie as unknown as {
+  parseCookie: (header: string) => Record<string, string>;
+}).parseCookie;
 
 export type SessionPayload = {
   openId: string;

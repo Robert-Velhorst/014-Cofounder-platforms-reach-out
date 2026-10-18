@@ -10,8 +10,7 @@ Local checks have passed, but live hosting, email, privacy/operator decisions an
 complete release acceptance remain unfinished. This describes the current working
 tree, not a verified GitHub main deployment. Initial budget planning is
 **EUR 100/month**; no purchase or deployment is authorized by that plan.
-The [October 2 live GitHub check](docs/GITHUB_REPOSITORY_STATE_2026-10-02.md)
-found no open PRs and confirmed that recent local code/documentation is not on main.
+The [October 2 GitHub snapshot](docs/GITHUB_REPOSITORY_STATE_2026-10-02.md) records the historical repository state; current branch and PR status must be checked live.
 Latest local increment uses [one live joined account/session read](docs/AUTH_JOINED_READ_2026-10-03.md)
 per authentication instead of two, preserving owner, revocation, expiry and
 deletion-fence checks. Actual SDK regression proves 40 reads instead of 80 for
@@ -370,7 +369,7 @@ Use Node 22 and pinned pnpm 10.4.1. Docker is needed for isolated database and
 operational checks. On Windows, `npx.cmd` avoids blocked PowerShell shims:
 
 ```powershell
-npx.cmd pnpm@10.4.1 install --frozen-lockfile
+npx.cmd pnpm@12.13.0 install --frozen-lockfile
 ```
 
 Create `apps/cofounder-discovery/.env` from `.env.example` only if no configuration

@@ -126,3 +126,11 @@ automatic rotation, a complete log scrubber or an image-wide secret scanner.
 
 Report suspected vulnerabilities privately to the repository owner; do not include
 secrets or personal prospect data in an issue.
+
+## Supported versions
+
+Security reports for the current default branch and latest published release are in scope. Older versions may be affected and are not guaranteed to receive fixes.
+
+## Response and disclosure
+
+Reports are reviewed on a best-effort basis; no response or fix-time guarantee is provided. Coordinate public disclosure with the maintainers so users have a reasonable opportunity to receive a fix.
