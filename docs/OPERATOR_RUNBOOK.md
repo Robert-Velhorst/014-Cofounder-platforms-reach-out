@@ -13,20 +13,12 @@ Run ./scripts/backup-database.ps1. The script creates a timestamped SQL dump und
 the repository backups directory. Copy verified backups to separately protected
 storage. Restore into a separate test database first.
 
-## ngrok
+## Hetzner production deployment
 
-Install/configure ngrok v3, set a unique JWT_SECRET, then run
-./scripts/start-ngrok.ps1. Optionally pass -Url https://name.ngrok.app.
-The launcher:
-
-1. requires local readiness;
-2. starts ngrok hidden;
-3. obtains the HTTPS endpoint from the loopback Agent API;
-4. restarts the app with the exact public origin, one trusted proxy, and registration
-   disabled;
-5. returns success only after public health verification.
-
-On failure it kills the tunnel and restores local-only mode.
+Hetzner is the production deployment target. The repository's root Compose stack is
+local-only; follow the infrastructure and cutover requirements in
+`DEPLOYMENT_TARGET.md` before exposing a hosted service. Do not use a public tunnel
+for production access.
 
 ## HAI connector
 
@@ -38,7 +30,7 @@ Register this Generic JSON Feed in HAI:
 
 - Same Windows host URL:
   http://host.docker.internal:3014/api/integrations/hai/feed
-- Approved ngrok URL:
+- Hetzner HTTPS URL:
   https://your-domain/api/integrations/hai/feed
 - Authorization: Bearer followed by HAI_CONNECTOR_TOKEN
 - Provider: generic_json_feed

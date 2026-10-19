@@ -2,7 +2,8 @@
 
 - Generate unique 32+ character values for JWT_SECRET,
   CREDENTIAL_ENCRYPTION_SECRET, and HAI_CONNECTOR_TOKEN.
-- Keep MySQL and the app loopback-bound. Only ngrok should expose an endpoint.
+- Keep local MySQL and app ports loopback-bound. Hosted endpoints must use the
+  configured trusted reverse proxy and exact HTTPS origin.
 - Hosted mode disables registration, validates request origins, trusts exactly one
   proxy hop, and requires HTTPS PUBLIC_ORIGIN.
 - Keep ENABLE_PLATFORM_AUTOMATION and ENABLE_UNSAFE_LEGACY_ROUTES false.

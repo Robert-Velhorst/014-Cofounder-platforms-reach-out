@@ -20,8 +20,8 @@
   console errors, and a fresh session.
 - HAI returns 503 without configuration, 401 with an invalid bearer token, and an
   owner-scoped Generic JSON Feed with a valid token.
-- ngrok is accepted only after both local readiness and public HTTPS health succeed.
-- Hosted browser acceptance also requires sign-in over HTTPS, a Secure/HttpOnly
+- Hosted browser acceptance uses the configured deployment domain and requires
+  public health, sign-in over HTTPS, a Secure/HttpOnly
   session cookie, no console or page errors, and no horizontal overflow.
 
 The latest execution evidence is in FINAL_VERIFICATION_REPORT.md.

@@ -81,7 +81,7 @@ Unsafe imported legacy routes and browser/platform automation stay disabled unle
 |       +-- scripts/             App-level migration and doctor helpers
 |       +-- package.json         App scripts and dependencies
 +-- docs/                        Operational, security, audit, acceptance, and verification docs
-+-- scripts/                     Windows launch, ngrok launch, and database backup scripts
++-- scripts/                     Windows launch and database backup scripts
 +-- docker-compose.yml           Local production-like app plus MySQL stack
 +-- Dockerfile                   Production image for apps/cofounder-discovery
 +-- package.json                 Workspace scripts delegating to the supported app
@@ -129,7 +129,6 @@ Operations and analytics:
 - audit event feed;
 - health and readiness endpoints;
 - backup script for MySQL dumps;
-- ngrok launcher for controlled HTTPS exposure;
 - read-only Generic JSON Feed for HAI.
 
 Security and safety:
@@ -322,7 +321,7 @@ Local feed URL for an HAI process on the same Windows host:
 http://host.docker.internal:3014/api/integrations/hai/feed
 ```
 
-Hosted/ngrok feed URL:
+Hetzner-hosted feed URL:
 
 ```text
 https://your-domain.example/api/integrations/hai/feed
@@ -332,21 +331,9 @@ HAI registration, HTTP-feed enablement, and host allowlisting are external opera
 
 The OpenAPI description is in `docs/hai-connector.openapi.yaml`.
 
-## ngrok And Hosted Testing
+## Hetzner Deployment
 
-Use ngrok only after setting a unique `JWT_SECRET` and reviewing the hosted-mode security settings.
-
-```powershell
-.\scripts\start-ngrok.ps1
-```
-
-Optional reserved URL:
-
-```powershell
-.\scripts\start-ngrok.ps1 -Url https://your-domain.ngrok.app
-```
-
-The script verifies local readiness, starts ngrok, discovers the HTTPS URL from the local ngrok agent, restarts the app with the exact public origin, enables the hosted proxy settings, verifies public health, and cleans up on failure.
+Hetzner is the production deployment target. The root Docker Compose file is for local development and binds services to loopback. Use the Hetzner deployment guide and complete its infrastructure, secrets, DNS/TLS, database migration, backup, monitoring, and rollback requirements before production cutover. This repository does not provide a public tunnel launcher.
 
 ## Backups
 
@@ -383,7 +370,7 @@ At the time of the final implementation report, the verified evidence included:
 - migrations `0020` and `0021` applied to MySQL 8.4;
 - Windows production bundle acceptance;
 - desktop and mobile browser checks;
-- dedicated ngrok HTTPS acceptance;
+- hosted HTTPS acceptance against the configured deployment domain;
 - HAI feed contract and cursor replay checks;
 - no live external provider delivery attempted or claimed.
 
@@ -394,7 +381,7 @@ Read `docs/SECURITY.md` before hosting or connecting external systems.
 The short version:
 
 - use unique 32+ character secrets;
-- keep MySQL and the app loopback-bound unless using the controlled ngrok path;
+- keep local MySQL and app ports loopback-bound; hosted services must sit behind the configured trusted reverse proxy;
 - disable registration in hosted mode unless intentionally onboarding a user;
 - leave `ENABLE_PLATFORM_AUTOMATION=false`;
 - leave `ENABLE_UNSAFE_LEGACY_ROUTES=false`;
@@ -440,7 +427,7 @@ Messages are not being sent automatically:
 | File                                 | Use                                                 |
 | ------------------------------------ | --------------------------------------------------- |
 | `apps/cofounder-discovery/README.md` | App-specific developer notes                        |
-| `docs/OPERATOR_RUNBOOK.md`           | Windows, backup, ngrok, HAI, and incident operation |
+| `docs/OPERATOR_RUNBOOK.md`           | Windows, backup, HAI, and incident operation       |
 | `docs/SECURITY.md`                   | Hosting, secrets, and safety boundary               |
 | `docs/CRITICAL_PATH.md`              | Supported end-to-end product workflow               |
 | `docs/FINAL_VERIFICATION_REPORT.md`  | Final verification results                          |
