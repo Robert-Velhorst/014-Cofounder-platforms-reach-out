@@ -14,7 +14,7 @@ that its handler is authorized. Counts include duplicate references to an operat
 query/mutation kind, procedure boundary, aliases, source line/handler digest,
 policy decision, client reference locations and all 154 inspected source hashes,
 including the procedure-boundary and HTTP-wrapper source files.
-Input digest: `50e5058d2dcdd8432cdf3b4dd4a6ccde96d56d7e3af3c2ea1c8dcb4f1f20e523`.
+Input digest: `3a01f6cb36391385554c3117896672f5b8ff60c188c3b34c1f4aa58781768099`.
 Latest refresh: candidate-list Dutch/English interface labels and content-language
 attributes, plus one imported copy module. Compared the prior snapshot: all API
 handler digests, boundaries, policy decisions, totals and client references remain

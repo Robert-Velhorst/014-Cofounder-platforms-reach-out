@@ -6,7 +6,7 @@ The [October 20 source inventory](UI_ACTION_INVENTORY_2026-10-20.json) records
 230 action-bearing JSX elements, 206 event attributes, 26 navigation elements
 and five action elements with spread attributes across 151 files in the App
 import/re-export/literal lazy-import closure. Input digest:
-`ec39ef28fe9c2709544c0cb7dd5179454fc6ddd90559ba4ad33ceab1242371ca`.
+`233a332c2686b500b7f3105dfec8b20baab467e02cff1117118e1d16924de4a4`.
 Latest inventory refresh: source hashes and action-expression digests now
 bind to the 2026-10-20 consolidation source. API routes, UI action classifications,
 and recorded counts match the prior receipt. This is structural evidence only,

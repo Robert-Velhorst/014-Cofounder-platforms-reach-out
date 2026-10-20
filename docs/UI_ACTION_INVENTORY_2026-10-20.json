@@ -550,39 +550,39 @@
     },
     {
       "path": "apps/cofounder-discovery/drizzle/schema.ts",
-      "sha256": "05b4a490c9af6a388285a5d5c9ec48c5b71fd607ca721733095e5f651e46bf22"
+      "sha256": "da71413735b19845c6371093057897f217ffb599d520ab01c290ddcefdc9b7e8"
     },
     {
       "path": "apps/cofounder-discovery/server/_core/context.ts",
-      "sha256": "3c566109caea3eec44a6d3bb1d9481dd8390ddd33a1a7de7844c79d30e5d7253"
+      "sha256": "19a02632b55d4d8a5df344ea51b0e1b85ccc7d95c9cfd644750da52655710843"
     },
     {
       "path": "apps/cofounder-discovery/server/_core/cookies.ts",
-      "sha256": "d7b2252b37e6b35cd1bf6377926a654494464aa445a9b96f267794f85a2cce1c"
+      "sha256": "90233296082db19f04154d3d3254a08040de39903d2b0d03a9dcec598ffa6298"
     },
     {
       "path": "apps/cofounder-discovery/server/_core/dataApi.ts",
-      "sha256": "1c3a1c7b6b92cdde0e03a1e2a1cac5e476b70aeb7e0f4b3673745b5f64bf4b99"
+      "sha256": "427764c9150b659f8f5710e9dd298d1d1c1ae758a1484c3e138b6722abd2dfd8"
     },
     {
       "path": "apps/cofounder-discovery/server/_core/env.ts",
-      "sha256": "0c3e36a285dec6c754e29888269d206aca5677d5a72a0af9e339e965d7d566c1"
+      "sha256": "5ae082488b04617efb684942b6d28d111b6c78130149c045837b621b2217dd65"
     },
     {
       "path": "apps/cofounder-discovery/server/_core/llm.ts",
-      "sha256": "fe541126b8d4fb09432637d9a2d604dd666a9dee7bddbb52b469eec15deca99b"
+      "sha256": "0bfd6fbf3cfae158850a2a5425401316b7c1799c0afe0f1f69f5dc2013802d44"
     },
     {
       "path": "apps/cofounder-discovery/server/_core/map.ts",
-      "sha256": "ae3e508020077680fc2f41e1c3f29fc3650aedcd9541670d72bd8931606d36ce"
+      "sha256": "87bb6993486f869677107f2e11c31cae5698730d5e0a5787094c761ac2420bd8"
     },
     {
       "path": "apps/cofounder-discovery/server/_core/notification.ts",
-      "sha256": "e021744581cb3296cec5cff76870d2c1b8dc67a21cd25c04e4b30cd239ac9c0b"
+      "sha256": "fdec387683936013e527a5faf1e4aaf6a752ee1d53919fd848bf0935abebbfea"
     },
     {
       "path": "apps/cofounder-discovery/server/_core/sdk.ts",
-      "sha256": "69ef2035a02ed6fbb59de4b01e10074dea5c9aa4d35d1a72cc5e6cdd07a94c7c"
+      "sha256": "1a0203e386711a3d6c2f2223db33debf7c9471f4e64e76c57f382f537fa926a0"
     },
     {
       "path": "apps/cofounder-discovery/server/_core/systemRouter.ts",
@@ -594,39 +594,39 @@
     },
     {
       "path": "apps/cofounder-discovery/server/account-deletion-request.ts",
-      "sha256": "9f691542af76557e4708b29b31e2d63a857b55f2049cfd996c9e2046455facfb"
+      "sha256": "e0ad4231b5c2907895a502aa6649121a2f3fa4caacb641cb11f02c0e646b9ab8"
     },
     {
       "path": "apps/cofounder-discovery/server/account-export-inventory.ts",
-      "sha256": "d0847a767a7d852a4a70e6ff13748d89c30a3a63ab33a7332eef8c2bff456785"
+      "sha256": "ebffbca8de1e563784e20c243082a519160aa1a23aa06d1886238bf7a799bb66"
     },
     {
       "path": "apps/cofounder-discovery/server/account-export.ts",
-      "sha256": "cbc6ee24b18f64cea445d89207b66137ae4cdbceb312fbe4bc775dc1ec6f166a"
+      "sha256": "a92530eaa74f3627e005bffa188b3a3373cce787bb5fd8e53ad0fb35da8587f2"
     },
     {
       "path": "apps/cofounder-discovery/server/account-mail-budget.ts",
-      "sha256": "9eb955da99868376349f1d89618e35e2c89b27e356110ed9af87c7751859b88d"
+      "sha256": "78a511c6a1e99aa63ca7672749bded4ba5dcdb2a5e6972e3b64791f9059e188c"
     },
     {
       "path": "apps/cofounder-discovery/server/account-mail-queue.ts",
-      "sha256": "5c7a5b952717226d7155bd7efb9f149459f5c4c9669482d7c5d8aed8eed8da0e"
+      "sha256": "3a343c9b9a0d61b69b6eea6efb123d2a9105ac7eb9a10e513d8010f8047634cf"
     },
     {
       "path": "apps/cofounder-discovery/server/account-mail.ts",
-      "sha256": "6c695039e53e765c70707104d2e7a8213de2985fb66aa4e47f68a1f5d0d70686"
+      "sha256": "2ae872e6949281bb4771fc8a7129766d208b8c964ac2a713d0e0cadd297c4f25"
     },
     {
       "path": "apps/cofounder-discovery/server/account-sessions.ts",
-      "sha256": "d44b287ce8b7db9dbc0ead9a6d872ff420d8c0ed4dda5f819a80f442a0b32a62"
+      "sha256": "d2a0c07cd67975d5b1debc5b62a38e037c5df2ad407af0bd6b5e57bd5ef1ecf2"
     },
     {
       "path": "apps/cofounder-discovery/server/account-work-fence.ts",
-      "sha256": "2d32a8bf91e6aa931b2d5a52045aefe5336510dce81ec5018fdc03c3435ac624"
+      "sha256": "00bf5499839cbf8f4564e61a1457093c9358c85e8a195f872a963d6000ed2424"
     },
     {
       "path": "apps/cofounder-discovery/server/admin-actor.ts",
-      "sha256": "44c6931da1b96ee564f2e8b1898fa4e573141f019c051598d2d2ffe2e1ccd3fa"
+      "sha256": "ceecb6c9358ebae0e7150bff06c8f7cf97c331fe775509700850c514efa512da"
     },
     {
       "path": "apps/cofounder-discovery/server/admin-mfa-router.ts",
@@ -634,11 +634,11 @@
     },
     {
       "path": "apps/cofounder-discovery/server/admin-mfa.ts",
-      "sha256": "ec2dbcabc1acd407f02a212e0937c2e60e6f8a32303dadf9af04725e0989d770"
+      "sha256": "ab3347c0bf0f498db52d1e2b8a8d28d05c6283496171a11d24e4223dad0aa351"
     },
     {
       "path": "apps/cofounder-discovery/server/admin-webauthn.ts",
-      "sha256": "ca4d9e6ecd316496a50304986e62dd75554a235be2a7df15850685972f7ce3f5"
+      "sha256": "7f30051de59ba689f7586b3018d86621951c31e40212169552bc115de919f0bd"
     },
     {
       "path": "apps/cofounder-discovery/server/ai-monitoring-router.ts",
@@ -646,11 +646,11 @@
     },
     {
       "path": "apps/cofounder-discovery/server/auth-attempt-admission.ts",
-      "sha256": "c67cdb074d24302ee1af5876b977e2d8fc01b26761dfed1a303ea369b5995290"
+      "sha256": "881a70610a1c5d5731c7cc6ec1eeecabbcfb67f92c3c12371bdae7418fc7b7f9"
     },
     {
       "path": "apps/cofounder-discovery/server/auth-password.ts",
-      "sha256": "05a28ebdc34ad6bf47d8a4821d5e9754facf2a83a7e8f3fa97a57094fd05be93"
+      "sha256": "24221912bc88f80e76b8b8bd8d8433a1b97c3d05dcb455d4cca88c57e1fa2bea"
     },
     {
       "path": "apps/cofounder-discovery/server/automation-router.ts",
@@ -658,55 +658,55 @@
     },
     {
       "path": "apps/cofounder-discovery/server/browser-automation.ts",
-      "sha256": "5ff99e74fe11b00040bb95f100387dc0c31ee643390c5fe1c4a675cd274bd505"
+      "sha256": "93e268eaebaf26c00891249198d053f0ead172fbe0619c56a4d0662997ff1d00"
     },
     {
       "path": "apps/cofounder-discovery/server/campaign-engine.ts",
-      "sha256": "166e80aac67996e0ffaf1d882e85423226b88f842f816c58dd83209eb725101b"
+      "sha256": "3a8b7c515e9024d255b563f7884840c32751c9836cd3cf2a3811fb8e074e197c"
     },
     {
       "path": "apps/cofounder-discovery/server/campaign-scheduler.ts",
-      "sha256": "44ee6d5c1c5d6791bdfe20b1b4c7e8626e525482bbbe2aeb182275bab9d480f2"
+      "sha256": "896e73ef9e81838852f0a2f3317dc3ea5a2bfd81bf82e8662ded725be5b05181"
     },
     {
       "path": "apps/cofounder-discovery/server/candidate-export.ts",
-      "sha256": "c849a2446f07c22ec96886cd4ba520e63ac5080b853a235a49f092f43d6afa98"
+      "sha256": "11f17fff1d513133a615e2d86058e633ba6446268d80a3c36b9e8d893d1541cd"
     },
     {
       "path": "apps/cofounder-discovery/server/candidate-intake.ts",
-      "sha256": "2bfadd645ad8d0c93188b8314b9f87d76b0c31f77256e544f8c661f2a8846073"
+      "sha256": "79af4de76c7c13531d27743a7152e92bd47b83db5d5974dfde50a7bd0a8a7162"
     },
     {
       "path": "apps/cofounder-discovery/server/candidate-mutations.ts",
-      "sha256": "57576be155fbbfd48df7c21e59a8540118f2c3af36d6d5319dabcc9ed93e29f5"
+      "sha256": "433049bc01812a3c25dcefab24c3327688deb34105b58512355ae1dd625d647c"
     },
     {
       "path": "apps/cofounder-discovery/server/candidate-query.ts",
-      "sha256": "c7cca6529f4945a4a1d35042d94524bc3c4d04d48d8264589a37ddc653fbea1b"
+      "sha256": "84e4bddfbd6c49fc0f057f409e670cd43c2fab2e733eb91aa66843477b33fadc"
     },
     {
       "path": "apps/cofounder-discovery/server/candidate-review.ts",
-      "sha256": "84058f7a3af5b4ddd52011ff0773749e6037558485b4170ac7f301a6281fa8b0"
+      "sha256": "2d7151f84a28d22110d5dc585e827f8520cd0659896a77a867babee62e82ebb8"
     },
     {
       "path": "apps/cofounder-discovery/server/candidate-workspace.ts",
-      "sha256": "b91c4c1f3c19f3666edb29e3f00c0e914a5ad3c3239eda85013b00b2f093d341"
+      "sha256": "18f7d7ab07d12bb9ef97c19120b7aa1fcddab7340afbd3073e5d0224931bad39"
     },
     {
       "path": "apps/cofounder-discovery/server/capacity.ts",
-      "sha256": "acaddca8d805435b69920aad0d5d06265a5464309376e6c116c39c5f4ae9f2b7"
+      "sha256": "11308f28007aeb3af53e14c7e482d058daec19b68ede6c4b6d61f64d79641635"
     },
     {
       "path": "apps/cofounder-discovery/server/config.ts",
-      "sha256": "cb2981d47e583f2eeef6dfc65f950575dfadb02a07f8828b5bbbb85b161ee8b4"
+      "sha256": "c352e86de2f0bea8374c001a95e69de85637476a40d9049092fddd64c406d89b"
     },
     {
       "path": "apps/cofounder-discovery/server/conversation-quality.ts",
-      "sha256": "a48db38810047d43e7eeaa8740aae5b82882f9c52e417eb4fff53dd28b0d3d70"
+      "sha256": "94983eba2f727420422b0710b803cb0de9f5ee3710a00cdc4193f7924e9f0903"
     },
     {
       "path": "apps/cofounder-discovery/server/conversation-starters.ts",
-      "sha256": "c9e630bf096325e399374ffc5e280ccd9fe3879e79cc7350489882d275919ecb"
+      "sha256": "13f04f0d8c07542fd33774746ef6a8772c668a3ed824e3b8df489c2cf262c1a0"
     },
     {
       "path": "apps/cofounder-discovery/server/critical-path-router.ts",
@@ -714,63 +714,63 @@
     },
     {
       "path": "apps/cofounder-discovery/server/daily-matcher.ts",
-      "sha256": "94d6cc800873d77654ad9206f2dca91c2ca3a2a23c1a238a716f3bf6f7c86f08"
+      "sha256": "9e9c0e37a179668d241ada119773029c4adb9ef08a6e8b2b5f62c5ca7f337a39"
     },
     {
       "path": "apps/cofounder-discovery/server/db.ts",
-      "sha256": "426cdf62c23b0e614ae568b15c55f56694acf06980c0be23dc7afc00acda6c4e"
+      "sha256": "6c39ca7937bb236447eb03d06091fe15339b3ae56335b7dc7b3ab0c73429a134"
     },
     {
       "path": "apps/cofounder-discovery/server/encryption.ts",
-      "sha256": "2f17a21364e5f2147b5e13baae151730c0664b3600b38de0ea394c4a23ebc98d"
+      "sha256": "0bf26b3a2ba5dc47cb461de4010969f959867751231bc398bc47f8874baf7d87"
     },
     {
       "path": "apps/cofounder-discovery/server/enrichment-engine.ts",
-      "sha256": "7dd48d37d08697d11af412a171e8da20ebe85728acb5f7096b969bf96f906e91"
+      "sha256": "17f9401fda0961496229df5d8aff098551b8ba7ecd0be124cffd49a35f288372"
     },
     {
       "path": "apps/cofounder-discovery/server/follow-up-system.ts",
-      "sha256": "4d4ca9de015a7a06e1216a779354c48dee6b4f89d0ea3d0d8200ce4c79d4d113"
+      "sha256": "0ede47185d2d6a41d9f974fd1b2aca03c93626d9d20e32c1192dce2187625e3c"
     },
     {
       "path": "apps/cofounder-discovery/server/login-admission.ts",
-      "sha256": "f361e09cb18c41af99b8d3c315a9a6a3bdeff281d05d2c2e6306c4c50f11e18d"
+      "sha256": "66c928256b3af9e381725d635c3f3412bbd7d696eacf426a22f00afd52237da0"
     },
     {
       "path": "apps/cofounder-discovery/server/match-queue.ts",
-      "sha256": "29055bea49880f2fbd5f9f679b33395daa9e8d3c69b7b1425fb85d3cdf86c72a"
+      "sha256": "3ae7a56ddf83db08f4810bd830856b05d0770de7daefc0cd5c1769a57686fd83"
     },
     {
       "path": "apps/cofounder-discovery/server/matching-engine.ts",
-      "sha256": "37d86d9e54b9f4fcd7a5ade21ea66a3314501b306c500cf6061d6138bb24278f"
+      "sha256": "33c68954d42ee1032c25e4dfb3d749828fd54b7ac404982a29113198e51422be"
     },
     {
       "path": "apps/cofounder-discovery/server/messaging-engine.ts",
-      "sha256": "755625137c289b36aae5bc862807da4163844f051c6a24fcd134ca4302606856"
+      "sha256": "ba8aa6a2c3705530db2fcce4a24c5dea06a29b162cf96e13544682d6fb6a3566"
     },
     {
       "path": "apps/cofounder-discovery/server/metered-billing.ts",
-      "sha256": "c465cdac78a95a3172c85ab2d9d0f65473943db61e46a3c1eb8bdde8a6d2d6a8"
+      "sha256": "5c52689809a0c41b6cf00ae5baff45fbfa9a29f4aeadcc3c8ecb4053ecfd96f0"
     },
     {
       "path": "apps/cofounder-discovery/server/ml-match-scoring.ts",
-      "sha256": "5467511f7aeec2b8a2f62d2f51d27d6beed4e7fbcdd173c072ab00b31d7e8842"
+      "sha256": "fb4f6e1f4ce0575c3414a7743950d5289f776e8a67503870bd8fea3bb45990c7"
     },
     {
       "path": "apps/cofounder-discovery/server/natural-language-search.ts",
-      "sha256": "57c2aab9f87494f1ac788b306d00d6284bdd01ced4549dbd411303fccf23d40f"
+      "sha256": "0acbad47ff1839b4536b71a3f517f82a1797f60f027a2434c02f203534d2c29e"
     },
     {
       "path": "apps/cofounder-discovery/server/outreach-clock.ts",
-      "sha256": "4c644b4cb79e069d32131ceb608ca59e05210b410ca303208a5de3b15c0d3d23"
+      "sha256": "543da5a15c595ba43ad747696ebe11ad59f2c50336781e03dea7f870d9b006c6"
     },
     {
       "path": "apps/cofounder-discovery/server/outreach-conversation.ts",
-      "sha256": "14fb0231e313d14f0e784f14ba2496b114e5a3aefe45b34964bf459a6e3faac1"
+      "sha256": "47e7b7f02b5b24d68b79500c9d6ac2ee3488a2a83ee66bf3e314c6505d3e1494"
     },
     {
       "path": "apps/cofounder-discovery/server/outreach-revision.ts",
-      "sha256": "c94fc386ecb84ae80a29d2789d7c761793dfc0ba9c8920219772e8dde6f0d783"
+      "sha256": "4fe7d99ebdb9192e24cfdea0f4bb24fcb678c5a40f16c3d5532cd47ef311ea92"
     },
     {
       "path": "apps/cofounder-discovery/server/outreach-router.ts",
@@ -778,23 +778,23 @@
     },
     {
       "path": "apps/cofounder-discovery/server/outreach-source-policy.ts",
-      "sha256": "b3d8ea857122728ab19e14f1133ba91f2f5f44dd01b271541e013c00c6f0953e"
+      "sha256": "eabf39f93ea8c9daecd5fd23d399508c61e83b43463ff319e5b50d3bf5cbbc75"
     },
     {
       "path": "apps/cofounder-discovery/server/outreach-state.ts",
-      "sha256": "f7cad0bba9a5b9fd1dfe76d5818bf113a25d7b9ba35f7d9c719b47f2b5944446"
+      "sha256": "1d20f4c8e57c4e256dc002a528958c57d66852ea467f22e7c8b3f183eefcd62d"
     },
     {
       "path": "apps/cofounder-discovery/server/partnership-progress.ts",
-      "sha256": "3038f4581b473162d1ef18616484af36cabfd0631097e89cc2baf632a1e0fd4f"
+      "sha256": "affd9d58f8236d1ddcd1214b3213393b29ac22b8cd2545a52923675b5ac3c6dc"
     },
     {
       "path": "apps/cofounder-discovery/server/password-recovery.ts",
-      "sha256": "7993cc918f1113b8459a8792bc39b33e52acd7828a3de9a2ba86f81c9742df44"
+      "sha256": "a3113540d15c7cb1a57f9022f855fa229cf1bddd54aef8378711cb57339cc13e"
     },
     {
       "path": "apps/cofounder-discovery/server/password-reset-admission.ts",
-      "sha256": "525905576ce539ffe422970658fe47476e305942b9ca6ebcb99e61ce4f330a2e"
+      "sha256": "4869c86b44fb9e34fbe16dea7cad5d32854e6e12c7a50339f3e35775f8085cdc"
     },
     {
       "path": "apps/cofounder-discovery/server/pipeline-router.ts",
@@ -802,15 +802,15 @@
     },
     {
       "path": "apps/cofounder-discovery/server/platform-automation.ts",
-      "sha256": "479c219671f20440cd67510561e05ae6a2c2d066101edc3df51ce3f107e3d726"
+      "sha256": "ce32b5841ac251159236b8aa1811cb7ad53b9a7d22a05de3187fd4ceee7fd8fa"
     },
     {
       "path": "apps/cofounder-discovery/server/platform-catalogue.ts",
-      "sha256": "ebc2034978e8a5c0e502cf4f5ea8c8f0ef400c25194de9751c3da75c5906d950"
+      "sha256": "ddef9d7982f37e21d381d426451774b11c3c814c17cf6760fee08499ab0d3268"
     },
     {
       "path": "apps/cofounder-discovery/server/platform-connections.ts",
-      "sha256": "b14d42d87a9c7d0f6731f45d32951d45d0ad909473be67f33a3b2cb4928492a9"
+      "sha256": "ffbc5067efd2251c689948113a731be3cce961b04f9f025eaf70a7803da66dce"
     },
     {
       "path": "apps/cofounder-discovery/server/platform-credentials-router.ts",
@@ -818,31 +818,31 @@
     },
     {
       "path": "apps/cofounder-discovery/server/platform-scrapers.ts",
-      "sha256": "ed2dedcec6cf153b570aa27e3b3fd23c604c66f9e8bb42c4dec4218409b47e3a"
+      "sha256": "7c676c19cd2c7a9bf053c8d7c91aad1a6f20832e5ca6be01ebbffd2ccc67ce98"
     },
     {
       "path": "apps/cofounder-discovery/server/predictive-timing.ts",
-      "sha256": "b5ad195a528397a0a9a7680295d0a4afbdef74250cd47ccefbeba2f879892606"
+      "sha256": "545923fcf4a25c9d2893bf37ad0a5403c38b888e6bddd595fcd86a10a88470d8"
     },
     {
       "path": "apps/cofounder-discovery/server/preference-learning.ts",
-      "sha256": "60c4ddecffe0247d55f661d9495974abe32c5e5bd0dbf3b82d7e4cc4df83c319"
+      "sha256": "bc51da3e34c57edf7b1ba7725351b1454758763846fac018d53f34ef83c4f85c"
     },
     {
       "path": "apps/cofounder-discovery/server/prospect-csv.ts",
-      "sha256": "868801689a88f904cd7e373eee8524a5af912052d1d20b6a64ad558b791254a4"
+      "sha256": "ccf2a2bd331db63affe1799cbd3ecec9871e81d8d0d790dce30dfd0cef2a8743"
     },
     {
       "path": "apps/cofounder-discovery/server/public-account.ts",
-      "sha256": "e80f1be46a385d7973e165aa8e9756f7af7408e5c2053417391dfd743c2b5aa4"
+      "sha256": "4ae3b71649b975039c54b79922553296921f840d1c9169d825f47d1bba61369f"
     },
     {
       "path": "apps/cofounder-discovery/server/public-trpc-error.ts",
-      "sha256": "2dd3da0d5efb206e692d4d10f31b261877b8b0dc22424b0510655d385a600527"
+      "sha256": "aaceba95058127af062cd9525848fc10903e2a6b425a7c2efd6586947e1a250d"
     },
     {
       "path": "apps/cofounder-discovery/server/registration-admission.ts",
-      "sha256": "e1d4aa73fb7173ebb42a9e35c7e1312bf08621d84bf6a866bcc3291f4c5c0f27"
+      "sha256": "64661a937fa2604e306c39ca54904623d993f475c7e07e9c2b490f15714e1adf"
     },
     {
       "path": "apps/cofounder-discovery/server/routers.ts",
@@ -850,47 +850,47 @@
     },
     {
       "path": "apps/cofounder-discovery/server/runtime-secrets.ts",
-      "sha256": "5ba1c55017e66d9dfd2024ce20b4cbdecacbdf2d25fc3505631b620a877a4fbf"
+      "sha256": "6c3ae5ef6b75cce6475ee2049c0c75c98b1dadc7ea1a8ec4ec0c1c9c0481e0e3"
     },
     {
       "path": "apps/cofounder-discovery/server/scraping-engine.ts",
-      "sha256": "3093dc801bc5d95f9026b0d8a5c29a9fff79b83e09856b9fc0bace47b275adb8"
+      "sha256": "5e03956531e1cabc4a44cf42b7f516ff0dd098f0c49da41782952c657e19be20"
     },
     {
       "path": "apps/cofounder-discovery/server/semantic-matching.ts",
-      "sha256": "8844e5405b8ebd4c967422f70a47a4d24fdcbf6a65a407bd32654bf01d06465e"
+      "sha256": "39e304fd02bf73d21e5253ad92d77e438256f437148df6bd0b6c6c7507aa5afe"
     },
     {
       "path": "apps/cofounder-discovery/server/server-work.ts",
-      "sha256": "f9d630adb66472e99f70f9ce4f111d17835e5141f3a9cdea9fbf793c9ea50a15"
+      "sha256": "20a93ab2a4a0863c60f256768955cbf5ef2f6aae41ccb81bb14a0319bb7d822d"
     },
     {
       "path": "apps/cofounder-discovery/server/transaction-deadlock.ts",
-      "sha256": "3fe2db02d4f7bccbc2f581722a6ff7712e34ce2bf0eba6421c0a7b69bcbc7e6e"
+      "sha256": "82db97c4ca693c5002d82ed6a3db79a3e33c76c38b27e58e08b3a2c72a0e26fb"
     },
     {
       "path": "apps/cofounder-discovery/server/verification-attempt-window.ts",
-      "sha256": "2c3ff8acb38ddc981d88f7cc6f72c6c3546f1a94049e00293ec5f3a86f7a4559"
+      "sha256": "3b264e1bbddfae7bb71ce8872e33cc664aa6d45c1e3ed062af60b5329e78102a"
     },
     {
       "path": "apps/cofounder-discovery/server/verification-redemption-admission.ts",
-      "sha256": "af95c1c4b9dbb584cae17f109d0e1cccf83f92b23840ae168ce5680787666bf9"
+      "sha256": "9cfa5fc1e36c4045f8cdbb03ea0c5179656e133044f07dd7c070dbb82c1a59f4"
     },
     {
       "path": "apps/cofounder-discovery/server/workspace-presets.ts",
-      "sha256": "ff4a476ae8f73a38bb0fe2b1c300c9d9c6202e05183dce03f85a8c2b657b8a00"
+      "sha256": "fdcd32e15f0da8420c893938673eee612d0290f5720e6043ed768711ee476c2b"
     },
     {
       "path": "apps/cofounder-discovery/shared/_core/errors.ts",
-      "sha256": "b28f5546606f9dc52b277b9bf74da8d7dea9484b01fa237e0a8602aef865a7f2"
+      "sha256": "52bee7d152045eaa009083e26a4cbc21d413c80b0403a23c4b5572141dec942a"
     },
     {
       "path": "apps/cofounder-discovery/shared/account-deletion-request.ts",
-      "sha256": "871cb9a9684686a9aabe5acb11aec9f5986d9e6b58591842e336e5729388059a"
+      "sha256": "e6207cf728e740137dba83783c888eecbafdf11e464b68cdc79073f3b5be6879"
     },
     {
       "path": "apps/cofounder-discovery/shared/account-export.ts",
-      "sha256": "41039970edd99e7c3064bf0016365f9a9fc0f07b5f21d898198bf87e2a20e265"
+      "sha256": "a3691c275e4b9c4eacdb0f3edc772b827947d97a627dd49bcf85676d761c77ea"
     },
     {
       "path": "apps/cofounder-discovery/shared/candidate-input.ts",
@@ -902,11 +902,11 @@
     },
     {
       "path": "apps/cofounder-discovery/shared/candidate-query.ts",
-      "sha256": "d70995c508da36d1882e98353df45cccf359397b9fb3aff089bb9e7ee184e8e9"
+      "sha256": "53f5383748a0c60c44a548c475afbaa646af41986ce73b307c96d43327631542"
     },
     {
       "path": "apps/cofounder-discovery/shared/const.ts",
-      "sha256": "9c18044d296133db42c3b4f69dd2f2f671534aa4073d5a0a726d5a8e097698e8"
+      "sha256": "d9fedf20dc67e22f79ee6c624e613fdbc16e2cc7db872201f89ffbad7f5c163b"
     },
     {
       "path": "apps/cofounder-discovery/shared/customer-support.ts",
@@ -934,14 +934,14 @@
     },
     {
       "path": "apps/cofounder-discovery/shared/profile-input.ts",
-      "sha256": "f14c9b33395af6306483d2da703b9c5e6b31bee9a5f024bd23c88b7e1a77b2c0"
+      "sha256": "0d3f0d13f854a7331241b869463b5b3e6a4bb369f1574fb2bde641b148d6acdc"
     },
     {
       "path": "apps/cofounder-discovery/shared/workspace-presets.ts",
       "sha256": "8fc8134b60025ffa401508f9ea0030e12b595c09200da78db8c1d307e6e8147c"
     }
   ],
-  "inputDigest": "ec39ef28fe9c2709544c0cb7dd5179454fc6ddd90559ba4ad33ceab1242371ca",
+  "inputDigest": "233a332c2686b500b7f3105dfec8b20baab467e02cff1117118e1d16924de4a4",
   "actions": [
     {
       "source": "apps/cofounder-discovery/client/src/App.tsx",
