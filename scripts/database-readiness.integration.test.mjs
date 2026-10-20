@@ -15,6 +15,8 @@ const workflow = readFileSync(
   new URL(".github/workflows/ci.yml", root),
   "utf8",
 );
+const ciImage = workflow.match(/^\s+mysql:\r?\n\s+image:\s*(\S+)\s*$/m)?.[1];
+assert.ok(ciImage, "CI MySQL service image missing");
 const ciCommand = workflow.match(/--health-cmd="([^"\r\n]+)"/)?.[1];
 assert.ok(ciCommand, "CI MySQL health command missing");
 const ciEnvironment = Object.fromEntries(
@@ -97,7 +99,7 @@ test(
     const image = await success([
       "image",
       "inspect",
-      "mysql:8.4",
+      ciImage,
       "--format",
       "{{.Id}}",
     ]);
