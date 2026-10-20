@@ -2,7 +2,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
-import { mkdtempSync, writeFileSync, realpathSync, rmSync } from "node:fs";
+import {
+  chmodSync,
+  mkdtempSync,
+  writeFileSync,
+  realpathSync,
+  rmSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname, basename, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -61,6 +67,11 @@ test(
       "synthetic-auth-admission-session-key-" + randomUUID(),
       { mode: 0o600 },
     );
+    // These values are synthetic, and the parent directory remains private to
+    // this process. The read-only bind mounts must be readable by container UID
+    // 1000, which differs from the GitHub-hosted runner's UID.
+    chmodSync(join(directory, "database-url"), 0o444);
+    chmodSync(join(directory, "jwt-secret"), 0o444);
     const helper = fileURLToPath(
       new URL("./authentication-admission-probe.mjs", import.meta.url),
     );
