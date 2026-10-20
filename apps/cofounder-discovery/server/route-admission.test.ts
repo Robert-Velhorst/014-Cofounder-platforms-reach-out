@@ -31,7 +31,7 @@ describe("explicit production operation admission", () => {
       const snapshot = JSON.parse(
         readFileSync(
           new URL(
-            "../../../docs/API_SURFACE_INVENTORY_2026-10-02.json",
+            "../../../docs/API_SURFACE_INVENTORY_2026-10-20.json",
             import.meta.url
           ),
           "utf8"
@@ -89,7 +89,7 @@ describe("explicit production operation admission", () => {
     const snapshot = JSON.parse(
       readFileSync(
         new URL(
-          "../../../docs/API_SURFACE_INVENTORY_2026-10-02.json",
+          "../../../docs/API_SURFACE_INVENTORY_2026-10-20.json",
           import.meta.url
         ),
         "utf8"

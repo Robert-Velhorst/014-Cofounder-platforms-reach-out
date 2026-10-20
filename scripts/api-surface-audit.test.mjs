@@ -36,7 +36,7 @@ const policy = await import(
 test("committed audit snapshot matches current inspected source bytes and records", () => {
   const snapshot = JSON.parse(
     readFileSync(
-      new URL("docs/API_SURFACE_INVENTORY_2026-10-02.json", root),
+      new URL("docs/API_SURFACE_INVENTORY_2026-10-20.json", root),
       "utf8",
     ),
   );

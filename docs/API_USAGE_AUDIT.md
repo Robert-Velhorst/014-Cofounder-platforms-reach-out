@@ -10,7 +10,7 @@ operations and zero references from that graph to default-denied operations.
 Import-graph membership is not proof that a control renders for every user or
 that its handler is authorized. Counts include duplicate references to an operation.
 
-[Complete inventory](API_SURFACE_INVENTORY_2026-10-02.json) records all 165 operations,
+[Complete inventory](API_SURFACE_INVENTORY_2026-10-20.json) records all 165 operations,
 query/mutation kind, procedure boundary, aliases, source line/handler digest,
 policy decision, client reference locations and all 154 inspected source hashes,
 including the procedure-boundary and HTTP-wrapper source files.

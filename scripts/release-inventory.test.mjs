@@ -11,6 +11,7 @@ import { join, dirname, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import {
   inspectRelease,
   runInventory,
@@ -336,7 +337,6 @@ test("comparison supports native-language filenames without using them as filesy
 
 test("comparison handler in a real child process uses synthetic files without requiring a checkout build", () =>
   fixture((root, put) => {
-    const moduleUrl = new URL("./release-inventory.mjs", import.meta.url).href;
     const current = inspectRelease(root, git);
     const file = join(root, "baseline.json");
     put("baseline.json", JSON.stringify(current));
@@ -344,9 +344,11 @@ test("comparison handler in a real child process uses synthetic files without re
       spawnSync(
         process.execPath,
         [
-          "--input-type=module",
-          "-e",
-          `import {runInventory, inspectRelease} from ${JSON.stringify(moduleUrl)}; const fakeGit = (_cmd, args) => args.includes("rev-parse") ? "a".repeat(40) : " M package.json\\n"; const result = runInventory(["--compare", ${JSON.stringify(file)}], ${JSON.stringify(root)}, base => inspectRelease(base, fakeGit)); process.stdout.write(result.output); process.exitCode = result.code;`,
+          fileURLToPath(
+            new URL("./release-inventory-test-child.mjs", import.meta.url),
+          ),
+          file,
+          root,
         ],
         { encoding: "utf8", timeout: 10000, maxBuffer: 1024 * 1024 },
       );

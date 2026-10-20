@@ -1350,7 +1350,7 @@ scanner and source-hashed inventory:165operations/58default-admitted/107denied,
 graph-to-denied references. Resolves verified/protected alias and owned MFA base,
 includes API-only declarations rather than treating absent controls as denial.
 Complete declaration/consumer positions/digests and150inputfile hashes in
-API_SURFACE_INVENTORY_2026-10-02.json; readable58-route map inAPI_USAGE_AUDIT.
+API_SURFACE_INVENTORY_2026-10-20.json; readable58-route map inAPI_USAGE_AUDIT.
 UI_ACTION_AUDIT now covers current route/action/data-effect/failure categories;
 corrected old1MB CSV claim to actual512KiB/1000data rows and documents accountData.
 

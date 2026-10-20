@@ -97,5 +97,10 @@ export function getTutorial(id: string): Tutorial | undefined {
  * Check if tutorial video URL is a placeholder
  */
 export function isPlaceholder(videoUrl: string): boolean {
-  return videoUrl.includes("example.com");
+  try {
+    const hostname = new URL(videoUrl).hostname.toLowerCase();
+    return hostname === "example.com" || hostname.endsWith(".example.com");
+  } catch {
+    return false;
+  }
 }

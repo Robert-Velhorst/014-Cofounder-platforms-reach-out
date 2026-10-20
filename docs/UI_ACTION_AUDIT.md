@@ -93,7 +93,7 @@ account lifecycle audit. [Proof and boundaries](VERIFICATION_ACCOUNT_FAILURE_202
 The supported App.tsx route graph is home, login/registration, verification,
 forgot/reset password, onboarding, outreach, administrator security and not-found;
 /dashboard redirects to /outreach. Retained legacy pages are not supported routes.
-[Current API inventory](API_SURFACE_INVENTORY_2026-10-02.json) links every declared
+[Current API inventory](API_SURFACE_INVENTORY_2026-10-20.json) links every declared
 endpoint and direct hook/simple imperative reference to source/line/digests.
 It finds 54 client references in the App import graph and no graph references to
 default-denied operations. This is structural source mapping, not full usability,

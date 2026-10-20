@@ -44,7 +44,8 @@ export function confinedRestoreGrants(grants, database, currentRole) {
       if (match[1] !== "USAGE") return false;
     } else {
       // Unescaped underscores are MySQL database-grant wildcards.
-      const exactScope = "`" + database.replace(/_/g, "\\_") + "`.*";
+      const escapedDatabase = database.replace(/[\\_]/g, "\\$&");
+      const exactScope = "`" + escapedDatabase + "`.*";
       if (match[2] !== exactScope) return false;
       if (
         !match[1]

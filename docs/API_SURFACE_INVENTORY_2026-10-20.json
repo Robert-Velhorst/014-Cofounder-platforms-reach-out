@@ -1,7 +1,7 @@
 {
   "format": "cofounder-api-surface-v1",
   "scope": "static tRPC declarations and direct hooks/simple imperative-client aliases; import closure is structural, no execution or complete data-effect proof",
-  "policySourceDigest": "daf93cb14eeeea84472995e11a71dedcb1c0e0382712d9286d7859bb62e5c0cd",
+  "policySourceDigest": "4607d45a593c901b7eb06d74fd1e12ec5e6626b0f2d2599b936a5e4281a03f55",
   "totals": {
     "operations": 165,
     "defaultPolicyAdmitted": 58,
@@ -17,7 +17,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 133,
-      "handlerDigest": "8ee0d863c2a69174173a401a30c0622e1043199d9ff904e985f36171bc030bb5",
+      "handlerDigest": "75661b390775781c534e9885f237fc79c483c9a2a5d5c307cfad6ae671313eb5",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
@@ -35,7 +35,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 160,
-      "handlerDigest": "505760d16d820f5c583b540b65eded84d6a3569c38b84d19cb02583ded248d7c",
+      "handlerDigest": "909035c20092945d1465a88fe9ad7b1e461df5581bd9773c0497019bf70ecebb",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/AccountDataExport.tsx",
@@ -53,7 +53,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 142,
-      "handlerDigest": "5efd914cce9faa02a58730cdcae2ee7d92eb750a9b7589bd36f55f76aa118bc4",
+      "handlerDigest": "ffcb46de09bec4902f506d14b087744161577b0baf434bc85f0511cc663a2e31",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
@@ -71,7 +71,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 151,
-      "handlerDigest": "f3a41960ca8a8a90292405b1a0336138b50b5e7f5cb5fa490d7a0804c7fb6a4e",
+      "handlerDigest": "9b2ff836454c89785714d9d0f947e6587ab493ab26a4dfd0ba341970d8971795",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
@@ -89,7 +89,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1728,
-      "handlerDigest": "318bb2772e8cee1fedf5e0f34a598d0fecefd8d5178326d1ca01160ac8bfccef",
+      "handlerDigest": "0e4f20827a8963f95d11db810bdea0382c69a8cd2d4190056ddbbc7bb2544e8b",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AdminAnalytics.tsx",
@@ -107,7 +107,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1545,
-      "handlerDigest": "1af99d6e38c604ab441b39cfa00a1c7d705241fff8da149cc30f94776ebe6bb1",
+      "handlerDigest": "267ba44fba3ba8fb29cf39b1d38484691ce421478a66cef390c14b91d8f1892d",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -118,7 +118,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1540,
-      "handlerDigest": "6570f96cb9d1a594c47244ca2cf86bf957d7227214571a19a50bd1ef84dc51c4",
+      "handlerDigest": "ac8ba068ede7f74ea3237dbd3b385c8215edd88692e86b6a10c0078aefce939e",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -129,7 +129,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1656,
-      "handlerDigest": "5e9f971032f5aecf5fb6aedac27392ac0a78393f3b1809e5dfcf11da9eada064",
+      "handlerDigest": "d0041500dcc2e6fe2306e8bd3c92006c23890c5db6df26f94ff94e1eeb9a406d",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -140,7 +140,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1569,
-      "handlerDigest": "a53a65ee8063a8c230cb0590e6d71e19c57e130cb7457ac4c7b6dfa4b0d24b3d",
+      "handlerDigest": "6baf5e045d3cb57f2f120f8e73504e498765fcfdc243be6e656c40636b1e1130",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -151,7 +151,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1550,
-      "handlerDigest": "5bc2aac4003ad40d6274308736acd3b9027b408fff97601aa4e24754a15d92cc",
+      "handlerDigest": "1bb03f3c8d2d43b7dc14dbb5aa2251ea98b172b50a0b63c5604042a74aaba548",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -162,7 +162,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1587,
-      "handlerDigest": "637e50b3edc68ef32e97429d44fbb36f1e76738e8d7e7954b43efa0b5d090a8c",
+      "handlerDigest": "3020842b73c7ed5e5afd774e79059345064e25435dc2d72a1e00a639ed83fb03",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -173,7 +173,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1556,
-      "handlerDigest": "25a910c91685627cc0f7cf3df78ab115c3b89aa00f0d74fbba46b8497b37c9b5",
+      "handlerDigest": "400917d5a9437a1346a98afd2ddab415d647ef99d9f9b29c13daf8a217fcdcea",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -184,7 +184,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1599,
-      "handlerDigest": "b7d27431d156e97841f1a3e36b14245ce0c904d0a2dd7a25e7db34e99c8a3294",
+      "handlerDigest": "70fc1a82d42c71e4ecc33cfdb9f69e41165959a244e68854dfcff221ec1ce19c",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -195,7 +195,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1629,
-      "handlerDigest": "04a40116cd235fd5dba7992465a1d3df9f8ef364b2e48700df160e37c644c06e",
+      "handlerDigest": "4a99b0d84ec5ccc27be74eeafbfd873ed6f3b1069ae3c8cbeb610ae78d4e551e",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -206,7 +206,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/ai-monitoring-router.ts",
       "line": 23,
-      "handlerDigest": "2ec32ea31c456d957666f1492775f2688b2fa8f75b68bcdd12138f26e86910ea",
+      "handlerDigest": "26d251c1baf753e1a0dbf3a1380f9f980a93e374160fbde3962bc80a28736fc2",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AIMonitoring.tsx",
@@ -224,7 +224,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/ai-monitoring-router.ts",
       "line": 205,
-      "handlerDigest": "bad7afd0f9ef744e51742e1466acda0165511ca773d122e8d1911e89be2d74e3",
+      "handlerDigest": "f0921adf6800fc15ebcf1444e98b31f93a605f5b2de052838e00fabfcc8a3b69",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AIMonitoring.tsx",
@@ -242,7 +242,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/ai-monitoring-router.ts",
       "line": 122,
-      "handlerDigest": "b24ec421f585e1cd3b1036039d4911ea1e2661f39361a535dbefeadc9330ed18",
+      "handlerDigest": "be314605b5fe50101b32901edcd741ebe246f34ffbb3c0f7f6944ddc93433067",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AIMonitoring.tsx",
@@ -260,7 +260,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/ai-monitoring-router.ts",
       "line": 292,
-      "handlerDigest": "a973fdfc049c8480a4fa4e3782689383299701e5d2c5e154a4b32a3077c31cb3",
+      "handlerDigest": "14d60267901f0bf6d77d79a0288cb3ffda5b60b1533cc05c28b5c28c7ce8a221",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -271,7 +271,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 707,
-      "handlerDigest": "dd0cfff1fcd1c3dd3fb375638ed8b64c4b090947d47e197688aababb24422482",
+      "handlerDigest": "79fb45ba9a7f789f7198b41a7693a715cea4c40c519231f229bce6758ebe0edd",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Analytics.tsx",
@@ -291,7 +291,7 @@
       ],
       "source": "apps/cofounder-discovery/server/admin-mfa-router.ts",
       "line": 32,
-      "handlerDigest": "2922a969a7a75660f837403f3396ed1322db096e860541ef684978a8b162f051",
+      "handlerDigest": "46499d72d8c7f7b3e7c139914ae6582218c10c702fdeeb22ca2650d451fa1ca4",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
@@ -311,7 +311,7 @@
       ],
       "source": "apps/cofounder-discovery/server/admin-mfa-router.ts",
       "line": 52,
-      "handlerDigest": "95322ec5e9f720827dc02ba2fa4e7032ec772065dfa19c395dc6b2c1095276b4",
+      "handlerDigest": "e69f646f07edd15b68a4e108b92e6005df223028fd4e14d596b09e73e698f087",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
@@ -331,7 +331,7 @@
       ],
       "source": "apps/cofounder-discovery/server/admin-mfa-router.ts",
       "line": 43,
-      "handlerDigest": "f3b5d163038bf356e8645343d2a71d52e36ea7fb4d65ec9131077ea7ffa0ad5e",
+      "handlerDigest": "3caf8762cba0d1fe85d4f913085d695569f64f05fb55dcaa158f2551dc261c58",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
@@ -351,7 +351,7 @@
       ],
       "source": "apps/cofounder-discovery/server/admin-mfa-router.ts",
       "line": 55,
-      "handlerDigest": "baa33aefc80170404e16fa7acd916532987ef348ee00a50fdf5f2bd8197f2f26",
+      "handlerDigest": "c17669289a15a421672b8010e998a1dd9d8c8f3e2de9dea8d100da5f7a320599",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
@@ -371,7 +371,7 @@
       ],
       "source": "apps/cofounder-discovery/server/admin-mfa-router.ts",
       "line": 58,
-      "handlerDigest": "92b5826a33be537a8ce231776094e3ae902ded47221fcc7856067379afc4e363",
+      "handlerDigest": "41d96ad286d827190813423b474e945b17918078249e62c514aef615cb0dd43d",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
@@ -391,7 +391,7 @@
       ],
       "source": "apps/cofounder-discovery/server/admin-mfa-router.ts",
       "line": 29,
-      "handlerDigest": "145fdb653e1ed18265ac9e2790a805e920ebafe8916ef10f26c114b60315954d",
+      "handlerDigest": "bf65c07a75a6329b8b32db97f95fe5870dfa22155c5427ba5d0c7e4fc94d15b0",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
@@ -409,7 +409,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 305,
-      "handlerDigest": "1b37502559e16a8869b950c55d954390242a5de87c67974e40983f3266931840",
+      "handlerDigest": "3a123f1fcd787795a6fefc5630d62bd0082734dabeaf960c092849ae824bbc16",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/VerificationBanner.tsx",
@@ -427,7 +427,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 230,
-      "handlerDigest": "72b08afb6158b99bec172ab8a7e69810243374e3b2e31fed7843806e83a6fe13",
+      "handlerDigest": "b1fe5f951e77c36a28bb371853af42220896125de2a5ba3f7c1e3a64256a2f0e",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Login.tsx",
@@ -445,7 +445,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 260,
-      "handlerDigest": "bc14f52c9e4fd699fc805af5c6f8cf626e48777ec5f8494644510da26804c362",
+      "handlerDigest": "d08e2f98efce5b2bb9da64409227763e93385f3e4988ec2714b4bcd5236a60bd",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/_core/hooks/useAuth.ts",
@@ -511,7 +511,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 175,
-      "handlerDigest": "440ae59b688018e3a6497db7fa033bfd3f7a5cc88768429f58373441ee4d00c9",
+      "handlerDigest": "00f8079887cb84cb8582c1d511c24292b07d3e1da875c15dbbfe9fc11f69a9ae",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Login.tsx",
@@ -529,7 +529,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 284,
-      "handlerDigest": "a32e163f374cecfcf04e167e343a8ef55d0b9aca5104542d1f12bb90c6dfa901",
+      "handlerDigest": "f8ff6d189adc472bd50796d1d904d8e6c6cf9903da93b7cfbda6437ecd072c30",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
@@ -547,7 +547,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 291,
-      "handlerDigest": "d1d3f58f7ad0337813d51ae4d715b7dc6859b796dda2ed9c39c3f41943b8d01f",
+      "handlerDigest": "8ba04fbdffd0691bfc39f3a14f18f141169230513c00322627f90000ddd5cde6",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
@@ -565,7 +565,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 266,
-      "handlerDigest": "20a56b1ee2fe44c39f5912b69a9ecca99febe30cd2ff640eda8c6e7a5923a95e",
+      "handlerDigest": "a0c85c0d22c9f31f3d3c66f2a687b8f29b642d35853447c7e73da757d2609589",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/VerificationBanner.tsx",
@@ -589,7 +589,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 269,
-      "handlerDigest": "ea7a19a4742873e4fe06dfc13e2c63dc8b71f222ae138d626378da3746b32f85",
+      "handlerDigest": "4c925c40ce7474e3ed5c083f7696b8454ec3fc336a73a0da1b2e8406f614b409",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/VerifyEmail.tsx",
@@ -607,7 +607,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/automation-router.ts",
       "line": 45,
-      "handlerDigest": "93c77c1832408822a4db7824521b2ba06136e49321b0e3cee6c211bec94ea1f7",
+      "handlerDigest": "dec19c1aac1c7edd409aae678e6f2bfd0b20e0ce3ff08128af3e8b1de3bd6275",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -618,7 +618,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/automation-router.ts",
       "line": 73,
-      "handlerDigest": "0588ace282794c659f858e374cbf576b479a901c076ed07aa9f19e6568d92b31",
+      "handlerDigest": "a1a6a4ac944c80f730c89d1cb40712a270e8c7a6a2ccdea86df335a186da6de9",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -629,7 +629,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/automation-router.ts",
       "line": 89,
-      "handlerDigest": "8f8d5207af83027fe2d9859efefe22575f2f95597fab3f350c448360f3befdf3",
+      "handlerDigest": "f0af31f383453f84e089b0fb58b14a236b0d8d21d35906fb668a42e0182648da",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -640,7 +640,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/automation-router.ts",
       "line": 27,
-      "handlerDigest": "c326e4a1553580b3fed6377eb2595e2843619a508a64dfed9ce0c78ad9578710",
+      "handlerDigest": "134593d513897170fce87d67f54a7fd97136d4f2560319dfc8074c65251cd08e",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -651,7 +651,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/automation-router.ts",
       "line": 19,
-      "handlerDigest": "24ff46d338745e5195f1b7015762a2a85dfb3adde09121d6f7b2eb4def8845ce",
+      "handlerDigest": "5549672ed404f46bcc3bb0f2b275b9b2b617f94a8b022727a1b1d8ba837525c8",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/Navigation.tsx",
@@ -669,7 +669,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/automation-router.ts",
       "line": 119,
-      "handlerDigest": "53dd9ace94a7458a57f139a79fa221772e1290364a3eea71cb43a98d5942de6b",
+      "handlerDigest": "416eed6418d7acf54b22ea9219c20271dba0de55cc9821dd3f663768a9899036",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -680,7 +680,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/automation-router.ts",
       "line": 59,
-      "handlerDigest": "46ece34c05df412e47884c7c3700c05f564b211b7216b757c8150ffcb405cc53",
+      "handlerDigest": "06fddc08b9f389882e4f60ff705ae03b95ca4ef70bef9fb5016a234e802acc2d",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -691,7 +691,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/automation-router.ts",
       "line": 105,
-      "handlerDigest": "999cd6c862138f2450f88f194e078cd511bc69f082f33c07c65e5714cb5f74f3",
+      "handlerDigest": "ef0144819a6f6841f9acb9a32e83a33d25482ae95f90bdbf6289acc14c6e0ce7",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -702,7 +702,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/automation-router.ts",
       "line": 160,
-      "handlerDigest": "a9976413d9c8dad3ecebc09d0f54f8a16c82980f526fde92fc0b59f261e30058",
+      "handlerDigest": "2ce3cce7980396e335355388bbcf9c5dfed89dd08d1b538d483bddb52a3c45df",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -713,7 +713,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1695,
-      "handlerDigest": "e40994d52842e922a61f5cf1e20febeb55fbd3a5c1dace42960da2c64ee75d6c",
+      "handlerDigest": "0421953453660d3b24bb109e9dd742a0d9439689598b5b1829af683d9f86aaee",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -724,7 +724,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1667,
-      "handlerDigest": "d9b0df88e64ab9ee908ad7284ae60262a4f6bfb538ecda12166d111eee18af91",
+      "handlerDigest": "dee21ca7d22e6319c41cf7617f1860e3bff1c9237cf99e5ecfd3ebadfcdb5f4d",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Usage.tsx",
@@ -742,7 +742,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1690,
-      "handlerDigest": "a9d06ccc3c5d212a3c026ceeb6a5970b1f8408837561787dea0b70fef6057c7c",
+      "handlerDigest": "7a17362adce6801ede4951736bbf4b32abe9b5f36f562d95d8d1b636d309888f",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Usage.tsx",
@@ -760,7 +760,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1672,
-      "handlerDigest": "45203acc3ba1092b39ed93b1fec6a577497be83e11bb3b95829064da4fa7407a",
+      "handlerDigest": "cc03edd7c455424e599964bc02d22cd8cb268ff79c6c8e22f79f4ed24a166074",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -771,7 +771,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 443,
-      "handlerDigest": "703c6b58d93053b97046587f0c4ffdd54cfd6b61232fa885d34c4ee5bd30de0e",
+      "handlerDigest": "424db74e834107144fa408e9d320745293d4c561fe3a4ea2c6db26251ccc4e4d",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Campaigns.tsx",
@@ -789,7 +789,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 469,
-      "handlerDigest": "5ead7443b51228f5828ef0ef32f7aac13afe455544846a8a96d155071c318585",
+      "handlerDigest": "6a9b7ebacfe990d31741adecc70d772155873484f3e49d7872baa933916e55c4",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/CampaignSettings.tsx",
@@ -807,7 +807,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 439,
-      "handlerDigest": "90f4eb97f854398aba8c923b5d4b3ac51c6c7a0879fed54743a089496ef16288",
+      "handlerDigest": "6291192a4013a408252beb430ca666ff27ae51a79353b32209a4b86ed9b67275",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/AIMonitoring.tsx",
@@ -831,7 +831,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 488,
-      "handlerDigest": "a359955203229c364de20ab7a81a0903e812388811742113a7d1729805530e11",
+      "handlerDigest": "0b8f279ce175d049f818487425b2ec2a15b7bb8250587bce049c1208ebe5039f",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/CampaignSettings.tsx",
@@ -849,7 +849,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1109,
-      "handlerDigest": "dd3b9b9e322a3c66ebced6d59420a378c33ac739d0d06fa51680d991b56bf297",
+      "handlerDigest": "09c6cb700fa322629ebefeb577963c0dbdb9a9443e8c22901c9c496c30b67fd7",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -860,7 +860,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1060,
-      "handlerDigest": "15e7c825eff5a101cfc3f720e288fdc3bcb9c5ef82c6cf5ecdf6df80b437670c",
+      "handlerDigest": "5d2474c056501f312c72074f8cb65c6502fd2f8101680e52fcd13c488ea11cf7",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -871,7 +871,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1161,
-      "handlerDigest": "dbe64497ae360ac7f2c30a872796d899656d12c886df62715c818fc2caf64cb7",
+      "handlerDigest": "d94c431a63dab66dcf989f91bacad1e44871400fc254eb3280e092c55aa3f051",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/ConnectedAccounts.tsx",
@@ -889,7 +889,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1156,
-      "handlerDigest": "780ebaa1f685460a0aec7858d186216ebc75ff9666c20f33e822970b9c9a45d2",
+      "handlerDigest": "16499f2e9dd5287eea9e82fa634218785d7064629396e2dcc9342e66d7d94c38",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/ConnectedAccounts.tsx",
@@ -907,7 +907,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1044,
-      "handlerDigest": "f006a16c28fd65de51943f21c480589296121ad732263c1f31ee496b4792b6dd",
+      "handlerDigest": "01244b7ecf111a25f650343c6cd3597b33fdd2762dac50265f2c36c632499a38",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/ConnectedAccounts.tsx",
@@ -925,7 +925,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1028,
-      "handlerDigest": "064da2cb35098c1fdab0b975590ac922de78f3b71c15afe33380ed97cc4ce0bc",
+      "handlerDigest": "0cda6e737e52afc5be37c6fe0948669e3088fd7182225abe2989572f4ef1fdcd",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/ConnectedAccounts.tsx",
@@ -943,7 +943,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1013,
-      "handlerDigest": "b6262464a93528cc2a1612d30b2634f467f55b1f5938a98b680a520e68b734de",
+      "handlerDigest": "b1b98c9cd7050477c55a014adbad6501f116cdaef3ae166339a98991a07ab4f9",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/ConnectedAccounts.tsx",
@@ -961,7 +961,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1219,
-      "handlerDigest": "aa0a150f6a815f339dc79c9f3a10dc79cce7088df4bf5659a68d0ee1e6cdb806",
+      "handlerDigest": "6c7c7b268eb10d2e4c0e7e1b6ca27edac81ec6de0701ee99583dd54b7acfd5b4",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/ConversationStarters.tsx",
@@ -979,7 +979,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1207,
-      "handlerDigest": "2dc455a0fa8c2859f6f2570cc923c5b7ee906a5ff64b85bc2d9285357299e3a0",
+      "handlerDigest": "915eeb0acbc44545a8adef0ef762f38d4c16385fd78cce81b4c211250f942612",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -990,7 +990,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1214,
-      "handlerDigest": "26481abab7f901ffa1384fd6655957ac1fe6f6eeeb3bfe23895a1995f89d231d",
+      "handlerDigest": "3b08bb16c508854951ce8e16a08d82f78bc40a564335918c64756ad523ae226b",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -1001,7 +1001,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1191,
-      "handlerDigest": "1bf88deac3b7337b44261163eabf81a917a8c63689599e79780c8996b49e1353",
+      "handlerDigest": "db65ac46e9471600a32ef74e8214665a0b8c0a7d474dad22f21d6ce966b85b63",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -1012,7 +1012,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1199,
-      "handlerDigest": "097800713e5e687159ca25d9de287056a24b2142d2b269060e497bb871cca068",
+      "handlerDigest": "bf112353db10cf39feb587a25e5edfdd35369dd2fb2dc7112cc3ac06cf90f382",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -1023,7 +1023,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1314,
-      "handlerDigest": "b2450e768053b084a48b2d74fd0e60b82489bf390d930f7f48a5316a25f03df3",
+      "handlerDigest": "d5e76b8eb9dcdcc5e99e0186217f1115c43b31dda28381eed46c14455a0f25fb",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/ConversationStarters.tsx",
@@ -1041,7 +1041,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1170,
-      "handlerDigest": "f09819196595a83b1fcb39a385c5d152110a997418a45b065507fbe0972feedb",
+      "handlerDigest": "12e2e792297756a1bcbfaf9239de98badb3c08fe50ace90f1eb5198e76e612fb",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -1052,7 +1052,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 605,
-      "handlerDigest": "327ed48701c02a0a13fe167032ca00025b165e918f9de8a38d685db890ca04be",
+      "handlerDigest": "0cb87e39c5d131fe345222fb41cdc7ca66c074e445c27e42e57faed87eb30bf5",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1070,7 +1070,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 638,
-      "handlerDigest": "378224ffbe375801c73dcb9320765ef554c39aa16b27758e38cb1ed552d9a356",
+      "handlerDigest": "8977c74c7808fc0b132ac4567aed8b5048a7c78183835ecdc9aca4b5d316fec1",
       "clientHooks": [],
       "defaultPolicyAdmitted": true
     },
@@ -1081,7 +1081,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 513,
-      "handlerDigest": "3eded5b41ad7cac2a626db4a8e65dcccb7d54403a974beec9b13e1b5d2ca5d7f",
+      "handlerDigest": "ed77566e10ba20c4082a23c81351a808bccfd19164da437f816c2b7b0c3493f1",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1099,7 +1099,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 393,
-      "handlerDigest": "82d2952ffc32df80888d966024a7a8bfbf087873ebe7ba655dd004cbe20fe8cf",
+      "handlerDigest": "368191e8d0a0c4a9edf63d9a185b74930fe6da47eb17096942adba1f5a6f4f36",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
@@ -1117,7 +1117,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 579,
-      "handlerDigest": "20a7b42ae43df195b446c6cba08f76e554505867645bb345e82f79757c3c5a3f",
+      "handlerDigest": "c1e776c78b593cf59c070e528c8dc02307f117f6c19f1fe3d98fff1b7d8248d8",
       "clientHooks": [],
       "defaultPolicyAdmitted": true
     },
@@ -1128,7 +1128,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 539,
-      "handlerDigest": "bbb2332eff40214e086cafe92920029bf0be085ad24e311289aec8fedfc93011",
+      "handlerDigest": "42915f5afc16963c9cac8c11243aaf557e72087baebd97ae3df4d88cb9251e5d",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1146,7 +1146,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 589,
-      "handlerDigest": "26ae641fbacfe02af6f9d1d2ce63c4199d63f3d8ee9a1f41c8132b0bf21726e5",
+      "handlerDigest": "821b3a69e1a7f192171395fc18e50b49cb4b31ff183c59e91247243759786455",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
@@ -1164,7 +1164,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 380,
-      "handlerDigest": "02ea7ba7857977b913b0b7a8b2a9db870f4b4aab1e7a9967e981d1d39e414a92",
+      "handlerDigest": "6d2395a5c0c983192764bb500455c5779bb7edef9b7483a5ae5a43563ac95bb4",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
@@ -1182,7 +1182,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 451,
-      "handlerDigest": "ad0e843f22c2051235eaa039d0e93bb6dbd859db41c22d11d44609d5cbc021c6",
+      "handlerDigest": "e6a0b5f4fd7bfb2bb0e6694ef8cf2514cc5cfd8fe6d2ff3b8817764a9acc8b40",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1200,7 +1200,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 436,
-      "handlerDigest": "0e2e4f82ad0e59b4be651c09f430bcfbacac142b2a79d9d8654c5b30ad700bdf",
+      "handlerDigest": "e59b7b2adc448469dc147ce00496638515c018e18761071f9576b213de53760c",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1218,7 +1218,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 401,
-      "handlerDigest": "277ec87cf6c45846d1821c31ba6e483f198f2f871ec2c9a7113b4e635c4b4432",
+      "handlerDigest": "10ae4d701ad6c65aa049926a26497d3062bc39c27218a3c0de76fb36b233720a",
       "clientHooks": [],
       "defaultPolicyAdmitted": true
     },
@@ -1229,7 +1229,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 524,
-      "handlerDigest": "40022d125aac2886189ccc173383cb3eb9074c3132008aee871ead1aecc38e48",
+      "handlerDigest": "24d9b98703788e172f5a93ea81704daffef21663a541467de4dda70007fc3648",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1247,7 +1247,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 559,
-      "handlerDigest": "cda3e10359a1f94b7c23f460e2360fcdeb3a488b6011149c68b6038ce3377cbf",
+      "handlerDigest": "f555f8ad0e35752a645788f81c07bb0c748cf7bb52cef54ad6842700b4306be1",
       "clientHooks": [],
       "defaultPolicyAdmitted": true
     },
@@ -1258,7 +1258,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 598,
-      "handlerDigest": "5bb381d2a581ba9d99a1b32533c92fd4620007f61f46a212b396118e4f356a0f",
+      "handlerDigest": "e8f250cdf6961e3e15b8709db4c3da862ee5c8c3255a81c75a41bd0b96917c12",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/FollowUpQueue.tsx",
@@ -1276,7 +1276,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 385,
-      "handlerDigest": "dc0b44fabc4f0a60096fa80a59001bbc41d4f1a3e45e315c5a9bcc06a756f518",
+      "handlerDigest": "7dfddb5b7156f36b48f8495dbe2e8d6f750a666109e97c6ae9469eeab8d1503c",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
@@ -1294,7 +1294,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 569,
-      "handlerDigest": "225fb3d3d6a3664f40bc5e4759be10a72008a79f0c37d4d98ad576e8a200546f",
+      "handlerDigest": "15c9fc282fd67dc4f25075b3bf07d37a0d03a47ca9c99e5efb538d426b4d7830",
       "clientHooks": [],
       "defaultPolicyAdmitted": true
     },
@@ -1305,7 +1305,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 497,
-      "handlerDigest": "79d8e7b00fdda29efa77fe3ce2b4351b6676ca489cd1c8d870d3eb116f3cf5bd",
+      "handlerDigest": "ca7ee693338e9e2ab9eaaa29ee402ca61ff44f2aa8650663ccffa81544656519",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1341,7 +1341,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 153,
-      "handlerDigest": "aed399fe34e484f3b39bc17d330ef7e719ead6db870851b46d5bd4ead50e615b",
+      "handlerDigest": "a221c24a8de3a288713986281d1945fe31364e6a93ed7473f60881d4beaf30d2",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1359,7 +1359,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 160,
-      "handlerDigest": "fb729f3b8512989df674db29cf26ffbcf1b7092b086740ab25748513aafb201c",
+      "handlerDigest": "7d41444d2e8015603220496980b4a4947cfeb80b91398535c1fb458a2b0661ec",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1377,7 +1377,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 348,
-      "handlerDigest": "afe92e20dd1e19f30153e93ed80bbb89a30b77202ed1eaf7419fe943b71ad8ce",
+      "handlerDigest": "82d58cea70a78eecd208e5684e981b78b2bc9bf36b22c67441aaa01fcc3b7a86",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
@@ -1395,7 +1395,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 355,
-      "handlerDigest": "648f68d5438350204862a178a56c979e311f1ef96278ace8c8363e35884dcf12",
+      "handlerDigest": "c99871fba42ad134ecffe31de2a9960f1025ffc4c256803b16f00cf3d0fb435c",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
@@ -1413,7 +1413,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 201,
-      "handlerDigest": "dbd2f3a1631fabd9b34ee817a5e66d5335fb86c0d5421548ca8cbfe2b4d49a7f",
+      "handlerDigest": "8f6b3ea86a815d3f3b91e501c902fd8ea353798172b859c47d76be124621e50e",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
@@ -1431,7 +1431,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 335,
-      "handlerDigest": "872c7f72d92fcf70bae6bf3508a8246701d966b8c3ab9114ba206631ab3e2495",
+      "handlerDigest": "05535bf0bd7fa630e3f2e7f3957114a673d33bbb3527751758b4116babee25a7",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
@@ -1449,7 +1449,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 226,
-      "handlerDigest": "47a9008fb4e20a3136fc51081cdf553dbf528d6298bd7b2f640ddc8a29f9688c",
+      "handlerDigest": "c5b180a27ab67a891c83c30001958a2c135091d53f503500177789dc277b078a",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
@@ -1467,7 +1467,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 206,
-      "handlerDigest": "aa37ffa08b773814b2ef2439c48815c109ef03dfd4392919444e06154cd28691",
+      "handlerDigest": "bcaca586bc9bf6345acc5cb5d7f936ced88834556ae18daab2e1a20f9403daf8",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/CandidateEditor.tsx",
@@ -1485,7 +1485,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 326,
-      "handlerDigest": "2ac73c1b412efaa8e192d6957a1a8a0200837418b6ab8133f3c4c0e204ce55ad",
+      "handlerDigest": "8c8e01136c0065e211eb90e7dc98cd1fe11de0444ceafc97fcbe8b9f128833bd",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/CandidateExport.tsx",
@@ -1503,7 +1503,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 308,
-      "handlerDigest": "94d21f0c06306c587b2e4d083f60444013f39acc01875df3efe8523a4d837098",
+      "handlerDigest": "cce0167b74b8b4848c19fea85f8930638c91b65d2a59286c6befcfbfae051d32",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1521,7 +1521,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 255,
-      "handlerDigest": "876f083072d349e665199eebcba7fc912b17da41bbb7694b39cf3e14854adc08",
+      "handlerDigest": "486389dec6daf506cb5846afdd952e66626d84808596fa2f8b8d581671192248",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1539,7 +1539,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 238,
-      "handlerDigest": "27266bcf5fefe65553d4c69d892aeb5581d98acc3b280da62c24fe525ac817c2",
+      "handlerDigest": "f98f3b6a185056d155595ca4feb9f7bbc1d61c4a97f4055538ba8f7950163454",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
@@ -1557,7 +1557,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 198,
-      "handlerDigest": "54164a28321298774aacb46af6de340830fc319aa0b4fa2edd352bede3b6a82f",
+      "handlerDigest": "4f273c77b6b3693b129f39104182d5cc8c5e70db41dbfce11851eb83585360b4",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
@@ -1575,7 +1575,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 216,
-      "handlerDigest": "dde4cdf39de7d9e3a11e8c2faba1ca27dc236c8c6dd67c324f333b99c7aff255",
+      "handlerDigest": "7619519d63bc001be17abf02972388111146305c1d2c832ce161f098465e25d7",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
@@ -1593,7 +1593,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 367,
-      "handlerDigest": "9a989ea605c7807346175e943d5aae21977b8bc1107bf6a16caee1cb69295991",
+      "handlerDigest": "fc9fd5495e5baf9655e919ca10e1ce4e33e7a2ae7b484538717a780aade2292f",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1611,7 +1611,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/critical-path-router.ts",
       "line": 172,
-      "handlerDigest": "75d6a686b0001d6260d76af4d70c13afa11f92df9fa0a3fedce802917703a778",
+      "handlerDigest": "25a6aafbc9664c843a98c2169937b4ad4c80bc336c8f8e0a29d2a6b245fdaafd",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
@@ -1629,7 +1629,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 879,
-      "handlerDigest": "451c8a0faf72ed7cb0081b78ad88e36aa6dddf1388812a93af78186617634e83",
+      "handlerDigest": "99af1ef8c2d23f77636cc00c93b36644aaa0f2f6442d7ff588451e696c795b23",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Enrichment.tsx",
@@ -1647,7 +1647,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 841,
-      "handlerDigest": "49d705ea1659b0580c39d8943e5351e41ebdcee516909022e4260319b32be8a6",
+      "handlerDigest": "61501d04002606353f06d6a1237600c7dd99c9e495ae21252ab07e34c1324b71",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -1658,7 +1658,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 921,
-      "handlerDigest": "79d54454f7ca6acb1cf1709d52d71d83a8b79fc73886f4ea8ceb65e40bd36a8e",
+      "handlerDigest": "e38e9db82964e6e16fbbadd173dc54321086a9b86817a00f3c6abaf2ef1c485b",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Enrichment.tsx",
@@ -1676,7 +1676,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1449,
-      "handlerDigest": "8bb1cc9691b1ddaf48f1ea473a192fe93fab1b3e9ae57582b49255947cdcd14f",
+      "handlerDigest": "1e198f44a2af50e44b69556734632ec13efe29168ae54f98c5ca288c2fe1eb09",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -1687,7 +1687,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1444,
-      "handlerDigest": "696a5aa68ab24632a39025352d85416dd4f107939e07977dba87a3f7f1a4d8b3",
+      "handlerDigest": "7511cbf83b31637e737d7f6569137c58093ed597ea343dd1a223dec7e7c2ae26",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -1698,7 +1698,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 386,
-      "handlerDigest": "7d2ce2de4202410836034317b365c27311fc1a9b28dd893c2f6c3a63861f84ac",
+      "handlerDigest": "cf767b5eafd91ef30c1ec8fcb36c81f72509af66c41a85107620ba2a322acb85",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -1709,7 +1709,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 382,
-      "handlerDigest": "15b948e26f2adcb0c4a1d9d25252bb23e0cef82127853606745378eabcf51be0",
+      "handlerDigest": "d50d7ffa936a858e1b1b4a2cc8423242fdfdb4a292b10f48b511780691044d56",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Dashboard.tsx",
@@ -1719,7 +1719,7 @@
         },
         {
           "source": "apps/cofounder-discovery/client/src/pages/Matches.tsx",
-          "line": 44,
+          "line": 42,
           "hook": "useQuery",
           "reachableFromApp": false
         }
@@ -1733,7 +1733,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 419,
-      "handlerDigest": "fea85b1fe885f1d668599f46801e4fb0e30c41d7905239b16c379b57283fdac3",
+      "handlerDigest": "6226993f136c868c0cf7c6aecdce3e70f5a464999d09f017ff5931aa1ea5b9a8",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -1744,7 +1744,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 607,
-      "handlerDigest": "83ef6c57d675c654bd0374af0ddfd269b47548f783158ad4515811bd5cc4e333",
+      "handlerDigest": "21ee58f7e19462a49a34600501df55838e190468386a9ea091a7dc2083d3477c",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Messages.tsx",
@@ -1762,7 +1762,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 522,
-      "handlerDigest": "fdb77860470694622f47fcd13491f06d4a127ec123d943fc42629def5f6bb927",
+      "handlerDigest": "636215ff881b9ad1891070cc624c57f4af3f181ad903ed3cf8e95ae247e0b223",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -1773,7 +1773,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 680,
-      "handlerDigest": "3ed8c20034de145a7c3105af2fd086317624209179621b57960bbc83a9480d5e",
+      "handlerDigest": "303706828846283cf75827b65266bfcb98eeee4d48984924921a2822c7e01081",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -1784,7 +1784,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 611,
-      "handlerDigest": "28d7c622d4d69af53d2e5ca1f17860b6902d457f99dcb37a48366ec59c787b8a",
+      "handlerDigest": "a74df6c1e0c77837813d80c80a23dbb59c39149c16dd43a9517a9ab56c306fef",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Messages.tsx",
@@ -1802,7 +1802,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 620,
-      "handlerDigest": "f5cdc727406298ba3dae6a9c02b1b9309b19e9ed3295db64e86bb17081c0b264",
+      "handlerDigest": "916bb29cc47caa127fcb916f1cd97aa56fb092092050910760eb57e16ce09312",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Messages.tsx",
@@ -1820,7 +1820,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1709,
-      "handlerDigest": "61e22e08b499ac9916a91baa7aafdc598af1671db92f22fca61ebe111c683d5f",
+      "handlerDigest": "7730e12ce550c1cc8d0070147226be790aeea8a730aa5397d37c52fc42712cc0",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/NaturalLanguageSearch.tsx",
@@ -1838,7 +1838,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1717,
-      "handlerDigest": "0fe25eb0cc86a95db7da3691ec55aef748b25890cdd3b3ca105bcc46b0ee9547",
+      "handlerDigest": "6ab36559e467a25823841ea279b3dd6a297c3f90a55755df0ead1548e4f1cd25",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/NaturalLanguageSearch.tsx",
@@ -1856,7 +1856,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1437,
-      "handlerDigest": "979714d1efe9a7791cd46dc96a9a0f996b61dff3a51652c9115ac4e133a2d707",
+      "handlerDigest": "386b1be3864b131e1402321060104dfcdd12cb58419e80bca48d96c6403fd67c",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/NotificationSettings.tsx",
@@ -1874,7 +1874,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1422,
-      "handlerDigest": "001525be6da1aed9f84ed08466da27c781d01b4d3f36bfb976651d0d51dcecd0",
+      "handlerDigest": "5d08adbb8968ac9855f1d85eb90dba9145db3f3305982c0cc205b47a4d2d1d38",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/NotificationSettings.tsx",
@@ -1892,7 +1892,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/outreach-router.ts",
       "line": 131,
-      "handlerDigest": "caa37e9e104feedf9966af836ba6669344b976514a4a774344e4e386ecc4ae35",
+      "handlerDigest": "e11b47b1ee6ab4ee49857aa9fa9301ad2c6c19613fa9a3b8a1cd93d1cd594ec4",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/ApprovalQueue.tsx",
@@ -1910,7 +1910,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/outreach-router.ts",
       "line": 305,
-      "handlerDigest": "0efe272d522d815813f97ea8d61a22c71f61c1740f1d22a37ae50210f08c3643",
+      "handlerDigest": "aa46109f9543b1ca01d4f9696c0d541ad04497c1df5b524e88ae610906b87242",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/ApprovalQueue.tsx",
@@ -1928,7 +1928,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/outreach-router.ts",
       "line": 412,
-      "handlerDigest": "5612c85e1c7554e8e2af2d6defab955ff61273ee55bc36212600837fa489bdff",
+      "handlerDigest": "b3a0a0ac838a7bb3e4459897dfe22ba1bbc30187591a2e45ed882582944db12c",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -1939,7 +1939,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/outreach-router.ts",
       "line": 80,
-      "handlerDigest": "d74164be5a94510dc73d7a89a15e576e8ab11d0172d49dfb93854d7e8b7b129f",
+      "handlerDigest": "0b40411b7cc8ddffb20acbfb78ed2a886241ee0b3c0829d51ea2c5226f6af488",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/ApprovalQueue.tsx",
@@ -1957,7 +1957,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/outreach-router.ts",
       "line": 462,
-      "handlerDigest": "9465174093dd169eb43682b82ce25bc450291902714929ac753d102026caccd5",
+      "handlerDigest": "708d7c50fea681374ae74c4c4b034f4c2d73d4bb4378b1f46d2fc1949e7c547f",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/ApprovalQueue.tsx",
@@ -1975,7 +1975,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/outreach-router.ts",
       "line": 279,
-      "handlerDigest": "7d6c54682ebd8a18a767f6fea94fc0aa5704470e2dabf93010327d93ce789d4e",
+      "handlerDigest": "ae11e2b4c883e54ad7be9346f4a8a75459e9c8b36f2af7f59f56ef5233fff1d4",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/ApprovalQueue.tsx",
@@ -1993,7 +1993,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/outreach-router.ts",
       "line": 448,
-      "handlerDigest": "f4ad7c243066abef4887d127138a05817c050c7359deafa28397e82254566d78",
+      "handlerDigest": "4c5ec218606bede1e30bce9106d49b8138a47014dbf369c084c99fe6dc73480e",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2004,7 +2004,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/pipeline-router.ts",
       "line": 195,
-      "handlerDigest": "91c9e87f10ee91a9873c4c30c7dbd844ccb30d75a2208548c61b2077fccb101d",
+      "handlerDigest": "724659ab5450ac57adfb96710a2c775542387816e146bfa638d15dc698799419",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2015,7 +2015,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/pipeline-router.ts",
       "line": 112,
-      "handlerDigest": "95801f418a453e0d4f3fa8e35d6b9bff215674dfc4e64b686222fcf6311c3cce",
+      "handlerDigest": "0a0e76db3454d123fee41d90f18121e0d44024da3e41253b747ed3d3204b47b6",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2026,7 +2026,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/pipeline-router.ts",
       "line": 166,
-      "handlerDigest": "393dac9cfe14608d13713a720135b5785409e84a7c9927a6cefab2743b2cb88e",
+      "handlerDigest": "50898f14e44774a354ff6cddca32b476e68fb21f8d5c96840e6c868ddfe4a199",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2037,7 +2037,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/pipeline-router.ts",
       "line": 18,
-      "handlerDigest": "16ceebf48dbe4316addab65454a1a219d6138eb853887644916b48eeaec17fed",
+      "handlerDigest": "18409c83beef47667274c62fc72d74712b1024c95510367c117a420539a0dba5",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Pipeline.tsx",
@@ -2055,7 +2055,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/pipeline-router.ts",
       "line": 245,
-      "handlerDigest": "f118adc67a2f9f74ce80fde7353620ee4938ec621ac2e1a7032c64189d26ed42",
+      "handlerDigest": "de423fb6e2f3cfd8471dff81ce356b0b40b2fc462c5ffeda91c1d7d8d0ae8fa6",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2066,7 +2066,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/pipeline-router.ts",
       "line": 218,
-      "handlerDigest": "92b792904fc27007b6e785f4a7e6d270f75e92a3641253f292e71ff44b28bce3",
+      "handlerDigest": "541c6969f3451c8f1d7a53f180cc68522469dd5b4008bf6940952a0f043e0255",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2077,7 +2077,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/pipeline-router.ts",
       "line": 139,
-      "handlerDigest": "33d8dc8027e1ee773cb6a7d43737e8c9e15f6f7d731a47e0b4fd3da31091f71d",
+      "handlerDigest": "f090e98f42d2a73968daeac8981f4a769760d37a873bfb521bc8ed9286b8a2f9",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2088,7 +2088,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/pipeline-router.ts",
       "line": 46,
-      "handlerDigest": "5ccafe728edb619557905d7cb35473e6f660f10fde832b6e73c444d2b1c9523b",
+      "handlerDigest": "be58f5781f19ccb37435e2970191b4d61e72f92ba940c472836bf313535e2479",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Pipeline.tsx",
@@ -2106,7 +2106,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/platform-credentials-router.ts",
       "line": 136,
-      "handlerDigest": "288482690e2dd8a5f03bc4a67243ad196a894f73601e185b055376c3c46af684",
+      "handlerDigest": "a605417940b28eaf6e16363514500907593d5f821ebccaadad0cca321927c7b0",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/PlatformConnections.tsx",
@@ -2124,7 +2124,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/platform-credentials-router.ts",
       "line": 25,
-      "handlerDigest": "2392a58d3b9fcf1ace211708d95da2894ff6110c5434f8a4774801a204766059",
+      "handlerDigest": "cb7116555f1805e7170787077f429a7c1b6e45b9ea52f4bde830ff43adac51d4",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/PlatformConnections.tsx",
@@ -2142,7 +2142,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/platform-credentials-router.ts",
       "line": 71,
-      "handlerDigest": "287aa8fed69b4c5a84ebf51db4994438d7a69085f3ba96e6ac5abc736898eb47",
+      "handlerDigest": "b348b51a0698bf1268ab96d8cc2eba957ca22e97648d4debd6026be653784aa2",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/PlatformConnections.tsx",
@@ -2160,7 +2160,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/platform-credentials-router.ts",
       "line": 161,
-      "handlerDigest": "1925c4ebde4ac5888d9ba27c2e0c0fd4400901c53295c9fc2b1a9302fa814708",
+      "handlerDigest": "5fd0e9c309d4ede519c18bbb1d07e7de5693c85f20685e1542655d50b510961a",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/PlatformConnections.tsx",
@@ -2178,7 +2178,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/platform-credentials-router.ts",
       "line": 216,
-      "handlerDigest": "d5151afc77976ec952185726f5675572df9aab66d0851c3e6bfaf6490cfc6783",
+      "handlerDigest": "4a91e53093d08e3118bc5ac26c08a1b954d8d4caf86ff67735e4cdb57a86646d",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/PlatformConnections.tsx",
@@ -2196,7 +2196,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1478,
-      "handlerDigest": "28d7a1a046bf5db64496e9b155b18c1986099a73522602608a7e0c08e2a60bce",
+      "handlerDigest": "8908ff40fe7bc5b263ff0072fa84d261aafc68cd92591c5dbc50fdc42bf1f37a",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2207,11 +2207,11 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1458,
-      "handlerDigest": "45bbae992d6fdc3e8dcc5cb35e53a134c91cc316613b94fca4c61edc1394dd44",
+      "handlerDigest": "adb0466d427b0f845f0b56ea2777d8221439ec366bc83208e80c5aaf192e55b3",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Matches.tsx",
-          "line": 45,
+          "line": 43,
           "hook": "useMutation",
           "reachableFromApp": false
         }
@@ -2225,7 +2225,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 325,
-      "handlerDigest": "cef95470afc7d88815fe34f5ecaa49a8e7743158c18266849708ae5cbf45ce6f",
+      "handlerDigest": "75cbc74ef19958a6562799799facc1f0c9312468cc04dcc4070ebeb49a8a3f2f",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
@@ -2243,7 +2243,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 312,
-      "handlerDigest": "422d322af2269533d7feeb12084fde2eae236b096c39169fb4ec2b4170e896ca",
+      "handlerDigest": "bc6b9d247349787adce100bf608e10e5237034b4b142dba236dbc3efd39e7ec6",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Dashboard.tsx",
@@ -2273,7 +2273,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 337,
-      "handlerDigest": "cef95470afc7d88815fe34f5ecaa49a8e7743158c18266849708ae5cbf45ce6f",
+      "handlerDigest": "75cbc74ef19958a6562799799facc1f0c9312468cc04dcc4070ebeb49a8a3f2f",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Settings.tsx",
@@ -2291,7 +2291,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 356,
-      "handlerDigest": "378564a2567ad832dca8493a9830d4471e2b550def06ece928e2061650fda918",
+      "handlerDigest": "1ad5555e58b29c1badad49b300ae2fdab6043ef6ef42f0ec72768500cec2fe0f",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2302,7 +2302,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 352,
-      "handlerDigest": "a861810f0a3e6db4245fd64a041a73194f0a05d680ea23871f9404f87efd3e3f",
+      "handlerDigest": "fddd41901f776a2021126a39062adb7b52e032a49671b867344c531efbda5f86",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2313,7 +2313,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 807,
-      "handlerDigest": "60e82b4f93340b656c8038e52ba6e06b6a52789fe333f6ae0056d13beb0a74b2",
+      "handlerDigest": "ad155871527885716266037a5db58cb131aba11604c71e577ca8295ec90710ba",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2324,7 +2324,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 717,
-      "handlerDigest": "428bd25dbe7694dbeeb0e3f9e15ca37b19a07872224ed594c3d5aaf9d1e7acb5",
+      "handlerDigest": "dd69d176a0e5af81d2ccd39622bcfb17fc4648efad22ad943a58f5c4d6578168",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/SavedSearches.tsx",
@@ -2342,7 +2342,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 780,
-      "handlerDigest": "d10efd9d526fb2e29322be50b91bbbc6a0c7cdc70c73cba6d27a6d7f64c09cec",
+      "handlerDigest": "57b3f25af58cde26994bbe35cd7e0c3bd448b5a87dd982e13783d42b0156c318",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/SavedSearches.tsx",
@@ -2360,7 +2360,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 794,
-      "handlerDigest": "d8de7fc852bfedd03b90e3e77bfc4c5509f3994b35403fac2074cdf3ec720c0d",
+      "handlerDigest": "5a468427b9d061e6854a1fe4e7ba0667c58e966cfe88edc22f8b86121fd82115",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2371,7 +2371,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 821,
-      "handlerDigest": "3fde8562cba66971f024b32a0e81ab84d81b7207399a0b82d63d3fa78568bb04",
+      "handlerDigest": "101539c5b279768d042a4bdf644cd596ba4f515973c11a7f0b3b6a872a25621d",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2382,7 +2382,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 713,
-      "handlerDigest": "f0ed884581dc6058700aaa3747538d4921f41b5794e9682e75812508e252b7d4",
+      "handlerDigest": "04680988cba49f71f81a81a52616531f2f9a7c8a7315bb4a75331291ef1fbe16",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/SavedSearches.tsx",
@@ -2400,7 +2400,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 745,
-      "handlerDigest": "d6594ceb97df7c51da96a30f6c7ab21a4d3704dda687ca0b053c244d25f3aa12",
+      "handlerDigest": "fb3436e34c14c176a387a1e3704a3ec676f70a02c288557f3d569c32ee93ad2d",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/SavedSearches.tsx",
@@ -2418,7 +2418,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 979,
-      "handlerDigest": "64c52f8f67ed5a32fe553cc83dc5de88433114c988fb8a4bd42f43c22daf893e",
+      "handlerDigest": "e3298c2fbbbd4213d023c53078c6a25ee5e91af1ba4c8f0c91fcad14034c2671",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Scheduler.tsx",
@@ -2436,7 +2436,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 996,
-      "handlerDigest": "1bc3f2b7974375983bb0040da1634197f7ec096f8d3fe241ddad53fe3fcf5f81",
+      "handlerDigest": "da80a9f71715a94c1d557c35eaf926a758442555685b9212fba93ba61b8e1295",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Scheduler.tsx",
@@ -2454,7 +2454,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 975,
-      "handlerDigest": "279f2a49215155d898fa003a095b9675222f909915d3e052fe2438b15521372d",
+      "handlerDigest": "017ba759b0179e227f7a8d6339488789aa0193a4c1b50d1b4a709cc8e7e5986e",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Scheduler.tsx",
@@ -2472,7 +2472,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 984,
-      "handlerDigest": "5126a8aca04551320ef96123922a3bf3ae21644922efaadc2850f6655e2bdc64",
+      "handlerDigest": "d0fb25ebf7b7d8f8fccc6d4bd5289f6d791c8c00c9599c631c28c1070088416e",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Scheduler.tsx",
@@ -2490,7 +2490,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1003,
-      "handlerDigest": "a66f8ba113322db0e7b261cb169b5d2adb15cd2a6de4645bd195b0523b95cb21",
+      "handlerDigest": "1cc7ca911577d8a982bb8317db3b2f826c66160ef9caceb0ca160090f5271ea7",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Scheduler.tsx",
@@ -2508,7 +2508,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 989,
-      "handlerDigest": "ff317ffb4b4489ffc8f074e63cdc15ff496eff3f035ae26f96058b2b5d20190d",
+      "handlerDigest": "8564b3dfb9a42769561ff2e2ef76ba75e04fa20541899820cf43e730849f0dc0",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/Scheduler.tsx",
@@ -2526,7 +2526,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 689,
-      "handlerDigest": "a6f320171bf6ec75158e1e7f7a1162d7e6b6271cf28314ed0f84e9e99a55f2a5",
+      "handlerDigest": "15e85f5bdd49858242af86da4995bdcb86200619a35d08b2dfc5236c4a670f72",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2537,7 +2537,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 969,
-      "handlerDigest": "53fcd63aa54c81363310666f0579c66b6bf52826e204881f902d6e6af5d89032",
+      "handlerDigest": "5958d58d5446297f34a4186baf80e59643da3863b826d275101ddb5c4e689d96",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/SuccessMetrics.tsx",
@@ -2555,7 +2555,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 956,
-      "handlerDigest": "d1f4151badf95ce2064f7689ea21cffc91191534ca5d5d7b872dd9961fa8f0da",
+      "handlerDigest": "9494d12ce7305586ddb3c2744b642fd702f3292fe4e7ffa88251d89b9d0b5771",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/SuccessMetrics.tsx",
@@ -2573,7 +2573,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 930,
-      "handlerDigest": "cccf954b74a520ecdb603744662fae1723ba4423245fa689b84656f74881c943",
+      "handlerDigest": "1f5be15af35e19b009ea154ca54892e449367c3ecc6b03a5bf3e07e3cd841909",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2584,7 +2584,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/_core/systemRouter.ts",
       "line": 10,
-      "handlerDigest": "4e6f3a195cb838037b162eea2925cf821397f7eaed0c969435f7f569eaf72b4d",
+      "handlerDigest": "4ba95d7c8e01c8dc7d9e79176f8e48500edc8d24409bee4250ae9ea6f0a089f2",
       "clientHooks": [],
       "defaultPolicyAdmitted": true
     },
@@ -2595,7 +2595,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/_core/systemRouter.ts",
       "line": 20,
-      "handlerDigest": "293f822679cf2826a2bd46dfa3d1202f28500296f9a76c10a0829f9be16522f4",
+      "handlerDigest": "a3ef96c9f2b8262c4a46948ee75705bcbea437999cd02c9cc5f0fd9bd40fb2b1",
       "clientHooks": [],
       "defaultPolicyAdmitted": true
     },
@@ -2606,7 +2606,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1506,
-      "handlerDigest": "27f2aa5cdac62f493facd118826b585c277c18ac514dfb722c70799753d20c03",
+      "handlerDigest": "158575a33436110f952f4dfe84eac3067969b0a671d40bd66f7da64cc3adc9b2",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     },
@@ -2617,11 +2617,11 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1486,
-      "handlerDigest": "dee484bfc5cc421be07e925d2eb62c79cd5627e174f9ea68872653eea928f8ed",
+      "handlerDigest": "7242d32564d0a3a6c8df35327e5a640987861ca2767b6a2eaf5466e8cf1b2871",
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/pages/ProspectTimeline.tsx",
-          "line": 32,
+          "line": 31,
           "hook": "useQuery",
           "reachableFromApp": false
         }
@@ -2635,7 +2635,7 @@
       "procedureAliases": [],
       "source": "apps/cofounder-discovery/server/routers.ts",
       "line": 1496,
-      "handlerDigest": "a08edf386b350b9b40bd3dc4415fbd9c1055ecd7b8c8b242cb88b7e01bb348ca",
+      "handlerDigest": "00bac581df1947def1ece079e921e7c73232c0ce80a371d2f2f912fcfbcdfa8a",
       "clientHooks": [],
       "defaultPolicyAdmitted": false
     }
@@ -2644,620 +2644,620 @@
   "inputFiles": [
     {
       "path": "apps/cofounder-discovery/client/src/_core/hooks/useAuth.ts",
-      "sha256": "3980d4d7341bad7eee4214afd4ab8d4aafe5a3a3987ea99449488f18567ece38"
+      "sha256": "a9a4e08a9755be7d2247961b6aef9c7a5cb89ce9bbcb2ffc9c198c4408d572f1"
     },
     {
       "path": "apps/cofounder-discovery/client/src/App.tsx",
-      "sha256": "8e108b88f56094ad1e64d43f945d01e9b36a927ea349fd2697abf91da94c53dc"
+      "sha256": "4ec0448bf6d6680f69b45129079fa58e1cd62fce704778cd275267173f33ab14"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/AccountDataExport.tsx",
-      "sha256": "6f199a05ff475034dc1525c6569e185061ae77b01cf8243086c808d4479ac9b9"
+      "sha256": "f534352825a9e8ac667c0aba6a0a111453c8c3b9232a0f17d9374792b015a440"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-      "sha256": "fcd9d6ee7c3540c03826f8a4aeacb9de59eacfafbf7d04f79b5dccbf36ff739c"
+      "sha256": "7dfa4f52d9c7ed5083b31001d9a8995e0f84627cd72e335292546b1cf758b6a5"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/AdminSecurityPanel.tsx",
-      "sha256": "dbce7e0419364b0693dff2e4eb8112cb7b5999c0569d1034b7f4441d34468623"
+      "sha256": "6c9ca57830f65d6d4d7b1014126f513c5c6acdc976ddd9981a27809d6541e475"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/AIChatBox.tsx",
-      "sha256": "63e5f511db14372206ebfc4dee98ab959f98eae6ddcaa95b01bcd152dd219c53"
+      "sha256": "3cdb595fb1ac8ff37b8547a5c9f7ad7026f153e4ad671311301c854b435677b0"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
-      "sha256": "f386ff06dc8f3797388d53d23f9687f24543baed2eb167020e49fe7ed061588b"
+      "sha256": "5d2ebb9490dbf52739239f04ba5c2cba8010069a08de53e2b94765f93606a8b0"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/CandidateEditor.tsx",
-      "sha256": "fe9c8084dbdd48427de1330afebe3af5074848a66348dad347f5ebb24ce578f2"
+      "sha256": "46c4e2f99636eca2395db4df7218c4b60e9154aedf244e0737f192d960c2505e"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/CandidateExport.tsx",
-      "sha256": "6222b2a56f8ddffde1c73ffcf3b0740c861e1a5a8114f4cea550e5a90bbf5309"
+      "sha256": "e41ee9953eba2fd4b1ce8d1c2fd867e308a49147e931d9d91071dfdfe1bdef9b"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
-      "sha256": "a29dd334b3dabdf9ac4ca96a3ecf374fbe388955a2d1c13bd1416841684cdd03"
+      "sha256": "86dbccd9019889ac5b34909c9945999c7328b78e44a10959824e5c43e8cbf533"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
-      "sha256": "3924928f0aae36f9c5b0da680a1a56fd366d93d6f6a089ea16c1aae0840007d7"
+      "sha256": "b64e821cfb77c276da5e8ed006d3f830cf9c48ca452235180dbf8e76d1b8dfe6"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ConversationStarters.tsx",
-      "sha256": "b0d03df6d269c607c411958f754a374ea07f04c332a2cd97c4f613f3e7722415"
+      "sha256": "5fcbd56c4cea8bcb454334d893accb66f8b04c8c1e19bc4163896c4b2317ee22"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/CustomerSupportBundle.tsx",
-      "sha256": "ac6e0c88df925732da4fcbcb3d629888a12fde9b77f4e997f5cece55852a0ca7"
+      "sha256": "e22c67b8b4226d3e93d300f6b2659691dfef476673f59ed4bccec498610df063"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/DashboardLayout.tsx",
-      "sha256": "20543e2c59a9274447068a31f9b309f108127f72b41398786bb2bf92d7046b4b"
+      "sha256": "c896383dbf9abef213b4daf8dc7c93c34405c701f663bdac707564f8f10d7430"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/DashboardLayoutSkeleton.tsx",
-      "sha256": "1d26be9aa13a51749cb5e1399f3b820a4c8752acd6727c8f5008bfa1573e63f9"
+      "sha256": "a48237b4512e24cdd4ee6f08185943537690d71f3778f205b9a143e87552f695"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/DashboardSkeleton.tsx",
-      "sha256": "04667a8d773887434574dc3c1f7f26b1ad3da9b987cb71c932785e34d300632c"
+      "sha256": "20f769b18192f846c871d10a176fe061a0bd6b6b9feba59de1600e0820350cca"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/EnrichmentData.tsx",
-      "sha256": "60d19a4a467b866dd038d1475d058d5468870498e7c5627976ce6d90f2dffed2"
+      "sha256": "c8cacc3072e5b4b5de69452b1261a111b247e02a550259ca8676e405908e3a31"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ErrorBoundary.tsx",
-      "sha256": "3b0bdb7a19758fcd440138ccfb5f306b96836564f15d7c8c9663d7dd7417e972"
+      "sha256": "b1c26f7bfd1fd3af76b47746a12065c170834e1878d23951276fd691fa1bd80f"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/FollowUpQueue.tsx",
-      "sha256": "92e87d48e8db18365f97ebb2b6224a39eb616c3360e2b93a59c314c01e08a77d"
+      "sha256": "978f1f5e2430a4f1f4da3e54448ccde649380092d878b5097b94036a9a6dfdfa"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ImportRecoveryNotice.tsx",
-      "sha256": "51c48056ae887c7637092aada5b1fadbcb03669852abfe97a9370528b9d08be8"
+      "sha256": "f52f68c1467c02befefb03e04a215409e8a623585ff7a3c0a4b4df26a2ff51d3"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/LanguageSelector.tsx",
-      "sha256": "dde6d934370301d065f263d2661a47755c5e759529ccc013c6d1909e2e8e1ef1"
+      "sha256": "1d48186272296eb95010952df0dd12ef98e49a6cdabb5551e64ea57d1eb03506"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/Layout.tsx",
-      "sha256": "1b2f203de67268911f46472707a511b4c12904afd675264e09b8c457bc3c8b49"
+      "sha256": "709f738337c95c0c4e575e444942bbbdeaeb4baa98c44783cd62bbcee8dd43a6"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ManusDialog.tsx",
-      "sha256": "536e62363d8fa1d8ad11cc94c22b395abe4cc66fc8521faf1cf1476a07104837"
+      "sha256": "60d809bcb46c8f4a63f8fc926956f2a5b5e49de1ec62742e9fe7b421f9395678"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/Map.tsx",
-      "sha256": "3f4b2dd7d03ebc9fba223a65a016a03497e9ee8787ed5b263bd246da4afa0906"
+      "sha256": "87defc6c1e2084a3641b1a91f02789a5f20c596ad52cfa04e56aff7d210dd8ae"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/MatchCardSkeleton.tsx",
-      "sha256": "6ab57bee6127132564820e2bba8872676b33addb171ddd51ca4961a5106ef677"
+      "sha256": "b4bfdd70139554a234f32eb01ce9e0a588f8656aa04231e2a28d3c75ac15d1a4"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/NaturalLanguageSearch.tsx",
-      "sha256": "59c278a59f2b310c5243f3204f3c687134b5a2e743da216c58953c86ad7ce200"
+      "sha256": "eb3e6fd54ff6110bcea091f3e75940f81136198de69e303fe9d1349f8d13d1a1"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/Navigation.tsx",
-      "sha256": "82da2b67ada4ba5d8e46abf6d9b2630886471c98c5110a1fa250efa895177f2a"
+      "sha256": "820ecfac63c4c847171dcf1e86ed1ab8db40cbe8610ef688c628ca5032ef493a"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/OutreachComposer.tsx",
-      "sha256": "3e7dbfdeaa8bb37de8ffdbaedc0bcbf31a76cc2a3c3074dd15ec9658d07493a2"
+      "sha256": "3d13f1ab4fa0741d8e661689ca382288d232198a8b993a665e58efe38fa06c40"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
-      "sha256": "070379a9fde94b0e070e1d39aeed5af2b668b80471b50a4e7bd50e89e2497cad"
+      "sha256": "2394bed00328edbef6658c5c77682310afb75043e2cbb5a339c2709103ea56d6"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/OutreachReviewQueue.tsx",
-      "sha256": "08c98410b31ec9f321d5cb4b81940e5dd6d0652d29d22f9a2cca8640cc0be080"
+      "sha256": "d35b598fe3086e1a7a1d1b2963932756eb3eeb05e0496641c5696cb1508292dc"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
-      "sha256": "dad437bbd478054173ca910a309dbf7188c1dd9a64e332752c29327d31ada974"
+      "sha256": "6b90666aec7c64711fe89d4ebc13459333f35017388e092cdf5d25284098d696"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/PlatformCatalogue.tsx",
-      "sha256": "287c4cb5f4ff0356caff731023913f9cfc9873244435207556779df8f69f874d"
+      "sha256": "baacb1905d6fd7f087ccfda70268286a60f68d390b51ad0157a2de3501464aa8"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/TutorialTooltip.tsx",
-      "sha256": "38bb8f67803d3a7be691e7d011dbcb8d92e32029e9f52163e21b93922b64f1d5"
+      "sha256": "91a40ff5662dc266a2d44ca0349601d172bcfdbdc168b3632fa5c90400724f38"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/accordion.tsx",
-      "sha256": "7b96cf50388ad3d07be64924ab33ba5f63b79a6a5749ebe4d31c789c0bc00d44"
+      "sha256": "06897d471a9d554f7006ae506ce0e9e734bcdcb9358f09426118f6f21d42bd92"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/alert-dialog.tsx",
-      "sha256": "aeecd7967eb0be3bad2753b6633d9a43cc4c08cb35de872ffdc0b9f2b6a9b26c"
+      "sha256": "a55a8c343bc4c757089da1551e104027b67a5613a3eef3d28000f0056c25c4d1"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/alert.tsx",
-      "sha256": "eccfc7f6ca9d51407cb413a3ca4b5ac721898ac93d38e95c02c35188ad674abe"
+      "sha256": "4afab4d9f1df47a28025138d0dc8b471e6f9d051130b54ab9328ad7ed8da3d00"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/aspect-ratio.tsx",
-      "sha256": "654f5d6e9ed17472305d7e6fc5de30453875ffae585f5d064aedc9e6945bdbb0"
+      "sha256": "21be6da88512ee86d8f4e839d2ec54477c8f3a764875c754528ec612fd599918"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/avatar.tsx",
-      "sha256": "c2382ff71d7ef3492096ed6ef35bf82e1fd421a81d55ca80453f5f5138eac360"
+      "sha256": "34b98f70799cdb2400d646951f9b26bbe3fd760c224c513a057cffc3767eb4a1"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/badge.tsx",
-      "sha256": "51fd797c59e63d164ade736769f19f26e41c157daba29aa0b327b3b226f4d4ac"
+      "sha256": "b88d7a949c8b5536f9c121a942dd3fdb9b5d510e5d3899269e86a0a21e33afba"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/breadcrumb.tsx",
-      "sha256": "dd84657e30691ea7f14a785c13b660d6cd626c08ba1df8439c3eca858ee3cd7e"
+      "sha256": "993dac1740ea729ef4a89e0f0f2607d2d6022bfa4915d8dae20177c2d7c8cfec"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/button-group.tsx",
-      "sha256": "ba1d824f0f4d8b5dd78a80fa766e3543eefb9173143652be2c7cb765af1864f5"
+      "sha256": "9597be343f5641886cc46b77a5a84cdaaaa271e0158d9ce4b382f95856c2adfe"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/button.tsx",
-      "sha256": "9b7892344505817e5002f1b6f9ae64ea021d86576c8311a01c06cfb3b9ded774"
+      "sha256": "dd9b6fc95d4d24d0c36b31d23c5f8f71f6328c812003201f38aacc9db1c6407a"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/calendar.tsx",
-      "sha256": "89308bce82e8b23b611cfbc88bc19f7b341d7109ab9a2838c04cb50922113501"
+      "sha256": "1cb79d589e4ede3684c4b0a5ddc0e64ed9884ccf2564846def9041cb1c81589a"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/card.tsx",
-      "sha256": "1397e7d264d90162220ea7473b311e434651886267c71e7f58d4488be9d8ff39"
+      "sha256": "fb98e5af912e14fca9dd142b7f89f5ebabd63644613947845b75b1c08f3b45be"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/carousel.tsx",
-      "sha256": "42f66e6fde568c209df5d58a4ca13c3ae92d120a04fd99f7be695d6a570ef0a9"
+      "sha256": "2d9049c5817732f9b1be43388910c2d20d8ad0945c115e20e169176c0e98550c"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/chart.tsx",
-      "sha256": "47c4de202fe1dc229af94d2c86197251d279bee131d2a6fb75ab9e58cec71aab"
+      "sha256": "8184a16c958430e002042dccabc61b553a0c61be8a7a050553a823a875e2cb04"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/checkbox.tsx",
-      "sha256": "4fc309590e66d3c41e3be5fb73f988b0e916e7bf5fff321c22c3a64cd4fe97cf"
+      "sha256": "4bf1793ed5696a13a3736b2376e0728dd894bd43542dc357182f3d619a0451bb"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/collapsible.tsx",
-      "sha256": "95b5b9ea89a4105045c58b7eba539e57a1f4abc5a54d43ea0f7168f46b645eeb"
+      "sha256": "2447e438564fc72fa1f40eca73d62f77c09aa952a553eb57090c337f0d5a9bf6"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/command.tsx",
-      "sha256": "47910540789d4de9e890de63bfc0046f9cf6bfaa86d496a98c79622900f8520c"
+      "sha256": "3feeae4429e35917c7ea50e32dd85a108562e6b62f52a367be4633c416766db2"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/context-menu.tsx",
-      "sha256": "fe63c0a0dcabe749874ad19e07dee8418337c62dd64452fc08b5abf27b49b9eb"
+      "sha256": "5507d22f5c37052703740387df7e2887722b6a0694120ab7250a0787add0690d"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/dialog.tsx",
-      "sha256": "cf2098e25f80ef95ebac18d0873b639f1706f936ebe6fef1887ca6b093bc9928"
+      "sha256": "81326553c05fb3ccacc6a04e9a6f9c957a80638b99e9aca60cad6a7da4c2c608"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/drawer.tsx",
-      "sha256": "573deecc31f90fcd96f53a37b2e5363eb326fe737cbdb28cac38a5d014734fc8"
+      "sha256": "c3c11eea12169fb169dc578fab9ac9d4bb3491432189a2c224cb4a5ce7db5d46"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/dropdown-menu.tsx",
-      "sha256": "ede99252b737a29eb1f05370956e2b842be161b6a661f1429155ac561653d029"
+      "sha256": "1aaad3d028f845dea82b8c6f1202bd05cfeb46f43396ff51fff0be46a4913050"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/empty.tsx",
-      "sha256": "c0b612929b15fd498b984d8d98d1b082a3eb294be5aa8eb9cb53b67cf152f465"
+      "sha256": "07ef0f8f6e16c9ed7c3d2fdeeced96cae3cef8f42b8fd8d74fc768965c9a7cd7"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/field.tsx",
-      "sha256": "f093424ca5eadf43d46b020ed780aee7aa5f6d90d0b48fb50c031e3d7b0528c7"
+      "sha256": "ae477d495b3ecb2b35855c8833e8e2f432b60970cc52f3314e8d67fa27013c8d"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/form.tsx",
-      "sha256": "0157362d572713567d989b726277879e75c60c24684ade4aef854867dc2fac48"
+      "sha256": "2b39c7f412bfb2a1c831c5926b07b96795d30f22470325cc56d16c99d7780ce0"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/hover-card.tsx",
-      "sha256": "bdfe831708e7de6b9fbb14d8fe5af5a0985f67cff3c2b5755b4b570c3b4e7ad5"
+      "sha256": "c95bf7b74335750039dbeaae260e663e107ef61c97c127c5fb12f1e78d7b0d9b"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/input-group.tsx",
-      "sha256": "f62f2be2ad4c2c7711e7b25b0d6c03572f7871cb4022e9f4f6860dcd77dd9e57"
+      "sha256": "f2ab93326bfa7b4c61136e9b5869e96437fa6c157f54eb45ffc7ac0c64d610f0"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/input-otp.tsx",
-      "sha256": "45fc7fed882aa5024d8eea52d9b392d13b1d80f2b7f846365bc2586e3d16253d"
+      "sha256": "748e38558d836dabbb2cecb25ae8fc2f9c2ad3ecb18c5afa8b9e05a5f726bea8"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/input.tsx",
-      "sha256": "31629c814cd585b4c0a0a43e6efe141bc9a6b9a020c6ea66435fa3ef036c3642"
+      "sha256": "a7819f1f4871d2d01e120b7f0ccd4e853254e5d1948625459f3978ada0571887"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/item.tsx",
-      "sha256": "89f2ed48c2270064d63e0a40f755c1da14e99e7db46bceac56d6dee7b45b8798"
+      "sha256": "b61a2a5187628dfd5c16b02071e03d36a14157766cf0889a4a12736ff071cf77"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/kbd.tsx",
-      "sha256": "4f8f3e521b2b007643b8a2c8f86cf547bd87e703dc2bed067083ca48f901d6ad"
+      "sha256": "adfc943949b1a889bac7ba08857d662a3738a5190d6a7a61c16baf72e17199e8"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/label.tsx",
-      "sha256": "7fdad17d8e83912ad0cfc372c551a901ab98523ef17c0792a17c592a147db732"
+      "sha256": "6d336a2d346145cacda629b44f6ea2b7a39847d8c1aa08a0b24a29cc7b24b557"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/menubar.tsx",
-      "sha256": "53fb1c058fabaf0cfb3fb2cfdb9b17ccc8762376d62cc011150d919209b82c1a"
+      "sha256": "8abd2d13955e5cc0a888273203c56470fbece6775f8388fea8b8c45350566b7d"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/navigation-menu.tsx",
-      "sha256": "aafccbe2b05d9f80b7d007301b51aaede4692efc468304c5fb11b21cd0c0ef43"
+      "sha256": "15596c184abc7ccd3ffbb3895edab1e4bec0dd5ebdfbaeb58012530dc83a52dc"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/pagination.tsx",
-      "sha256": "8f0d822b4688eb131e37fbf2330e19b269ab6487583be3249b98f3b68bb07928"
+      "sha256": "72f26fcd0747ce5180ba9bf2931fe7dc133649d4ccb0af372dc2a57b70a712c8"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/popover.tsx",
-      "sha256": "5e7bec05904d9091a7b53963f5b49660bf3564b02a057ef8640ab6855d6e32fd"
+      "sha256": "344e67a635fefb999fe3908492118a4e06edbacd09cc5dcee0500686a7c41ad0"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/progress.tsx",
-      "sha256": "2297e3c13d5b2a04a9164c3900c8cae2e477c07ebed35c4bbda98d1232ab7b7e"
+      "sha256": "a4e4a61a0028bee6fd7e4ca72f1f2d65a7bdc7396050a5ec775fb824e4d13ce9"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/radio-group.tsx",
-      "sha256": "025f03d81d4e304eb27d94e6517f37072a3941df8f8603ac55cfb42b17cd99ef"
+      "sha256": "e1316e88dde857beece2a4e396e61650f757345900a207b2a7c975a6358c3507"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/resizable.tsx",
-      "sha256": "52e1027a4b4a5f70f0479f69fe40046dfa112952b7e568292727e1618348ee80"
+      "sha256": "92bc397186063a54a6705c1185b7f773c4c3481683c05b004d78769a637842fe"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/scroll-area.tsx",
-      "sha256": "793c5d69e6e5ce8bcbe453b8834d53f3a90839fc8e8e1f9fe5f77e7626566677"
+      "sha256": "cdbee78ff47e9bc0d9afc61d22bce6f7b7cc4db68c2372c04f6e8e72345dda43"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/select.tsx",
-      "sha256": "40945665ec8363e55ae38f26115ee763cbc5548bed585eed569d406cbc4b7a75"
+      "sha256": "3d6768ce8d03a4965deaa3a302bb9ade5ef952c11e79e15c43da73c3b81ba11e"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/separator.tsx",
-      "sha256": "23bbf3f74d01f55533f6f22ebbc2b299137421e07896cb7af21245756a10c27e"
+      "sha256": "f3633ff9b8801b2d0f771427f8057a4be9dfa945237ad91d090ea8737856632e"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/sheet.tsx",
-      "sha256": "ab22e38f2cf312a31a84fb91f7e912f0da66e809f6e1ae675ec6cf0c8ec0ba61"
+      "sha256": "11f2ea890d9ad3b46929eb7f069ded5c689ac94b513735ee1edcd19e0825ba18"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/sidebar.tsx",
-      "sha256": "476d79a6ecc015e4dbfbc76aad0c8680b3e81716f5a9366f97f8219695a27e70"
+      "sha256": "4d943867faf6fdd0a5afa1f1fe2107be4ba8a7c44528dede1cd2dda48851affe"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/skeleton.tsx",
-      "sha256": "1f75b999a5ad2f65e8fb807faa2b3fccef9eb333996fb4c9030575dac7393091"
+      "sha256": "fad980d20de58e1e82a4510723f2c7ce951c70060cbdb198d69c222e81410601"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/slider.tsx",
-      "sha256": "9c458646597836916678a9bce2f3064d4d5cdb0c65d32d92bc71f57d7569fb6b"
+      "sha256": "daa4578c395b3520c06c2227abd9ceb6cab6f2620d8aa572c4a6959e43f0a165"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/sonner.tsx",
-      "sha256": "a65fe9ded89363ec546f28401a26caec1a3aa38c52259eb829cfa33723dbe3a5"
+      "sha256": "113477b1ad4a5e202dd211dc9fbff7dbf9533a21929940dd596684aeaa17542b"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/spinner.tsx",
-      "sha256": "ecd836d476573adb4403747c3457339276805433c20eacf3408303b76ec283ff"
+      "sha256": "9e77b418f3b4bab43c67c7965d51606c20d3ad97efd71e417a24fd0cf31170f4"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/switch.tsx",
-      "sha256": "688cccb52220e05f6770fb5e8296375f2a784bcf6585eb26a721a9f29361ab60"
+      "sha256": "78bc979818857bcae8df6aac28811529879c297eb0b4c476eca292e431cd3516"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/table.tsx",
-      "sha256": "085566291cf03c9fea590aa9b77339feebf04cf8ce23494a3667f84bf4811e29"
+      "sha256": "64bcf4146dbc44aa630d0f841efb2ea4995e03218a1797bd0125539849d54d9f"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/tabs.tsx",
-      "sha256": "394b62295cee5185e858bcabfafcd5a7287910944c962fbd9c1c06444b22cedb"
+      "sha256": "63eeed33979ca27dae5b8bfcfb91c678ca159d3890eb2ef3afb008868cba3895"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/tag-input.tsx",
-      "sha256": "516d4fd38ffb28c45379e45e29cd24aac83a643d4dbef2ae7331d7174da747b1"
+      "sha256": "084115699a96149a3c06cfb3c5ad4306ec9553197e2a34f230148a2680a427e4"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/textarea.tsx",
-      "sha256": "3b4d8ddff604ece6c52309a21a6b352af4701e96bcb9d3596b372fe983e8604a"
+      "sha256": "739ca17d3f4fd26c162460ec56c551e9f5175bcfaead84d41b3f003a8b3f3881"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/toggle-group.tsx",
-      "sha256": "92e7640e30c4ae3ffd775e9a3d845327c26d9ce0f9f39555c2e7cfc2c8671c4d"
+      "sha256": "4639efd79f99adb8cf32f39d3a676141cf3fb584ecab9a80f60d39969c78dda4"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/toggle.tsx",
-      "sha256": "a922c5e0534b9fd556ff8a8b56e25f7d24544be6050472cdd1ea003b8a0f3e47"
+      "sha256": "c76c9b4de0e8ec4f6f361501df4be1dca4ee14421d66ef425a180f34c99e8710"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/ui/tooltip.tsx",
-      "sha256": "6f0c581e2018d676e43c0b4b5aeb62d3fe68e65907cf748548208d75ac212677"
+      "sha256": "480182cd46ec750e9642730d2bd9ad3447e63a8673675570a6bd2a0f02a0d7bf"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/VerificationBanner.tsx",
-      "sha256": "6a932743f64e1190c036748c10478f491f9cbfd4412bd1c5bc4c726c28eeccdb"
+      "sha256": "9e0987d84f21d4394fefa3dcf3e871250f5f89c98aa0e3e4ad48da90c4a20f29"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
-      "sha256": "4a57a6c7df6db27a091da358ec42b7fba3b5f42f9a4fada368b7f4fb455aef4d"
+      "sha256": "8822f06d774c8128c27e120bbab0d25f15ca8b76dc0d1c2fe3b96d088e4e2fd9"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/WorkspaceSafetyStatus.tsx",
-      "sha256": "f112ac39f6334c3726cd6f7e5391f4ad72d7bc1f3ae0018a8cbdc7197c2b5da6"
+      "sha256": "af206eea6bd2c40f875ee179a33e5c6fba0884a43d6c8d728e01ad30d94547f3"
     },
     {
       "path": "apps/cofounder-discovery/client/src/const.ts",
-      "sha256": "e8ba684df396612458a9ac25815635fc8d03184d3b405f971a413bb15b61d1f1"
+      "sha256": "2cd9c30499b8c559db0ea35b0fdd9ac137540ef2f925d223903156c8f254d8e9"
     },
     {
       "path": "apps/cofounder-discovery/client/src/contexts/LanguageContext.tsx",
-      "sha256": "94839d5f7efe8503549f95223545d00b3d97fabcfabda93afc90cc00522b45c5"
+      "sha256": "935bc034c54a899ae401ce1095b1eeb101cb2d01abd40d0f9ca565d3beaa5dd7"
     },
     {
       "path": "apps/cofounder-discovery/client/src/contexts/ThemeContext.tsx",
-      "sha256": "e025cdb51ad747757235b16dccbb39b5e949cdf93fa9a822ff81ef6e32f65924"
+      "sha256": "4880f274c840349923d61e5bd71fa4cb085fc3ae0b5a10c85d6a4c6fbff8ea65"
     },
     {
       "path": "apps/cofounder-discovery/client/src/hooks/useComposition.ts",
-      "sha256": "674c515075a2f318d4ec2291313ba552488de0b2c1aac7f36f3d71c4e34d434e"
+      "sha256": "9bc595fbef15b83697c02444b52788ff6cff7bc12313c14718bac0e9a7a04d8e"
     },
     {
       "path": "apps/cofounder-discovery/client/src/hooks/useMobile.tsx",
-      "sha256": "464e778a9da49481e3c6dac4f92ff589e01349b33063a74c45435cfeed81e1c0"
+      "sha256": "049af00eaaa8e81f03190edfb1efdce7143a83c70b10254b82dbc18efb55e64f"
     },
     {
       "path": "apps/cofounder-discovery/client/src/hooks/usePersistFn.ts",
-      "sha256": "0dc5f198b5bd9f00f21755ee0687ef177d5237f3e9298cd2c369e8478195c186"
+      "sha256": "0cf13a1eaa8b673a20bdc8d80d6a027521f6ee2581461f647fc5f602fa22efa2"
     },
     {
       "path": "apps/cofounder-discovery/client/src/lib/admin-security-flow.ts",
-      "sha256": "15060e4e6d5aa96854fc71c88e670c9ac3673ae4c3c631d0209230f75946bf87"
+      "sha256": "ae84b2cc5b4ac011f3f71c610db69c8da7fb4bcf1c1abd39cc10acd24b73ff02"
     },
     {
       "path": "apps/cofounder-discovery/client/src/lib/candidate-workspace-copy.ts",
-      "sha256": "42a023ace4f98d3411cbdd1751037327c1ceb737f96775d7a737f16dbe8e0928"
+      "sha256": "a3d620dc9f200cbb6aef66ad9d514e161ac2f8a207f3e2818f1915c9fb0a3159"
     },
     {
       "path": "apps/cofounder-discovery/client/src/lib/csv-import-copy.ts",
-      "sha256": "5d40500e7e2ecfa4b81946b50656c2ec2c1a4b58a744b32d411043a6ebcd62bb"
+      "sha256": "33fc1762be14d0b1628b16cfce0263461827b6858dfe663b25998ccab8e0e62e"
     },
     {
       "path": "apps/cofounder-discovery/client/src/lib/trpc.ts",
-      "sha256": "d883ad43f46eaf73342924feaf5342ce601d04abe1a828076625071931cc0ef3"
+      "sha256": "7dcd66f834423063bb8916887bc51e4373670d644cacf58cf6498bd843c1e658"
     },
     {
       "path": "apps/cofounder-discovery/client/src/lib/utils.ts",
-      "sha256": "d1f1e0d62cb8d8d1e04c26e14de842d8a151f75812d81b046c65b5d1fe8e4b27"
+      "sha256": "c0adf27efbfa148d5abcf99e860f8e3e6c8fc77a1f99e023c08ef4f12e6ece29"
     },
     {
       "path": "apps/cofounder-discovery/client/src/main.tsx",
-      "sha256": "6f62ab17fdb872611adbf23c152e76323e29c867c5d7184485114b22ee708e76"
+      "sha256": "d215ab62126dac75c5145402f7915c32d2477d2bc3f8677655f87d44018aaf4d"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
-      "sha256": "f6878914a2affab8d36b24759849c70420293a6de414fb7a6373607d0134320b"
+      "sha256": "e7d5412bb5bb63f5ef52cf3236fe9ff974894e245d2f88126466beddc8e0d722"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/AdminAnalytics.tsx",
-      "sha256": "f6a47fddaf59900a82b99ef69a584bea6ff840ecd0163359b14b7ad95fb21bb3"
+      "sha256": "be7d73d39f2e8967682bb89e9bb46acb4c50adc2954389010cefaa3cdf04e595"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
-      "sha256": "823c25fde189b80fa77f99ea184342feacf8b244f5f1a0fbdfd002762d813c8a"
+      "sha256": "2f08ed079869cb35c54cf290a3ad5a1438b5cd2581720edd8538d2617c9ce08e"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/AIMonitoring.tsx",
-      "sha256": "56155dd950b42da1cd5a62c63edaadccd6dad53bd470df701e9d90bfb312b618"
+      "sha256": "070ff9f1ab8a8d594c4646342d7f384bb8a61dc788fd0cb11ccfe7e1c3b8a373"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Analytics.tsx",
-      "sha256": "ecea6ad8d5999b27e3b68cc60b56106694eddbbe5d970f252b1a40d9103f6387"
+      "sha256": "f12cd4635f1514b7464a32aa3269d8e7374c74b53ca71a96e0e39063275ce1e2"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/ApprovalQueue.tsx",
-      "sha256": "63bf143271b5432678918411154f2d29774bc786774c404334b5a5a2d8395e6e"
+      "sha256": "f2afe494ba03d171254aed208964a46092bab37bcbffe7d487f97cb4724e2fde"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Campaigns.tsx",
-      "sha256": "fd8974c97f41c94261c0b75e05a8dcf3e4dc3caf9a4879356062a5a1d1d1fb4f"
+      "sha256": "7831eb50f5ff0c37d57670f54e99ffcf653035caf6893a084938b7944670b434"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/CampaignSettings.tsx",
-      "sha256": "89a773d14443558c246d5768f20651c1de8cce78b9cfabb28cd546cf749beb17"
+      "sha256": "6c71c5b632a85c1acc25c3d12468f1825f02815f2513f86611249a7ecd4b1051"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/ComponentShowcase.tsx",
-      "sha256": "72b3e2ed7894184ffa0ec7740803a21e6ca593270d12f2dce4e4e94f3e9ec872"
+      "sha256": "b5ebac02d2de1b3c86f1700f772bc0fd6321b5bc7b926a6d0dbc35bc18e5164f"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/ConnectedAccounts.tsx",
-      "sha256": "4db9c0ef44e9e3d5ededf8e6cd7123f1f7e071a3805f4fb7c24155bb6019f5f3"
+      "sha256": "556cfc1a4c54b2acc47fc97b1b9fd5cae644aee2aef83e87d0a06c6b8064738b"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Dashboard.tsx",
-      "sha256": "71d1a8e3f24344f977a97f1d46e43012186bab34f2425fbe903f8afd0e15fb04"
+      "sha256": "512baafe945300f7f10054a2d7616e4f9ff160f189f9b41840fe680b2989d8d9"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Enrichment.tsx",
-      "sha256": "8721c9248e385c1c0e3808b176171cef8d9350a82469e38a50591261cc858c56"
+      "sha256": "7c5d41180ef5a88f8aa747210d11be3a0a2d2652deb47fd2ee39b6bd4ff162a2"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Help.tsx",
-      "sha256": "4a167d256e4c496454cd71cbf88b4fb9ecefbea0e5a0b27604f5a6845889a2f8"
+      "sha256": "3d2730e7ce86bdbca784c6c467228f104124e18d8df7ee9466af8ffa6aa5cb46"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Home.tsx",
-      "sha256": "a0233e749bddb94821171434fc230315aca27e0e2642a01d5ca22163da74ed63"
+      "sha256": "87bd946d3914a31815fb6c278281d1a4aa69418fc350bf5dff5679c4cc6ffdaa"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Login.tsx",
-      "sha256": "9fed897c8675072a8ca05bfb41f79e892ae839e9ef629472dd4b81a8da2d7178"
+      "sha256": "2f3f4bf50694e8ba5298eac629f3f7d5dcd0221e49ecd0888874cbaefe9852c7"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Matches.tsx",
-      "sha256": "b27e28cd656fceea69ea16b8d255de57ab7c8f0c99589e0c60d14cd29fa75366"
+      "sha256": "fe4c1d6855ba17e9f616c2df6cfe9abe7df3fe1597b6451ed9dd575627083d8c"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Messages.tsx",
-      "sha256": "eceb158bdcb855359e1ec97acafba615588d201bf8e2888e46bddfc2a29fd873"
+      "sha256": "71683af18b382b2bd0072b10b1fbbd9840ac6a602b49bd875e14d5cb30383b75"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/NotFound.tsx",
-      "sha256": "f490ae2cc3dfaa81060c5c03ef92ebfa9477e1a0d9fab4fe3c7d2c9a513c62c1"
+      "sha256": "5f82aa3ba78c09440003515c3779754b1c98253e430df33e4243610268fb303a"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/NotificationSettings.tsx",
-      "sha256": "02fe41a2e6d79d48c7ade65474f8a1baa8d2256676b48cf2e8721ee84cdcaf6e"
+      "sha256": "f2395637b0e318b846265fbec71b5a22aadbbc595add046af50689cba0e4833c"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
-      "sha256": "73a933948f3875ff0cd70afc72e586887d467dff918ed0f6c491531ec530ffb7"
+      "sha256": "1dedcdf2e442c65f589792d298b060dc87ce689160a699ef6f8f55b247f68ef4"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
-      "sha256": "9430d2109614797fe2e549f07da327b67636497230ad17a86f72e35afcbad298"
+      "sha256": "e5a3937a28758229c065b9ea428a8d1a77de0954619c644e051d75c4c5054d92"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Pipeline.tsx",
-      "sha256": "1d5f2d228494e1cdd061ab4373ff6fd37ed349bb4fa3077f69e2fb52561c6738"
+      "sha256": "636c2d09cb71f563e34ceb16bed5e38598029ea6328d4e53d236c0dc1bc47cde"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/PlatformConnections.tsx",
-      "sha256": "1a2fe302867cb143bcbd2c294976d1b6880c5d010ca668fee5baccd70f7ef102"
+      "sha256": "0b9326fffbde5bc2bb48c9152fb3e7d03fb1a18eb9beeedec6ff895897acc3a5"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/ProspectTimeline.tsx",
-      "sha256": "4c58316e140696c191c7d6976075b87825a601aaebcb821e7e2365b2ab73b8aa"
+      "sha256": "a2c8c23ee99bebf60436097bdc99681df1ea09f4c020b74b25d19d62ba034adc"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/SavedSearches.tsx",
-      "sha256": "abd10dfcfc3ad4d1af9f1f5a786cc242852b6553e4e086b43625936ff33e960e"
+      "sha256": "4599c4dd715bb298791ed2d1b5aaf6582814fa5f8ad40c8f468b899410044bff"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Scheduler.tsx",
-      "sha256": "f0947713aae990b3fbb0ae7a86c2cdeb4a41ba71160573850df92c9112b8c6ce"
+      "sha256": "0e62ece42a987c96303821dd2dda39895853d37bf8fca8efb2092791928c5cf3"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Settings.tsx",
-      "sha256": "9f6795c3560da3fe8b525e515d187e29540ee39ec60155c9b3e457f3a7a5a267"
+      "sha256": "e68ae55edeefa4e1afa06f99752ebf220c04292d8da0556563a341eb30bc23f2"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/SuccessMetrics.tsx",
-      "sha256": "930f3f80b6ee510a034920331c66e448b31cb76ef185317d54c2d50781e089fd"
+      "sha256": "6ded4443e54231827e6f7a37907d4538aff6697c58f5502488f7fe317ca6fb3b"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/Usage.tsx",
-      "sha256": "ee56f63098787a689dd74a843b846209e2c533c79dd01055cb99c10f6441f645"
+      "sha256": "68f18274676a6b919b5d5a23ea7e99431730385763232578f731da3cd7a6e995"
     },
     {
       "path": "apps/cofounder-discovery/client/src/pages/VerifyEmail.tsx",
-      "sha256": "4d91aaf1c4dfe1f057d64da66e5b7cacb4e37ff76c0879ccbd3806bc6ab80080"
+      "sha256": "fbd0cbd7d12a45d2b20ab0f4b484a48ff2ca784a85dadf952397ebcc5ba77fa9"
     },
     {
       "path": "apps/cofounder-discovery/client/src/tutorials.ts",
-      "sha256": "145719c1d56c4cba25b62c27d3ac61ebb55e7205627648b1a3184c6fe1857223"
+      "sha256": "a39be2b9c82a7386f67b188652cd1bce5617f9443472b63b462f5696c9b26c2c"
     },
     {
       "path": "apps/cofounder-discovery/server/_core/index.ts",
-      "sha256": "873489ede4fca2d9953d4c31352270c78370e9c230b30caa5a87e2543ff90528"
+      "sha256": "c2529146901b8364ad715067419b200e4f168c1ee4f9acbf5efa60e4d24d192b"
     },
     {
       "path": "apps/cofounder-discovery/server/_core/systemRouter.ts",
-      "sha256": "bbbe876d0ef6d5a62abd24f517487a223087860e2a22425db05c11828e883f18"
+      "sha256": "e1bf6e80ec7e1ac2fd4d4d3eeb70d332f85f4e780a8c262da3c629330dd27a38"
     },
     {
       "path": "apps/cofounder-discovery/server/_core/trpc.ts",
-      "sha256": "a858d4384766b0d03044c58efd99145d923d59a0d0ba5c96fef4848589fa40aa"
+      "sha256": "65c78a8616259f35497efa0ddf2837dd54e78deaaffbffd195907d0c1b221bf4"
     },
     {
       "path": "apps/cofounder-discovery/server/admin-mfa-router.ts",
-      "sha256": "22142c0e7b1eb854ae53f68d84618d62b70494cad3d63e6e26a6c1a19a5a2740"
+      "sha256": "2725a1333bdc5e7e897eb1a7529b72697bc8f4b68e29ee7876ce8d4747a00669"
     },
     {
       "path": "apps/cofounder-discovery/server/ai-monitoring-router.ts",
-      "sha256": "ff8c4c18a0b5a290f06dd565ffc39b37b02cbfa0d470a043afac9230319ee581"
+      "sha256": "84ab32d70419e4b37952b63b0c8cc41ce20ecafe41433b731e8d330b43705b1d"
     },
     {
       "path": "apps/cofounder-discovery/server/automation-router.ts",
-      "sha256": "7eab798fd6b80b25e04e98c2422d8adac1469bd4c0c57daf954b219bf9a04d4e"
+      "sha256": "c3f000e979f5edd819a96d6e9cb365e0a3e10ec58e806e78a6b4f0c528d98d5a"
     },
     {
       "path": "apps/cofounder-discovery/server/critical-path-router.ts",
-      "sha256": "1734ce785c30a59aba2a138d5e495f151259709ba672b9df6f61d4067fe3eb27"
+      "sha256": "0f3f7940d5a743e2ed5b52e6f55fe0c09e8a556f146206dda108386aa819fcdd"
     },
     {
       "path": "apps/cofounder-discovery/server/outreach-router.ts",
-      "sha256": "92f12506e772c2d4916be75a259179b4b7f50bfbf5987ad1b00714a1afef137c"
+      "sha256": "63d930e69344fab3e9c4ef2f43c21b9e911681a662263e54f7274d97bd6287cb"
     },
     {
       "path": "apps/cofounder-discovery/server/pipeline-router.ts",
-      "sha256": "04ad064fc39ed661fe9ef66d0f49046b5401703b59ca152a4eee8c76e9271051"
+      "sha256": "8a7b8393316fcaf7ae9bce2da5cfef2af8ca2eba339db23e7441be768cc14aef"
     },
     {
       "path": "apps/cofounder-discovery/server/platform-credentials-router.ts",
-      "sha256": "91a3e5bffda105ca1741feafb51ece75089eb8d1c98fb9842d7b0800b1622667"
+      "sha256": "a44beb2f197dccbc93510ecd5b81ace1bacadd842b283b18e631918b08067dd0"
     },
     {
       "path": "apps/cofounder-discovery/server/route-policy.ts",
-      "sha256": "daf93cb14eeeea84472995e11a71dedcb1c0e0382712d9286d7859bb62e5c0cd"
+      "sha256": "4607d45a593c901b7eb06d74fd1e12ec5e6626b0f2d2599b936a5e4281a03f55"
     },
     {
       "path": "apps/cofounder-discovery/server/routers.ts",
-      "sha256": "333fcded44a6d74bf52f0c6a1760a927264f6a3dc001009f6b023af723df4bd5"
+      "sha256": "b18542b78931308d831cb41cd65c87ae35bc56330f978234b1136e026b18c701"
     },
     {
       "path": "apps/cofounder-discovery/shared/candidate-input.ts",
-      "sha256": "ccd11d74baaaddcc0b22213fb5e8bc9316dfc873e0bec2bfbfd97efd263a1f75"
+      "sha256": "22be1ae444215f80f75b147f6e402d123b1aa2ab97f77b7cd8969ef2584771ef"
     },
     {
       "path": "apps/cofounder-discovery/shared/candidate-intake.ts",
-      "sha256": "a30b39991d00f20b44f7484ff08cf1ccf7980f9331cd31b6e1db89a2d3ba16fb"
+      "sha256": "6d9e10fe46fd8a77256e3c6f9c4f4d9c81cedfbebdc529f9827c89fdb168108d"
     },
     {
       "path": "apps/cofounder-discovery/shared/customer-support.ts",
-      "sha256": "41b3bae6da0105ee465fff835151aeb30615cb0cf43488084187742edcd5cdae"
+      "sha256": "a62c486f85f5c2f2f4323b6956851c22e240ed0419a027744c8df128ddc57b3c"
     },
     {
       "path": "apps/cofounder-discovery/shared/import-declaration.ts",
-      "sha256": "7851a3ebfa0edbcd17ca61bf4a635f58381d1d6c110f9ef8c09ec90821197c94"
+      "sha256": "0555ccfa8d4d756fc1ccf158d44ecd7f2cad1a8e4fac7c865df5e2bb7cde6634"
     },
     {
       "path": "apps/cofounder-discovery/shared/outreach-conversation.ts",
-      "sha256": "dd5d31c2f7517580b6bc9f6c21ff27b08d3f2fd4a43bc8e6faa0487c8e804467"
+      "sha256": "dfd22bf67ebe203bbed34ea23e50744dac16bfe71889c0486ff75bb2d865a23c"
     },
     {
       "path": "apps/cofounder-discovery/shared/outreach-revision.ts",
-      "sha256": "6b3985e2cdc09e90043257372791f3b57c78c23fa344cb7b111fd58517a35103"
+      "sha256": "74eb3c19a54271c64ac5f1841579077bbc1200fece81ae70c8839eefd6857b3d"
     },
     {
       "path": "apps/cofounder-discovery/shared/partnership-progress.ts",
-      "sha256": "53350dd9d3042ae84242f25058e5d7c0ea6427bce7aa1032c82dc1fd6c96f8db"
+      "sha256": "fb551354f2159883e2a23cb19beaa3df814eadaeb1c54ef528b9af2ce1cc8234"
     },
     {
       "path": "apps/cofounder-discovery/shared/platform-catalogue.ts",
-      "sha256": "79eb6d1b21320628e5316d3318a50c98f5543eb5d84f30434cf860a5b1468ebd"
+      "sha256": "daf2278f865ddb28f44d3646676b1c575342ed6bf6f36de32ec73e6872c7f833"
     },
     {
       "path": "apps/cofounder-discovery/shared/workspace-presets.ts",
-      "sha256": "8fc8134b60025ffa401508f9ea0030e12b595c09200da78db8c1d307e6e8147c"
+      "sha256": "264219889cb14ad0e862a5ca2e563f2defbe3e70975e47cced16559a585eadcc"
     }
   ],
-  "inputDigest": "50e5058d2dcdd8432cdf3b4dd4a6ccde96d56d7e3af3c2ea1c8dcb4f1f20e523"
+  "inputDigest": "0713eb3445a2e91094236e2533a1bce963a4f8ac0f6aa57f2a5af78c5b473980"
 }
