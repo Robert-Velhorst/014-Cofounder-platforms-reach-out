@@ -606,3 +606,7 @@ inherited ZIP/demo asset rights review are still missing. Do not infer a complet
 license grant, copyright holder or redistribution permission from metadata.
 Third-party notices and service terms need separate review. See
 [release rights review](docs/THIRD_PARTY_RELEASE_REVIEW_2026-10-02.md).
+
+## Deployment target
+
+Public deployment targets Hetzner. The local tunnel launcher is retired. Follow `DEPLOYMENT_TARGET.md` and complete infrastructure, secrets, DNS/TLS, database migration, backup, monitoring and rollback acceptance before cutover. Local checks do not prove a hosted deployment.

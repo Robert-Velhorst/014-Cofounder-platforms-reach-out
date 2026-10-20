@@ -176,3 +176,5 @@ functional correctness, licensing, provider approval, hosted operations, legal
 acceptance, or that any phase has met its definition of done. It always
 reports completion as unproven. Final approval must inspect substantive evidence
 for **every phase and additional requirement** and retain the entire goal.
+
+The workstation tunnel launcher is retired. Hetzner deployment, migration, hosted acceptance and rollback remain open operator gates under `DEPLOYMENT_TARGET.md`.

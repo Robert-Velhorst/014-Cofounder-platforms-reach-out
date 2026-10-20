@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import http from "node:http";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import {
   activate,
   createGate,
@@ -401,19 +401,12 @@ for (const failure of ["discover", "prepare", "verify", "cancel", "agent"]) {
     },
   );
 }
-test("launcher keeps local demo startup and fallback out of its command path", () => {
+test("retired Windows tunnel launcher is absent and retained coordinator stays fail-closed", () => {
   const source = readFileSync(
     new URL("./start-ngrok.mjs", import.meta.url),
     "utf8",
   );
-  const wrapper = readFileSync(
-    new URL("./start-ngrok.ps1", import.meta.url),
-    "utf8",
-  );
-  assert.doesNotMatch(
-    wrapper,
-    /Start-Process|docker compose|start-windows|APP_MODE/,
-  );
+  assert.equal(existsSync(new URL("./start-ngrok.ps1", import.meta.url)), false);
   assert.match(source, /"compose.production.yml"/);
   assert.match(source, /"--no-build",\s*"--pull",\s*"never"/);
   assert.match(source, /"--inspect=false"/);

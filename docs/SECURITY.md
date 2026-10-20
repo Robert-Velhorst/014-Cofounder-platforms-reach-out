@@ -79,8 +79,8 @@ This bounded feature does not prove a whole-product threat model or privacy asse
   the separate application-only production definition and
   [production runbook](PRODUCTION_CONTAINER_RUNBOOK.md) for hosted preparation.
 - Keep database access private and application traffic loopback-bound behind a
-  reviewed HTTPS proxy. The controlled ngrok launcher is a separate exposure path,
-  not the only possible production proxy and not proof of release readiness.
+  reviewed HTTPS proxy. The workstation tunnel launcher is retired; hosted
+  deployment targets Hetzner and requires separate release acceptance.
 - Production validates supplied origins on mutating requests and requires HTTPS
   PUBLIC_ORIGIN for non-loopback hosts. Missing Origin headers are not proof of
   trust. Registration and proxy trust are explicit configuration choices, not

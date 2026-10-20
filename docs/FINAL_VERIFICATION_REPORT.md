@@ -1813,6 +1813,8 @@ remain open. Phase 024 moves from Missing to Partial, not whole-goal completion.
 
 Updated: 2026-08-09
 
+Historical report: the tunnel launcher has since been retired. The current deployment target is Hetzner; this dated evidence does not prove a current hosted deployment or cutover.
+
 | Check                       | Result                                                                                                           |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | TypeScript                  | Pass                                                                                                             |

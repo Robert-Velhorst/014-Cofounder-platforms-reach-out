@@ -1,3 +1,5 @@
+> Historical repair receipt: the tunnel launcher is now retired. These commands are not current operating instructions. Public deployment targets Hetzner under `DEPLOYMENT_TARGET.md`.
+
 # Controlled hosted tunnel: operator procedure and local repair receipt
 
 October 2, 2026. This is preparation and local test evidence, not permission to

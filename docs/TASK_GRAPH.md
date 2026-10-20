@@ -43,7 +43,7 @@ It does not remove the broader beta, provider, privacy or final readiness gates.
       -> production build + dependency audit
       -> Windows container acceptance
       -> browser/accessibility acceptance
-      -> ngrok/HAI operator gates
+      -> Hetzner deployment/HAI operator gates
       -> final verification + release
 
 Provider-authorized automation is a separate future branch of work and is not a

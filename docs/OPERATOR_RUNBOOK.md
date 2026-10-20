@@ -22,17 +22,9 @@ acknowledgement. It creates an authenticated encrypted backup, not a plaintext
 SQL file under the repository. Restore only into the explicitly confirmed,
 separate empty rehearsal target described by that runbook.
 
-## ngrok
+## Hetzner production deployment
 
-Follow [HOSTED_TUNNEL.md](HOSTED_TUNNEL.md), including separate public-exposure
-approval, a reviewed immutable image, protected secret files and private database.
-After those gates, ./scripts/start-ngrok.ps1 -PublishConfirmed accepts an optional
--Url https://name.ngrok.app. The foreground coordinator holds public requests at
-503 while discovering the exact gate-bound endpoint, preparing the standalone
-production app and checking actual container posture/readiness. It does not
-start the example database. Keep the terminal open; failures/cancellation close
-the gate and stop only its owned agent. No local-mode or registration fallback.
-Actual TLS, provider configuration and browser ingress acceptance remain required.
+Keep the local Compose stack on loopback. Follow `DEPLOYMENT_TARGET.md` and the production container runbook for infrastructure, private database, secrets, DNS/TLS, migration, backup, monitoring and rollback acceptance. The workstation tunnel launcher is retired.
 
 ## HAI connector
 
@@ -66,7 +58,7 @@ Register this Generic JSON Feed in HAI:
 
 - Same Windows host URL:
   http://host.docker.internal:3014/api/integrations/hai/feed
-- Approved ngrok URL:
+- Hetzner HTTPS URL:
   https://your-domain/api/integrations/hai/feed
 - Authorization: Bearer followed by HAI_CONNECTOR_TOKEN
 - Provider: generic_json_feed
