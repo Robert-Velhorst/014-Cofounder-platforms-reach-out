@@ -86,7 +86,6 @@ const operators = [
   "test:monitor",
   "test:recovery",
   "test:production-config",
-  "test:tunnel",
   "test:release-contract",
   "test:requirements",
   "test:support",
