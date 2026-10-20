@@ -2645,8 +2645,8 @@ recovery, production-configuration tests and application units. The production-
 configuration suite reads synthetic Compose models; it does not start or change
 containers. Docker Compose must be available. `test:all` additionally needs the
 prepared isolated database/recovery environment; do not point it at live data.
-The readiness rehearsal requires an already available `mysql:8.4` image and Docker
-engine. It creates only network-disabled, unpublished, memory-bounded tmpfs fixtures,
+The readiness rehearsal requires the already available MySQL image pinned in
+`.github/workflows/ci.yml` and Docker engine. It creates only network-disabled, unpublished, memory-bounded tmpfs fixtures,
 checks the actual CI/local/integration probe definitions and stops its own fixtures.
 It never uses an existing database or pulls an image. Stopped fixture containers
 remain inspectable; their synthetic tmpfs data is discarded on stop.

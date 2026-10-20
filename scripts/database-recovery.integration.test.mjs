@@ -18,6 +18,8 @@ import {
   createCipheriv,
 } from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { getCiMysqlImage } from "./ci-mysql-image.mjs";
+
 const script = fileURLToPath(
   new URL("./database-recovery.mjs", import.meta.url),
 );
@@ -76,7 +78,7 @@ test(
     const databaseImage = docker(
       "image",
       "inspect",
-      process.env.RECOVERY_TEST_DATABASE_IMAGE || "mysql:8.4",
+      process.env.RECOVERY_TEST_DATABASE_IMAGE || getCiMysqlImage(),
       "--format",
       "{{.Id}}",
     );

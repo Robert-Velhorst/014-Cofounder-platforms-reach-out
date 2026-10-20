@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { getCiMysqlImage } from "./ci-mysql-image.mjs";
 import { assertCancelledMigrationReleased } from "./runtime-startup-observation.mjs";
 
 function docker(...args) {
@@ -44,7 +45,7 @@ test(
     const databaseImage = docker(
       "image",
       "inspect",
-      process.env.RUNTIME_STARTUP_DATABASE_IMAGE || "mysql:8.4",
+      process.env.RUNTIME_STARTUP_DATABASE_IMAGE || getCiMysqlImage(),
       "--format",
       "{{.Id}}",
     );

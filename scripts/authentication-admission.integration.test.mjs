@@ -6,6 +6,7 @@ import { mkdtempSync, writeFileSync, realpathSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname, basename, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { getCiMysqlImage } from "./ci-mysql-image.mjs";
 
 test(
   "actual runtime rejects excess authentication before DB work and retains disconnected work until settlement",
@@ -39,7 +40,7 @@ test(
     const database = docker(
       "image",
       "inspect",
-      process.env.AUTH_ADMISSION_DATABASE_IMAGE || "mysql:8.4",
+      process.env.AUTH_ADMISSION_DATABASE_IMAGE || getCiMysqlImage(),
       "--format",
       "{{.Id}}",
     );

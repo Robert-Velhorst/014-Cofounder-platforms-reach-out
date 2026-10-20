@@ -241,7 +241,8 @@ executes the PowerShell wrapper. It stops only its own fixture containers and
 removes only its private temporary files; stopped containers remain inspectable.
 `RECOVERY_TEST_APP_IMAGE` can select an already available integration-test image.
 `RECOVERY_TEST_DATABASE_IMAGE` can select an already available exact MySQL image
-(default `mysql:8.4`). Before creating any fixture, the test resolves all selected
+(default: the MySQL image pinned in `.github/workflows/ci.yml`). Before creating
+any fixture, the test resolves all selected
 images to exact local IDs and validates them. Missing images
 fail; fixture runs use --pull=never. Migration executes the selected image's own
 compiled runner and migrations, not host dist/source mounts. This does not prove

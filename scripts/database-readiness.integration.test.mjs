@@ -8,6 +8,7 @@ import { mkdtempSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { getCiMysqlImage } from "./ci-mysql-image.mjs";
 
 const execute = promisify(execFile);
 const root = new URL("../", import.meta.url);
@@ -15,8 +16,7 @@ const workflow = readFileSync(
   new URL(".github/workflows/ci.yml", root),
   "utf8",
 );
-const ciImage = workflow.match(/^\s+mysql:\r?\n\s+image:\s*(\S+)\s*$/m)?.[1];
-assert.ok(ciImage, "CI MySQL service image missing");
+const ciImage = getCiMysqlImage(workflow);
 const ciCommand = workflow.match(/--health-cmd="([^"\r\n]+)"/)?.[1];
 assert.ok(ciCommand, "CI MySQL health command missing");
 const ciEnvironment = Object.fromEntries(
