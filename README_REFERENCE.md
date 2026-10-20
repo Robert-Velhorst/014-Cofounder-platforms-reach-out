@@ -1033,7 +1033,7 @@ Unsafe imported legacy routes and browser/platform automation stay disabled unle
 |       +-- scripts/             App-level migration and doctor helpers
 |       +-- package.json         App scripts and dependencies
 +-- docs/                        Operational, security, audit, acceptance, and verification docs
-+-- scripts/                     Windows launch, ngrok launch, and database backup scripts
++-- scripts/                     Windows launch, database backup, and support scripts
 +-- docker-compose.yml           Local production-like app plus MySQL stack
 +-- Dockerfile                   Production image for apps/cofounder-discovery
 +-- package.json                 Workspace scripts delegating to the supported app
@@ -1085,7 +1085,7 @@ Operations and analytics:
 - audit event feed;
 - health and readiness endpoints;
 - encrypted MySQL backup and isolated restore tooling;
-- ngrok launcher for controlled HTTPS exposure;
+- no public-tunnel launcher; production deployment targets Hetzner;
 - read-only Generic JSON Feed for HAI.
 
 Security and safety:
@@ -2800,7 +2800,7 @@ Local feed URL for an HAI process on the same Windows host:
 http://host.docker.internal:3014/api/integrations/hai/feed
 ```
 
-Hosted/ngrok feed URL:
+Hosted feed URL:
 
 ```text
 https://your-domain.example/api/integrations/hai/feed
@@ -2810,32 +2810,13 @@ HAI registration, HTTP-feed enablement, and host allowlisting are external opera
 
 The OpenAPI description is in `docs/hai-connector.openapi.yaml`.
 
-## ngrok And Hosted Testing
+## Hosted deployment
 
-Use ngrok only after separate operator approval for public exposure and deployment.
-Review [the hosted tunnel runbook](docs/HOSTED_TUNNEL.md). The launcher now uses
-the standalone production definition, not the demonstration database or local
-Compose defaults. It requires an already available reviewed immutable image and
-protected database/session secret files; no provider or purchase is provisioned.
-
-```powershell
-.\scripts\start-ngrok.ps1 -PublishConfirmed
-```
-
-Optional reserved URL:
-
-```powershell
-.\scripts\start-ngrok.ps1 -PublishConfirmed -Url https://your-domain.ngrok.app
-```
-
-The foreground coordinator starts a loopback holding gate before ngrok. Public
-requests receive 503 until the exact endpoint, actual hosted container settings
-and database readiness are checked. It strips client forwarding chains, accepts
-only the configured HTTPS ingress, and monitors the app/agent while running.
-Keep this terminal open. Cancellation or verification failure closes forwarding
-and stops its own agent; it never enables registration or silently restores a
-development deployment. This is locally tested launch ordering, not verified
-live TLS, browser-cookie, provider, public-launch or security acceptance.
+Public-tunnel support, including the experimental Ngrok launcher, is retired
+and the launcher source has been removed. Production deployment targets Hetzner;
+follow `DEPLOYMENT_TARGET.md` and the current production container runbook. The
+historical tunnel repair receipt in `docs/HOSTED_TUNNEL.md` is not an operating
+procedure. No hosted migration or live deployment is implied by this document.
 
 ## Backups
 
@@ -2946,7 +2927,7 @@ report, not acceptance of the public SaaS beta:
 - migrations `0020` and `0021` applied to MySQL 8.4;
 - Windows production bundle acceptance;
 - desktop and mobile browser checks;
-- dedicated ngrok HTTPS acceptance;
+- Hetzner HTTPS and reverse-proxy acceptance (still required);
 - HAI feed contract and cursor replay checks;
 - no live external provider delivery attempted or claimed.
 
@@ -3123,7 +3104,7 @@ these measurements. Provider, privacy, recovery and whole-workflow gates remain.
 The short version:
 
 - use unique 32+ character secrets;
-- keep MySQL and the app loopback-bound unless using the controlled ngrok path;
+- keep MySQL and the app loopback-bound behind the Hetzner reverse proxy;
 - disable registration in hosted mode unless intentionally onboarding a user;
 - leave `ENABLE_PLATFORM_AUTOMATION=false`;
 - leave `ENABLE_UNSAFE_LEGACY_ROUTES=false`;
@@ -3178,9 +3159,9 @@ The [security assessment checkpoint](docs/SECURITY.md#whole-product-assessment-c
 identifies the managed whole-product threat model and its source snapshot.
 It distinguishes real supported paths from inactive legacy code and conditional
 provider/host capabilities. It is not an approved security audit or permission to
-launch. The [locally tested tunnel repair](docs/HOSTED_TUNNEL.md) now holds app
-forwarding closed until hosted checks pass. Real provider/HTTPS/browser acceptance
-and renewed review of changed launcher sources remain required before public use.
+launch. Public-tunnel support has been retired; the historical [tunnel repair
+receipt](docs/HOSTED_TUNNEL.md) is not an operating procedure. Real Hetzner
+provider/HTTPS/browser acceptance remains required before public use.
 
 The [privacy impact assessment draft](docs/PRIVACY_IMPACT_ASSESSMENT_DRAFT.md)
 explains candidate and account privacy risks, actual qualification behavior,
@@ -3193,7 +3174,7 @@ collect, contact or erase people. No retention or registration setting was chang
 | File                                 | Use                                                 |
 | ------------------------------------ | --------------------------------------------------- |
 | `apps/cofounder-discovery/README.md` | App-specific developer notes                        |
-| `docs/OPERATOR_RUNBOOK.md`           | Windows, backup, ngrok, HAI, and incident operation |
+| `docs/OPERATOR_RUNBOOK.md`           | Windows, backup, HAI, and incident operation         |
 | `docs/SECURITY.md`                   | Hosting, secrets, and safety boundary               |
 | `docs/CRITICAL_PATH.md`              | Supported end-to-end product workflow               |
 | `docs/FINAL_VERIFICATION_REPORT.md`  | Final verification results                          |

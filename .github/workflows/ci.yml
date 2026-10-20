@@ -58,7 +58,6 @@ jobs:
       - run: pnpm test:recovery
       - run: pnpm test:monitor
       - run: pnpm test:production-config
-      - run: pnpm test:tunnel
       - run: pnpm test:support
       - run: pnpm test:release-inventory
       - run: pnpm --dir apps/cofounder-discovery test:unit
