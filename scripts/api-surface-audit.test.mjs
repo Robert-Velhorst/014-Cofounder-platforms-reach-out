@@ -15,7 +15,7 @@ const root = new URL("../", import.meta.url),
   audit = inspectApiSurface();
 const ts = createRequire(
   new URL("../apps/cofounder-discovery/package.json", import.meta.url),
-)("typescript");
+)("@typescript/typescript6");
 const policy = await import(
   "data:text/javascript;base64," +
     Buffer.from(

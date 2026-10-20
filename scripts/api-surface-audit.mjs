@@ -6,7 +6,7 @@ import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 const repo = fileURLToPath(new URL("../", import.meta.url));
 const ts = createRequire(join(repo, "apps/cofounder-discovery/package.json"))(
-  "typescript",
+  "@typescript/typescript6",
 );
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const localName = (node) =>
