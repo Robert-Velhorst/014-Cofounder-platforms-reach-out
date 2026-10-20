@@ -26,7 +26,7 @@ test("current UI inventory covers current source bytes rather than stale receipt
   const actual = inspectUiActions();
   const expected = JSON.parse(
     readFileSync(
-      new URL("../docs/UI_ACTION_INVENTORY_2026-10-02.json", import.meta.url),
+      new URL("../docs/UI_ACTION_INVENTORY_2026-10-20.json", import.meta.url),
       "utf8",
     ),
   );

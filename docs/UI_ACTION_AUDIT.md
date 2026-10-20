@@ -2,15 +2,15 @@
 
 ## Reproducible current structural inventory
 
-The [October 2 source inventory](UI_ACTION_INVENTORY_2026-10-02.json) records
+The [October 20 source inventory](UI_ACTION_INVENTORY_2026-10-20.json) records
 230 action-bearing JSX elements, 206 event attributes, 26 navigation elements
 and five action elements with spread attributes across 151 files in the App
 import/re-export/literal lazy-import closure. Input digest:
-`3dc2f679c6213f9da71bcd8c6a2b73c566113287a829c2f0ce3373ed2f2ab67c`.
-Latest fingerprint refresh: one Indonesian directory source record changed the
-imported catalogue bytes. Compared fresh and retained inventories: API routes,
-input digest, UI actions/references and all totals unchanged. This is structural
-agreement, not connected acceptance of the new source increment.
+`ec39ef28fe9c2709544c0cb7dd5179454fc6ddd90559ba4ad33ceab1242371ca`.
+Latest inventory refresh: source hashes and action-expression digests now
+bind to the 2026-10-20 consolidation source. API routes, UI action classifications,
+and recorded counts match the prior receipt. This is structural evidence only,
+not production or connected acceptance.
 [Dated review and admission limits](PLATFORM_INDONESIA_REVIEW_2026-10-02.md).
 Preceding fingerprint refresh: candidate-list Dutch/English copy added one imported
 copy module and changed labels/accessibility attributes. Compared both previous

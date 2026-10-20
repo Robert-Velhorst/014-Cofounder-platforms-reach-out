@@ -9,7 +9,7 @@ import { inspectApiSurface } from "./api-surface-audit.mjs";
 const repo = fileURLToPath(new URL("../", import.meta.url));
 const ts = createRequire(
   new URL("../apps/cofounder-discovery/package.json", import.meta.url),
-)("typescript");
+)("@typescript/typescript6");
 const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const compare = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
 
