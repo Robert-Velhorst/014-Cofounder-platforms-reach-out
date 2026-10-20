@@ -1,5 +1,16 @@
 {
-  "include": ["client/src/**/*", "shared/**/*", "server/**/*"],
+  "include": [
+    "client/src/**/*",
+    "shared/**/*",
+    "server/**/*",
+    "scripts/doctor.ts",
+    "scripts/inspect-account-deletion.ts",
+    "scripts/process-account-deletion.ts",
+    "scripts/admin-enrollment.ts",
+    "scripts/list-account-deletion-requests.ts",
+    "scripts/migrate.ts",
+    "scripts/start-runtime.ts"
+  ],
   "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
     "incremental": true,
@@ -13,6 +24,7 @@
     "skipLibCheck": true,
     "allowImportingTsExtensions": true,
     "moduleResolution": "bundler",
+    "resolveJsonModule": true,
     "types": ["node", "vite/client"],
     "paths": {
       "@/*": ["./client/src/*"],

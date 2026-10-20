@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `verification_email_digest` varchar(64);

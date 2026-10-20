@@ -1,4 +1,6 @@
 .git
+**/.secrets
+**/*.secret
 **/node_modules
 **/dist
 **/.env
@@ -6,6 +8,11 @@
 !**/.env.example
 **/coverage
 **/test-results
+**/output
+**/outputs
+**/.playwright-cli
+**/playwright-report
+**/browser-artifacts
 *.log
 *.zip
 *.exe

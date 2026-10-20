@@ -17,20 +17,29 @@ RUN set -eux; \
     rm node.tar.xz; \
     node --version | grep --fixed-strings --line-regexp "v26.12.0"
 
-FROM node-runtime AS build
+FROM node-runtime AS dependencies
 WORKDIR /app
-RUN npm install --global pnpm@12.13.0
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN npm install --global pnpm@12.14.0
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY apps/cofounder-discovery/package.json ./apps/cofounder-discovery/package.json
 RUN pnpm install --frozen-lockfile
+
+FROM dependencies AS build
 COPY . .
 RUN pnpm --dir apps/cofounder-discovery check \
  && pnpm --dir apps/cofounder-discovery test:unit \
  && pnpm --dir apps/cofounder-discovery build \
  && pnpm --filter cofounder-discovery-platform deploy --prod --legacy /prod/app
 
+FROM dependencies AS integration-test
+COPY . .
+WORKDIR /app/apps/cofounder-discovery
+RUN pnpm build
+CMD ["sh", "-c", "pnpm db:migrate && pnpm test:integration"]
+
 FROM debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f AS runtime
 ENV NODE_ENV=production
+RUN groupadd --system node && useradd --system --gid node --create-home node
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates libatomic1 \
  && rm -rf /var/lib/apt/lists/*
@@ -42,5 +51,6 @@ COPY --from=build /prod/app/node_modules ./node_modules
 # migrations come from the verified workspace build while dependencies stay pruned.
 COPY --from=build /app/apps/cofounder-discovery/dist ./dist
 COPY --from=build /app/apps/cofounder-discovery/drizzle ./drizzle
+USER node
 EXPOSE 3000
-CMD ["sh", "-c", "node dist/migrate.js && node dist/index.js"]
+CMD ["node", "dist/start-runtime.js"]

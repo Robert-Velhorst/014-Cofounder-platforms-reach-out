@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { notifyOwner } from "./notification";
+import {
+  notifyOwner,
+  TITLE_MAX_LENGTH,
+  CONTENT_MAX_LENGTH,
+} from "./notification";
 import { adminProcedure, publicProcedure, router } from "./trpc";
 
 export const systemRouter = router({
@@ -16,8 +20,16 @@ export const systemRouter = router({
   notifyOwner: adminProcedure
     .input(
       z.object({
-        title: z.string().min(1, "title is required"),
-        content: z.string().min(1, "content is required"),
+        title: z
+          .string()
+          .trim()
+          .min(1, "title is required")
+          .max(TITLE_MAX_LENGTH),
+        content: z
+          .string()
+          .trim()
+          .min(1, "content is required")
+          .max(CONTENT_MAX_LENGTH),
       })
     )
     .mutation(async ({ input }) => {

@@ -1,0 +1,3864 @@
+{
+  "format": "cofounder-ui-actions-v1",
+  "scope": "App local import/export/literal dynamic-import closure; JSX event attributes, navigation and possible implicit buttons/forms. Same-file API references are review leads, not handler-to-endpoint or data-effect proof. Spread/library/runtime controls and non-JSX imperative actions require manual review. No execution, permissions, usability or completion claim.",
+  "totals": {
+    "inputFiles": 151,
+    "actionElements": 230,
+    "eventAttributes": 206,
+    "navigationElements": 26,
+    "spreadActionElements": 5
+  },
+  "apiInputDigest": "3a01f6cb36391385554c3117896672f5b8ff60c188c3b34c1f4aa58781768099",
+  "apiReferences": [
+    {
+      "operation": "auth.me",
+      "source": "apps/cofounder-discovery/client/src/_core/hooks/useAuth.ts",
+      "line": 16,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "auth.logout",
+      "source": "apps/cofounder-discovery/client/src/_core/hooks/useAuth.ts",
+      "line": 21,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "accountData.export",
+      "source": "apps/cofounder-discovery/client/src/components/AccountDataExport.tsx",
+      "line": 18,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "accountData.deletionStatus",
+      "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
+      "line": 15,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "accountData.requestDeletion",
+      "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
+      "line": 24,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "accountData.withdrawDeletion",
+      "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
+      "line": 28,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.prospects.details",
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 50,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "criticalPath.prospects.optOut",
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 58,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.prospects.archive",
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 59,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.prospects.restore",
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 60,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.prospects.edit",
+      "source": "apps/cofounder-discovery/client/src/components/CandidateEditor.tsx",
+      "line": 100,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.prospects.exportCsv",
+      "source": "apps/cofounder-discovery/client/src/components/CandidateExport.tsx",
+      "line": 16,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.prospects.previewIntake",
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 88,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.prospects.add",
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 89,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.outreach.conversation",
+      "source": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
+      "line": 34,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.outreach.reminders",
+      "source": "apps/cofounder-discovery/client/src/components/FollowUpQueue.tsx",
+      "line": 37,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "criticalPath.outreach.revise",
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 51,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.outreach.details",
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 297,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "criticalPath.outreach.cancel",
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 310,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.progress.list",
+      "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
+      "line": 53,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "criticalPath.progress.record",
+      "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
+      "line": 57,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "auth.requestPasswordReset",
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 40,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "auth.resetPassword",
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 118,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "auth.me",
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 19,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "auth.adminMfa.status",
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 76,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "auth.me",
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 104,
+      "hook": "query"
+    },
+    {
+      "operation": "auth.adminMfa.beginEnrollment",
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 105,
+      "hook": "mutate"
+    },
+    {
+      "operation": "auth.adminMfa.finishEnrollment",
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 106,
+      "hook": "mutate"
+    },
+    {
+      "operation": "auth.adminMfa.beginStepUp",
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 107,
+      "hook": "mutate"
+    },
+    {
+      "operation": "auth.adminMfa.finishStepUp",
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 108,
+      "hook": "mutate"
+    },
+    {
+      "operation": "auth.adminMfa.removePasskey",
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 109,
+      "hook": "mutate"
+    },
+    {
+      "operation": "auth.login",
+      "source": "apps/cofounder-discovery/client/src/pages/Login.tsx",
+      "line": 28,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "auth.register",
+      "source": "apps/cofounder-discovery/client/src/pages/Login.tsx",
+      "line": 40,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "profile.get",
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 156,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "profile.create",
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 255,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "auth.me",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 107,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "criticalPath.presets.read",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 117,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "criticalPath.presets.save",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 126,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.status",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 127,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "criticalPath.platforms",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 128,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "criticalPath.prospects.list",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 132,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "criticalPath.outreach.list",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 143,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "criticalPath.analytics",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 149,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "criticalPath.prospects.importCsv",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 152,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.qualify",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 165,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.outreach.draft",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 166,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.outreach.submitReview",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 169,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.outreach.approve",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 172,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.outreach.prepareManualSend",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 175,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "criticalPath.outreach.confirmSent",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 178,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "auth.logout",
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 184,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "auth.me",
+      "source": "apps/cofounder-discovery/client/src/pages/VerifyEmail.tsx",
+      "line": 29,
+      "hook": "useQuery"
+    },
+    {
+      "operation": "auth.verifyEmail",
+      "source": "apps/cofounder-discovery/client/src/pages/VerifyEmail.tsx",
+      "line": 31,
+      "hook": "useMutation"
+    },
+    {
+      "operation": "auth.sendVerificationEmail",
+      "source": "apps/cofounder-discovery/client/src/pages/VerifyEmail.tsx",
+      "line": 34,
+      "hook": "useMutation"
+    }
+  ],
+  "inputFiles": [
+    {
+      "path": "apps/cofounder-discovery/client/src/App.tsx",
+      "sha256": "8e108b88f56094ad1e64d43f945d01e9b36a927ea349fd2697abf91da94c53dc"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/_core/hooks/useAuth.ts",
+      "sha256": "3980d4d7341bad7eee4214afd4ab8d4aafe5a3a3987ea99449488f18567ece38"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/AccountDataExport.tsx",
+      "sha256": "6f199a05ff475034dc1525c6569e185061ae77b01cf8243086c808d4479ac9b9"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
+      "sha256": "fcd9d6ee7c3540c03826f8a4aeacb9de59eacfafbf7d04f79b5dccbf36ff739c"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/AdminSecurityPanel.tsx",
+      "sha256": "dbce7e0419364b0693dff2e4eb8112cb7b5999c0569d1034b7f4441d34468623"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "sha256": "f386ff06dc8f3797388d53d23f9687f24543baed2eb167020e49fe7ed061588b"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/CandidateEditor.tsx",
+      "sha256": "fe9c8084dbdd48427de1330afebe3af5074848a66348dad347f5ebb24ce578f2"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/CandidateExport.tsx",
+      "sha256": "6222b2a56f8ddffde1c73ffcf3b0740c861e1a5a8114f4cea550e5a90bbf5309"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "sha256": "a29dd334b3dabdf9ac4ca96a3ecf374fbe388955a2d1c13bd1416841684cdd03"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
+      "sha256": "3924928f0aae36f9c5b0da680a1a56fd366d93d6f6a089ea16c1aae0840007d7"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/CustomerSupportBundle.tsx",
+      "sha256": "ac6e0c88df925732da4fcbcb3d629888a12fde9b77f4e997f5cece55852a0ca7"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ErrorBoundary.tsx",
+      "sha256": "3b0bdb7a19758fcd440138ccfb5f306b96836564f15d7c8c9663d7dd7417e972"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/FollowUpQueue.tsx",
+      "sha256": "92e87d48e8db18365f97ebb2b6224a39eb616c3360e2b93a59c314c01e08a77d"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ImportRecoveryNotice.tsx",
+      "sha256": "51c48056ae887c7637092aada5b1fadbcb03669852abfe97a9370528b9d08be8"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/LanguageSelector.tsx",
+      "sha256": "dde6d934370301d065f263d2661a47755c5e759529ccc013c6d1909e2e8e1ef1"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/OutreachComposer.tsx",
+      "sha256": "3e7dbfdeaa8bb37de8ffdbaedc0bcbf31a76cc2a3c3074dd15ec9658d07493a2"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "sha256": "070379a9fde94b0e070e1d39aeed5af2b668b80471b50a4e7bd50e89e2497cad"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/OutreachReviewQueue.tsx",
+      "sha256": "08c98410b31ec9f321d5cb4b81940e5dd6d0652d29d22f9a2cca8640cc0be080"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
+      "sha256": "dad437bbd478054173ca910a309dbf7188c1dd9a64e332752c29327d31ada974"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/PlatformCatalogue.tsx",
+      "sha256": "287c4cb5f4ff0356caff731023913f9cfc9873244435207556779df8f69f874d"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "sha256": "4a57a6c7df6db27a091da358ec42b7fba3b5f42f9a4fada368b7f4fb455aef4d"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/WorkspaceSafetyStatus.tsx",
+      "sha256": "f112ac39f6334c3726cd6f7e5391f4ad72d7bc1f3ae0018a8cbdc7197c2b5da6"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ui/alert.tsx",
+      "sha256": "eccfc7f6ca9d51407cb413a3ca4b5ac721898ac93d38e95c02c35188ad674abe"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ui/badge.tsx",
+      "sha256": "51fd797c59e63d164ade736769f19f26e41c157daba29aa0b327b3b226f4d4ac"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ui/button.tsx",
+      "sha256": "9b7892344505817e5002f1b6f9ae64ea021d86576c8311a01c06cfb3b9ded774"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ui/card.tsx",
+      "sha256": "1397e7d264d90162220ea7473b311e434651886267c71e7f58d4488be9d8ff39"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ui/dialog.tsx",
+      "sha256": "cf2098e25f80ef95ebac18d0873b639f1706f936ebe6fef1887ca6b093bc9928"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ui/input.tsx",
+      "sha256": "31629c814cd585b4c0a0a43e6efe141bc9a6b9a020c6ea66435fa3ef036c3642"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ui/label.tsx",
+      "sha256": "7fdad17d8e83912ad0cfc372c551a901ab98523ef17c0792a17c592a147db732"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ui/sonner.tsx",
+      "sha256": "a65fe9ded89363ec546f28401a26caec1a3aa38c52259eb829cfa33723dbe3a5"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ui/table.tsx",
+      "sha256": "085566291cf03c9fea590aa9b77339feebf04cf8ce23494a3667f84bf4811e29"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ui/tabs.tsx",
+      "sha256": "394b62295cee5185e858bcabfafcd5a7287910944c962fbd9c1c06444b22cedb"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ui/textarea.tsx",
+      "sha256": "3b4d8ddff604ece6c52309a21a6b352af4701e96bcb9d3596b372fe983e8604a"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/components/ui/tooltip.tsx",
+      "sha256": "6f0c581e2018d676e43c0b4b5aeb62d3fe68e65907cf748548208d75ac212677"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/const.ts",
+      "sha256": "e8ba684df396612458a9ac25815635fc8d03184d3b405f971a413bb15b61d1f1"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/contexts/LanguageContext.tsx",
+      "sha256": "94839d5f7efe8503549f95223545d00b3d97fabcfabda93afc90cc00522b45c5"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/contexts/ThemeContext.tsx",
+      "sha256": "e025cdb51ad747757235b16dccbb39b5e949cdf93fa9a822ff81ef6e32f65924"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/hooks/useComposition.ts",
+      "sha256": "674c515075a2f318d4ec2291313ba552488de0b2c1aac7f36f3d71c4e34d434e"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/hooks/usePersistFn.ts",
+      "sha256": "0dc5f198b5bd9f00f21755ee0687ef177d5237f3e9298cd2c369e8478195c186"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/lib/admin-security-flow.ts",
+      "sha256": "15060e4e6d5aa96854fc71c88e670c9ac3673ae4c3c631d0209230f75946bf87"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/lib/candidate-workspace-copy.ts",
+      "sha256": "42a023ace4f98d3411cbdd1751037327c1ceb737f96775d7a737f16dbe8e0928"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/lib/csv-import-copy.ts",
+      "sha256": "5d40500e7e2ecfa4b81946b50656c2ec2c1a4b58a744b32d411043a6ebcd62bb"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/lib/trpc.ts",
+      "sha256": "d883ad43f46eaf73342924feaf5342ce601d04abe1a828076625071931cc0ef3"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/lib/utils.ts",
+      "sha256": "d1f1e0d62cb8d8d1e04c26e14de842d8a151f75812d81b046c65b5d1fe8e4b27"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "sha256": "f6878914a2affab8d36b24759849c70420293a6de414fb7a6373607d0134320b"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "sha256": "823c25fde189b80fa77f99ea184342feacf8b244f5f1a0fbdfd002762d813c8a"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/pages/Help.tsx",
+      "sha256": "4a167d256e4c496454cd71cbf88b4fb9ecefbea0e5a0b27604f5a6845889a2f8"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/pages/Home.tsx",
+      "sha256": "a0233e749bddb94821171434fc230315aca27e0e2642a01d5ca22163da74ed63"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/pages/Login.tsx",
+      "sha256": "9fed897c8675072a8ca05bfb41f79e892ae839e9ef629472dd4b81a8da2d7178"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/pages/NotFound.tsx",
+      "sha256": "f490ae2cc3dfaa81060c5c03ef92ebfa9477e1a0d9fab4fe3c7d2c9a513c62c1"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "sha256": "73a933948f3875ff0cd70afc72e586887d467dff918ed0f6c491531ec530ffb7"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "sha256": "9430d2109614797fe2e549f07da327b67636497230ad17a86f72e35afcbad298"
+    },
+    {
+      "path": "apps/cofounder-discovery/client/src/pages/VerifyEmail.tsx",
+      "sha256": "4d91aaf1c4dfe1f057d64da66e5b7cacb4e37ff76c0879ccbd3806bc6ab80080"
+    },
+    {
+      "path": "apps/cofounder-discovery/drizzle/schema.ts",
+      "sha256": "da71413735b19845c6371093057897f217ffb599d520ab01c290ddcefdc9b7e8"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/_core/context.ts",
+      "sha256": "19a02632b55d4d8a5df344ea51b0e1b85ccc7d95c9cfd644750da52655710843"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/_core/cookies.ts",
+      "sha256": "90233296082db19f04154d3d3254a08040de39903d2b0d03a9dcec598ffa6298"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/_core/dataApi.ts",
+      "sha256": "427764c9150b659f8f5710e9dd298d1d1c1ae758a1484c3e138b6722abd2dfd8"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/_core/env.ts",
+      "sha256": "5ae082488b04617efb684942b6d28d111b6c78130149c045837b621b2217dd65"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/_core/llm.ts",
+      "sha256": "0bfd6fbf3cfae158850a2a5425401316b7c1799c0afe0f1f69f5dc2013802d44"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/_core/map.ts",
+      "sha256": "87bb6993486f869677107f2e11c31cae5698730d5e0a5787094c761ac2420bd8"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/_core/notification.ts",
+      "sha256": "fdec387683936013e527a5faf1e4aaf6a752ee1d53919fd848bf0935abebbfea"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/_core/sdk.ts",
+      "sha256": "1a0203e386711a3d6c2f2223db33debf7c9471f4e64e76c57f382f537fa926a0"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/_core/systemRouter.ts",
+      "sha256": "bbbe876d0ef6d5a62abd24f517487a223087860e2a22425db05c11828e883f18"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/_core/trpc.ts",
+      "sha256": "a858d4384766b0d03044c58efd99145d923d59a0d0ba5c96fef4848589fa40aa"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/account-deletion-request.ts",
+      "sha256": "e0ad4231b5c2907895a502aa6649121a2f3fa4caacb641cb11f02c0e646b9ab8"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/account-export-inventory.ts",
+      "sha256": "ebffbca8de1e563784e20c243082a519160aa1a23aa06d1886238bf7a799bb66"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/account-export.ts",
+      "sha256": "a92530eaa74f3627e005bffa188b3a3373cce787bb5fd8e53ad0fb35da8587f2"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/account-mail-budget.ts",
+      "sha256": "78a511c6a1e99aa63ca7672749bded4ba5dcdb2a5e6972e3b64791f9059e188c"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/account-mail-queue.ts",
+      "sha256": "3a343c9b9a0d61b69b6eea6efb123d2a9105ac7eb9a10e513d8010f8047634cf"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/account-mail.ts",
+      "sha256": "2ae872e6949281bb4771fc8a7129766d208b8c964ac2a713d0e0cadd297c4f25"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/account-sessions.ts",
+      "sha256": "d2a0c07cd67975d5b1debc5b62a38e037c5df2ad407af0bd6b5e57bd5ef1ecf2"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/account-work-fence.ts",
+      "sha256": "00bf5499839cbf8f4564e61a1457093c9358c85e8a195f872a963d6000ed2424"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/admin-actor.ts",
+      "sha256": "ceecb6c9358ebae0e7150bff06c8f7cf97c331fe775509700850c514efa512da"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/admin-mfa-router.ts",
+      "sha256": "22142c0e7b1eb854ae53f68d84618d62b70494cad3d63e6e26a6c1a19a5a2740"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/admin-mfa.ts",
+      "sha256": "ab3347c0bf0f498db52d1e2b8a8d28d05c6283496171a11d24e4223dad0aa351"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/admin-webauthn.ts",
+      "sha256": "7f30051de59ba689f7586b3018d86621951c31e40212169552bc115de919f0bd"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/ai-monitoring-router.ts",
+      "sha256": "ff8c4c18a0b5a290f06dd565ffc39b37b02cbfa0d470a043afac9230319ee581"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/auth-attempt-admission.ts",
+      "sha256": "881a70610a1c5d5731c7cc6ec1eeecabbcfb67f92c3c12371bdae7418fc7b7f9"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/auth-password.ts",
+      "sha256": "24221912bc88f80e76b8b8bd8d8433a1b97c3d05dcb455d4cca88c57e1fa2bea"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/automation-router.ts",
+      "sha256": "7eab798fd6b80b25e04e98c2422d8adac1469bd4c0c57daf954b219bf9a04d4e"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/browser-automation.ts",
+      "sha256": "93e268eaebaf26c00891249198d053f0ead172fbe0619c56a4d0662997ff1d00"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/campaign-engine.ts",
+      "sha256": "3a8b7c515e9024d255b563f7884840c32751c9836cd3cf2a3811fb8e074e197c"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/campaign-scheduler.ts",
+      "sha256": "896e73ef9e81838852f0a2f3317dc3ea5a2bfd81bf82e8662ded725be5b05181"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/candidate-export.ts",
+      "sha256": "11f17fff1d513133a615e2d86058e633ba6446268d80a3c36b9e8d893d1541cd"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/candidate-intake.ts",
+      "sha256": "79af4de76c7c13531d27743a7152e92bd47b83db5d5974dfde50a7bd0a8a7162"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/candidate-mutations.ts",
+      "sha256": "433049bc01812a3c25dcefab24c3327688deb34105b58512355ae1dd625d647c"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/candidate-query.ts",
+      "sha256": "84e4bddfbd6c49fc0f057f409e670cd43c2fab2e733eb91aa66843477b33fadc"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/candidate-review.ts",
+      "sha256": "2d7151f84a28d22110d5dc585e827f8520cd0659896a77a867babee62e82ebb8"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/candidate-workspace.ts",
+      "sha256": "18f7d7ab07d12bb9ef97c19120b7aa1fcddab7340afbd3073e5d0224931bad39"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/capacity.ts",
+      "sha256": "11308f28007aeb3af53e14c7e482d058daec19b68ede6c4b6d61f64d79641635"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/config.ts",
+      "sha256": "c352e86de2f0bea8374c001a95e69de85637476a40d9049092fddd64c406d89b"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/conversation-quality.ts",
+      "sha256": "94983eba2f727420422b0710b803cb0de9f5ee3710a00cdc4193f7924e9f0903"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/conversation-starters.ts",
+      "sha256": "13f04f0d8c07542fd33774746ef6a8772c668a3ed824e3b8df489c2cf262c1a0"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/critical-path-router.ts",
+      "sha256": "1734ce785c30a59aba2a138d5e495f151259709ba672b9df6f61d4067fe3eb27"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/daily-matcher.ts",
+      "sha256": "9e9c0e37a179668d241ada119773029c4adb9ef08a6e8b2b5f62c5ca7f337a39"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/db.ts",
+      "sha256": "6c39ca7937bb236447eb03d06091fe15339b3ae56335b7dc7b3ab0c73429a134"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/encryption.ts",
+      "sha256": "0bf26b3a2ba5dc47cb461de4010969f959867751231bc398bc47f8874baf7d87"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/enrichment-engine.ts",
+      "sha256": "17f9401fda0961496229df5d8aff098551b8ba7ecd0be124cffd49a35f288372"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/follow-up-system.ts",
+      "sha256": "0ede47185d2d6a41d9f974fd1b2aca03c93626d9d20e32c1192dce2187625e3c"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/login-admission.ts",
+      "sha256": "66c928256b3af9e381725d635c3f3412bbd7d696eacf426a22f00afd52237da0"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/match-queue.ts",
+      "sha256": "3ae7a56ddf83db08f4810bd830856b05d0770de7daefc0cd5c1769a57686fd83"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/matching-engine.ts",
+      "sha256": "33c68954d42ee1032c25e4dfb3d749828fd54b7ac404982a29113198e51422be"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/messaging-engine.ts",
+      "sha256": "ba8aa6a2c3705530db2fcce4a24c5dea06a29b162cf96e13544682d6fb6a3566"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/metered-billing.ts",
+      "sha256": "5c52689809a0c41b6cf00ae5baff45fbfa9a29f4aeadcc3c8ecb4053ecfd96f0"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/ml-match-scoring.ts",
+      "sha256": "fb4f6e1f4ce0575c3414a7743950d5289f776e8a67503870bd8fea3bb45990c7"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/natural-language-search.ts",
+      "sha256": "0acbad47ff1839b4536b71a3f517f82a1797f60f027a2434c02f203534d2c29e"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/outreach-clock.ts",
+      "sha256": "543da5a15c595ba43ad747696ebe11ad59f2c50336781e03dea7f870d9b006c6"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/outreach-conversation.ts",
+      "sha256": "47e7b7f02b5b24d68b79500c9d6ac2ee3488a2a83ee66bf3e314c6505d3e1494"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/outreach-revision.ts",
+      "sha256": "4fe7d99ebdb9192e24cfdea0f4bb24fcb678c5a40f16c3d5532cd47ef311ea92"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/outreach-router.ts",
+      "sha256": "92f12506e772c2d4916be75a259179b4b7f50bfbf5987ad1b00714a1afef137c"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/outreach-source-policy.ts",
+      "sha256": "eabf39f93ea8c9daecd5fd23d399508c61e83b43463ff319e5b50d3bf5cbbc75"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/outreach-state.ts",
+      "sha256": "1d20f4c8e57c4e256dc002a528958c57d66852ea467f22e7c8b3f183eefcd62d"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/partnership-progress.ts",
+      "sha256": "affd9d58f8236d1ddcd1214b3213393b29ac22b8cd2545a52923675b5ac3c6dc"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/password-recovery.ts",
+      "sha256": "a3113540d15c7cb1a57f9022f855fa229cf1bddd54aef8378711cb57339cc13e"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/password-reset-admission.ts",
+      "sha256": "4869c86b44fb9e34fbe16dea7cad5d32854e6e12c7a50339f3e35775f8085cdc"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/pipeline-router.ts",
+      "sha256": "04ad064fc39ed661fe9ef66d0f49046b5401703b59ca152a4eee8c76e9271051"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/platform-automation.ts",
+      "sha256": "ce32b5841ac251159236b8aa1811cb7ad53b9a7d22a05de3187fd4ceee7fd8fa"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/platform-catalogue.ts",
+      "sha256": "ddef9d7982f37e21d381d426451774b11c3c814c17cf6760fee08499ab0d3268"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/platform-connections.ts",
+      "sha256": "ffbc5067efd2251c689948113a731be3cce961b04f9f025eaf70a7803da66dce"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/platform-credentials-router.ts",
+      "sha256": "91a3e5bffda105ca1741feafb51ece75089eb8d1c98fb9842d7b0800b1622667"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/platform-scrapers.ts",
+      "sha256": "7c676c19cd2c7a9bf053c8d7c91aad1a6f20832e5ca6be01ebbffd2ccc67ce98"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/predictive-timing.ts",
+      "sha256": "545923fcf4a25c9d2893bf37ad0a5403c38b888e6bddd595fcd86a10a88470d8"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/preference-learning.ts",
+      "sha256": "bc51da3e34c57edf7b1ba7725351b1454758763846fac018d53f34ef83c4f85c"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/prospect-csv.ts",
+      "sha256": "ccf2a2bd331db63affe1799cbd3ecec9871e81d8d0d790dce30dfd0cef2a8743"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/public-account.ts",
+      "sha256": "4ae3b71649b975039c54b79922553296921f840d1c9169d825f47d1bba61369f"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/public-trpc-error.ts",
+      "sha256": "aaceba95058127af062cd9525848fc10903e2a6b425a7c2efd6586947e1a250d"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/registration-admission.ts",
+      "sha256": "64661a937fa2604e306c39ca54904623d993f475c7e07e9c2b490f15714e1adf"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/routers.ts",
+      "sha256": "333fcded44a6d74bf52f0c6a1760a927264f6a3dc001009f6b023af723df4bd5"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/runtime-secrets.ts",
+      "sha256": "6c3ae5ef6b75cce6475ee2049c0c75c98b1dadc7ea1a8ec4ec0c1c9c0481e0e3"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/scraping-engine.ts",
+      "sha256": "5e03956531e1cabc4a44cf42b7f516ff0dd098f0c49da41782952c657e19be20"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/semantic-matching.ts",
+      "sha256": "39e304fd02bf73d21e5253ad92d77e438256f437148df6bd0b6c6c7507aa5afe"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/server-work.ts",
+      "sha256": "20a93ab2a4a0863c60f256768955cbf5ef2f6aae41ccb81bb14a0319bb7d822d"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/transaction-deadlock.ts",
+      "sha256": "82db97c4ca693c5002d82ed6a3db79a3e33c76c38b27e58e08b3a2c72a0e26fb"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/verification-attempt-window.ts",
+      "sha256": "3b264e1bbddfae7bb71ce8872e33cc664aa6d45c1e3ed062af60b5329e78102a"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/verification-redemption-admission.ts",
+      "sha256": "9cfa5fc1e36c4045f8cdbb03ea0c5179656e133044f07dd7c070dbb82c1a59f4"
+    },
+    {
+      "path": "apps/cofounder-discovery/server/workspace-presets.ts",
+      "sha256": "fdcd32e15f0da8420c893938673eee612d0290f5720e6043ed768711ee476c2b"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/_core/errors.ts",
+      "sha256": "52bee7d152045eaa009083e26a4cbc21d413c80b0403a23c4b5572141dec942a"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/account-deletion-request.ts",
+      "sha256": "e6207cf728e740137dba83783c888eecbafdf11e464b68cdc79073f3b5be6879"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/account-export.ts",
+      "sha256": "a3691c275e4b9c4eacdb0f3edc772b827947d97a627dd49bcf85676d761c77ea"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/candidate-input.ts",
+      "sha256": "ccd11d74baaaddcc0b22213fb5e8bc9316dfc873e0bec2bfbfd97efd263a1f75"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/candidate-intake.ts",
+      "sha256": "a30b39991d00f20b44f7484ff08cf1ccf7980f9331cd31b6e1db89a2d3ba16fb"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/candidate-query.ts",
+      "sha256": "53f5383748a0c60c44a548c475afbaa646af41986ce73b307c96d43327631542"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/const.ts",
+      "sha256": "d9fedf20dc67e22f79ee6c624e613fdbc16e2cc7db872201f89ffbad7f5c163b"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/customer-support.ts",
+      "sha256": "41b3bae6da0105ee465fff835151aeb30615cb0cf43488084187742edcd5cdae"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/import-declaration.ts",
+      "sha256": "7851a3ebfa0edbcd17ca61bf4a635f58381d1d6c110f9ef8c09ec90821197c94"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/outreach-conversation.ts",
+      "sha256": "dd5d31c2f7517580b6bc9f6c21ff27b08d3f2fd4a43bc8e6faa0487c8e804467"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/outreach-revision.ts",
+      "sha256": "6b3985e2cdc09e90043257372791f3b57c78c23fa344cb7b111fd58517a35103"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/partnership-progress.ts",
+      "sha256": "53350dd9d3042ae84242f25058e5d7c0ea6427bce7aa1032c82dc1fd6c96f8db"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/platform-catalogue.ts",
+      "sha256": "79eb6d1b21320628e5316d3318a50c98f5543eb5d84f30434cf860a5b1468ebd"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/profile-input.ts",
+      "sha256": "0d3f0d13f854a7331241b869463b5b3e6a4bb369f1574fb2bde641b148d6acdc"
+    },
+    {
+      "path": "apps/cofounder-discovery/shared/workspace-presets.ts",
+      "sha256": "8fc8134b60025ffa401508f9ea0030e12b595c09200da78db8c1d307e6e8147c"
+    }
+  ],
+  "inputDigest": "233a332c2686b500b7f3105dfec8b20baab467e02cff1117118e1d16924de4a4",
+  "actions": [
+    {
+      "source": "apps/cofounder-discovery/client/src/App.tsx",
+      "line": 63,
+      "tag": "Redirect",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "755c6091490e0ca25f45d715a8194e7874b0743b575fdd8338b90750e693ad58"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AccountDataExport.tsx",
+      "line": 156,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "1138ae4470d6fcc578257581bcedda33909f10fe42ab6bd44a2e7715579e0017"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AccountDataExport.tsx",
+      "line": 161,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "f07afbd30893b3bba63eb486baea810b5868165fb568d49b863e1bef9199f2c8"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AccountDataExport.tsx",
+      "line": 171,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "227fe2155bb51427d6f8c95ee716ccfdfbd67d9aa435e27621be6be5727351a6"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AccountDataExport.tsx",
+      "line": 181,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "9177133b86c86d9c1fea879d89061e135403812898389084514e8e0e407c13ea"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
+      "line": 193,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "22b884f2622103b7b5b63b4a7d940ebc97c0eb7647d38d2e86a086208e2d877b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
+      "line": 207,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "cd2d674fcce48aeb5557c3e54e76a4cd304c5cf08f29b0dbae5ed98f2545301b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
+      "line": 212,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "df696475e8ad3d20bf47106050035bb1f288d9a7e889fc7fd0376d528d5b532e"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
+      "line": 222,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "87618dc278d8652af8d5421fd29357a73bee3b6b8415dd4a7d75093188e7d3ec"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
+      "line": 240,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "af4833f5d3ad0cd77295a329d660ca67344c5ac2560e6d68fab026e629979111"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AdminSecurityPanel.tsx",
+      "line": 59,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "ad796dc9f19552b9f6903864ccc136e3daf2df9856b44fc77d35e66ae05336e6"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AdminSecurityPanel.tsx",
+      "line": 87,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "78ad805fe57ae3ffda4cb638489f22935b545cae42d50c0d7d47452f46cf074a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AdminSecurityPanel.tsx",
+      "line": 117,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "6cf7bd489568a94fff350d6c6521b982aa28ccd6a5d05bd02a20a8ceb11a3d7e"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AdminSecurityPanel.tsx",
+      "line": 142,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "aa291adfdf36c7edaeba256847f6bf4e5394815139f2477d7833dfe2d0d530f4"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AdminSecurityPanel.tsx",
+      "line": 206,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "af13cdf9b442ca1b3f206cacf7d6ef4034cb41ed6f46cd7e92a1904a58e4bad4"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AdminSecurityPanel.tsx",
+      "line": 232,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "1b3ec1d6a2a8f54c74f2c70bb1327889db185fadbe2fa21e41828d600bbee8c5"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/AdminSecurityPanel.tsx",
+      "line": 283,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "790ac2d8fb55a6ddd39efdb18dad4af3429bb62c022eab0fc11377a773137a1a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 183,
+      "tag": "Dialog",
+      "events": [
+        "onOpenChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "6f9853557da4caefdd431b02636b7a572649ede5d8283aa6ada3e24c4a6bf93d"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 189,
+      "tag": "DialogContent",
+      "events": [
+        "onEscapeKeyDown",
+        "onInteractOutside"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "7c95debc4d72705dc5582343c6c1809962b1c2c1e63cc7cca0ab7cefd8acd48a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 213,
+      "tag": "CandidateEditor",
+      "events": [
+        "onBusy",
+        "onCancel",
+        "onDirty",
+        "onSaved"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "07193af6c2a1332ef94a570bb69495cb2f16ebacf5336212eeef291c491bd44a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 245,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "fe8a5e2b58e492f14677c49d3b1b80027e39d0b643195f2678b01a49387880cf"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 278,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "76fbd104f7d7b500faf0083201ec06a0c43a4935b1689a2a117174614b3e1dad"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 364,
+      "tag": "PartnershipProgress",
+      "events": [
+        "onBusy",
+        "onDirty"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "aa671d7e8335208bfc70d7e2b16563023f2ddb4c4c7622d9d8fdee81f51bd77a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 395,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "922dd3f161e3b4177c372cf7fa68cff07d7a7fafb773af5605da800a72313fdf"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 397,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "5d09b11eb4eedd8f5c71a96938924ed696efcb5ee9e10b55d86f1e55fe5f0d08"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 423,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "d990c0c09ccdaa6d5e9b7892d36b8682d43866aa010dee9d6c404eb90a78a4dd"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 644,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "cd2d674fcce48aeb5557c3e54e76a4cd304c5cf08f29b0dbae5ed98f2545301b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 646,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "0f09a45ae3a173311b5c8f8253a23b616a28dec92e1d47e757278eaf90504b57"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateDetails.tsx",
+      "line": 660,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "3f80fe65cd97f3c0dcc7f6f5934fed08b0178025b26a709390ba73d26e79cae9"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateEditor.tsx",
+      "line": 167,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "fbc5d80d9b269bdd93664ec9bb57c202e15307a5ff71ca99873edf20ce41112e"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateEditor.tsx",
+      "line": 238,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "d5954ec490e9ed3cccac6f73c60d40d058bf6753c7da52c8e1781fd3b45ed4bc"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateEditor.tsx",
+      "line": 246,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "45827412ea4cea2848752344c2f819c351a3589b3540c1c40537a2cc8fb3a4af"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateExport.tsx",
+      "line": 86,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "8bc649d86687c7b716b2cd35aa40cbea5924499352be3cb2e8182f1b9b02c35c"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 221,
+      "tag": "Dialog",
+      "events": [
+        "onOpenChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "6f9853557da4caefdd431b02636b7a572649ede5d8283aa6ada3e24c4a6bf93d"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 227,
+      "tag": "DialogContent",
+      "events": [
+        "onEscapeKeyDown",
+        "onInteractOutside"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "034e3c580ad92fcfd5f6aa6d72e67c4cd2e3170933a0713e019800a65fd1f665"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 288,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "d0c6446e169f8fdc1e0abbb7353ae8926138768133636d98a2837f61b0947760"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 294,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "2e03b178b452bc4cd8c1b24818d578fe23d6b67b5b5d0cb31c65c35978df6ed0"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 338,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "c22ebec858052d3a968b94604287444a3ced46126c624e64ac252744cece04c6"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 384,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "73af35315e69e3ace45f6fed04458ac52ef94b908c2666b5c99d6b74cbed1de3"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 410,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "c197999139fb5df5408e0af510265fe3dafa3e3b325b8c9968ac9f7ffd86bb72"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 430,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "8bffc094d77c25c96c7902246ebf1e73007b753dfa9e7a1f58030ab3f055ff4a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 446,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "1cd50bf939fa930a28a03883376629da66ed695964a8473921eb9cd86b398cf1"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 459,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "7b3961dba4a7560593c977ae05ebb159bc1956a9fef8fc52b454e6131532de9c"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 474,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "d49557d4062bb0587c3b31829da1dbed0acce2b22ee63a9abcf623f62f719dd5"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 493,
+      "tag": "Textarea",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "785bb20fb42bf34ab764761d2db695e56061932bfcdba9d70667459cabb80e2b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 501,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "13496c70435cf81fc8c9e928d96cf5e8a59dcccb5e55cb6ed7b8cced369ef02b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 524,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "2eb7ab5aaf19934cfb241e79dc24446a73cbcec07e795e22a840a13f4d88931d"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 561,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "b95c7005759bb8b3bbb918b855dfe55f0132ac7f4c9712d9d3e07b298c318980"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CandidateIntake.tsx",
+      "line": 573,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "191b67c8a5de0d57a0f349e0315d14b1e297a766bf97c9ef87f27cba43d5717b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
+      "line": 198,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "05716fb672d60ce50151d3cac8b52614ea00091cea57d52cfab1d4786d74d41a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
+      "line": 208,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "e2185baab59f98935c2fd38d519dd8a7768f6f834035522e77d23603981f2998"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
+      "line": 221,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "20c14943561f0a84b5ebd31679531b347b0c1f827a29d571a59c5c095c6af5ba"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
+      "line": 235,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "1812f0ad929220329e1a17629bd44de60a13ce3555e5344e0c1a832f457f972e"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
+      "line": 263,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "0b14331d25199d01843aa4a9cb56b7e51dba8fb8e675f8fabc4ba35d5f0b2382"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
+      "line": 283,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "c22f8da36d135cae32a2cc02fa5250d7e88e555ffdee90f99b1a888ba0b3aadc"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
+      "line": 311,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "2577036f54984525aaea5677b697259f486b7f788e2df26870335d33131944cc"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
+      "line": 322,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "366aa91939c9d6c6971805284668e1a791a02c8bef219d647147c767baead673"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
+      "line": 333,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "dd353a8842fa52aaef291026bb79bc6fddc30b7ff762ae7ebaeb0848cdbfa176"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ConversationControls.tsx",
+      "line": 345,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "5bb19bbfdbc018de3ec7cbcfb26340554b091aeb352149ef5d3780d71746b3f3"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CustomerSupportBundle.tsx",
+      "line": 105,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "280bb001d8f8655ce70f97c62701d834aae6a7c03a62a2df03d4dd290a69c19c"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CustomerSupportBundle.tsx",
+      "line": 134,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "24a46a0223eeed05b75f200719e88ad1ba21ab5a28bdc0b1ebfb5af37abd3d6f"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CustomerSupportBundle.tsx",
+      "line": 159,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "9989b00d29368ad0ce10b097e0680ad04095e2dd9aa8436b96725309a0453410"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CustomerSupportBundle.tsx",
+      "line": 169,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "b89e6158ce0c4a31e59e312810305545f88d537558f85be1888e0c6fd6e1969c"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CustomerSupportBundle.tsx",
+      "line": 198,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "0c78d352c330e6f15a86f8b3fabb72de52e392da81f0fa77baeac8e029a004ea"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CustomerSupportBundle.tsx",
+      "line": 209,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "ec5d029256affaab45b1b001ebf75c2d5e26644f48271168b58806ca75431180"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/CustomerSupportBundle.tsx",
+      "line": 217,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "c83c59d3a6964edded9e24c32bf27b69f98c5ddd305dea230e04385f086cf35e"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ErrorBoundary.tsx",
+      "line": 42,
+      "tag": "button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "814dc4a71e4d85d7ff80ffd9ec7614dd3b9e356e4aab8753e9af0bb75cfcfe33"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/FollowUpQueue.tsx",
+      "line": 75,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "2be6729c81b98bdd39541853f76943ff54c0201ecf2fc3fa1b42a23fe2a69d94"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/FollowUpQueue.tsx",
+      "line": 90,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "f7cfd43ac1c61568e2f7167cb0d8e3b550390b92225d98aef798b49c48fb0d70"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/FollowUpQueue.tsx",
+      "line": 143,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "edf8526a252cde5d5406db8aacfc169bb485af756056385486e6399eb02b143e"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/FollowUpQueue.tsx",
+      "line": 168,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "33e76614f6fd876bef82f95205566478867316f73b1cc577bb719443da773a68"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/FollowUpQueue.tsx",
+      "line": 180,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "7909dc26487e737922082008cb320003676463b6137cab07bdd138b8fb1eaa2e"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ImportRecoveryNotice.tsx",
+      "line": 33,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "0f249f75983681ddbe6fc1083c4d7637c1971911bb005ef1e20406ecd69d94e0"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/LanguageSelector.tsx",
+      "line": 11,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "056b4441ead1597fd142130ec84c3cc92559fa003342d2fb6f20000f548d0b97"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/LanguageSelector.tsx",
+      "line": 21,
+      "tag": "a",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "9623cb83a2e64f6c14b75d26f5ccccbecd7688f6ec3a7aa54d69356b807d0629"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachComposer.tsx",
+      "line": 113,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "9daba6dbd152ee94158f6192823f36924cfdcf2aa5a5e71acccb77a08bcc0f27"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachComposer.tsx",
+      "line": 119,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "2b1816cc5b7ef40a77d471efd744399319a2a980259b3cac576bab9ad9aa3a98"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachComposer.tsx",
+      "line": 135,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "4b0002952a448c0cb707faee39b705b6c813517e5128b7def13f0ff0d8c04c4c"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachComposer.tsx",
+      "line": 166,
+      "tag": "Textarea",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "cdde43520a68f0c45cc9ba4f3104a963aff03fe04a3719346961268ab8aaa87c"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachComposer.tsx",
+      "line": 180,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "72ea3f2eb4503b552fb66091b1ee18f16f48aeb168e10675db0f33ee129e50ce"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachComposer.tsx",
+      "line": 214,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "98ea1d20e2cf36b472bc241a1c805c2acd73fc19ba499dfa30e4c1df4cbdf7b1"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachComposer.tsx",
+      "line": 222,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "aad86ec7eb7911bbe6f2afaff6597b11dbc2fd925fd7f7339bc0e9ba7beb3e1a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachComposer.tsx",
+      "line": 239,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "509df7035a754f8ab0a6f1a3694892f3530f628ec23e1aeeab4a8b6f38d81994"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 133,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "616ab20275e97de7a9d727c7818cb075a0f1c662f2eb591b27355a2498ed7772"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 155,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "9558e3c1b142d5d8cc6401d305ad3921fe8616c1e1bac84e34abada00701264f"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 167,
+      "tag": "Textarea",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "1e319051626bc0278c886636e7e9d7a74208ef89bbfb4a9b43ab0768abdac023"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 178,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "7ca6acb9f4d8a571a2c43a94e2a59f4c4941be517aed725ee0881851eb35acec"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 191,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "37632d4f865f5e055670146f94e278817fa906b88be5f25a5d352bd13b5e8725"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 224,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "51863a4cb67baed3fbee2e5f3ffce5cd145bc1b5f58e5996d2d98be92411e92b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 239,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "45827412ea4cea2848752344c2f819c351a3589b3540c1c40537a2cc8fb3a4af"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 378,
+      "tag": "Dialog",
+      "events": [
+        "onOpenChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "6f9853557da4caefdd431b02636b7a572649ede5d8283aa6ada3e24c4a6bf93d"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 384,
+      "tag": "DialogContent",
+      "events": [
+        "onEscapeKeyDown",
+        "onInteractOutside"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "9d74b9a06dab43658bed0de6ea35204681790ba0f1f571ac4a13e238596bb309"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 415,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "b1d5e3054a01633348ea9226f085ce9a1c223de55de9b2b939d06a24d5d05ac2"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 428,
+      "tag": "RevisionEditor",
+      "events": [
+        "onBusy",
+        "onCancel",
+        "onDirty",
+        "onSaved"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "3df233e2b80797096122af26adcfaef0ce3ec6701e66b43b09d1faf836d24af7"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 460,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "92c7442d3fd9e098eafb4489dcf1280983ae9a47e397bcf37690c2d86df70605"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 543,
+      "tag": "ConversationControls",
+      "events": [
+        "onBusy",
+        "onChanged"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "130ef3ac930582fb1d919a2ec91411ddd484c87e2246c9f5860dad25159a1274"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 558,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "7ba1e55b5c4c4ecfaf2a5eaf68700bd32192e18703a1b9b94f30c512b56ebde9"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 569,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "657386a14a263820656f939132dd7669defbf2d489aad0a406bbee829cd12c54"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 589,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "57b1f51ba1ae2cd15b5ee9ad3346fefeb8513b32484a6920e03030dda891da64"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 604,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "7eff67b227f73c0870834afd1a069da57ad92757caacf800c21d0288121d4a7d"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 615,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "5b2d2451ab215ef1dc273f884afe5e13c37c8b08f4e6752b5327cd0d3c618e9d"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachDraftManager.tsx",
+      "line": 631,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "092c5871656a723a9f5297963c4e4b6aec7826e6dc90bdca2f61f22d82a542e9"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachReviewQueue.tsx",
+      "line": 116,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "70d316f293e897dd4c0fd328e87a538684158fca4839de698de072b033c2791a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachReviewQueue.tsx",
+      "line": 128,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "c8b4842c6c85f26c942346d5d3c29ca55fda0a875ff7e6e575b46580a7bd3764"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachReviewQueue.tsx",
+      "line": 137,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "5a4e43c5307895133ba0b717d6603e5a5106f510a0ec44f3a17048b09ec0bedb"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachReviewQueue.tsx",
+      "line": 146,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "2c6f7856b74b81e9f5f40b266fb0cc17c6466c121df21e86962b86304bb015df"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachReviewQueue.tsx",
+      "line": 159,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "2ba055f436f0c980f37f2a4ceb8685ce0ccc93cd4c5f239ac6c2b9f41015b0a1"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachReviewQueue.tsx",
+      "line": 168,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "730fbca36fccb886c9f101fb66118922e677d29ab74d65b5d20e698238a63ec3"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachReviewQueue.tsx",
+      "line": 209,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "3a476d1863abcf4b0816ea4826c7f9b30b5219981e032998a485e127742cb75d"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachReviewQueue.tsx",
+      "line": 223,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "2cf5bc7b81d6f573c65ed10ee3d37b42cae52cf5f79f1a9dfa6ded59588cbc3c"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/OutreachReviewQueue.tsx",
+      "line": 328,
+      "tag": "QueueRecord",
+      "events": [
+        "onManage"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "d4f2f025d23da667befca25adc99c8492f55d2112788aff69cf1930a4c545cef"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
+      "line": 237,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "a8e91070e3af3fda4a761437afdc065cd17b6fe6a1d0dae34444c9234f619218"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
+      "line": 257,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "72a0d7e9e957dfb0efcdc60a42a52304ed205e4e821576ea2502efb13ecb4a94"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
+      "line": 307,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "d51f4d72e0afd6353f62d4f943d4cca6b5128c2bb915168c4f65dcc6af60cb81"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
+      "line": 319,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "fe52ad52148d71b4db1d1c9ee08daaf681c18c32487c8370413b52c7ccd4bc6b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
+      "line": 339,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "c9478b368c10f50e086643ca7494a0b25298c2bd463d71d40aafb00a8eaa497d"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
+      "line": 367,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "b87cf1503830e797e47768c9f37b37d1695b5b3029f285c1e6af37ada748b2bf"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
+      "line": 389,
+      "tag": "Textarea",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "5be3fdfe69bbc1a0bf2edfc8a10878d145cacc7bb38bcea6047297d788ddf6a4"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
+      "line": 407,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "efb55c8165a7a34c5f3b6b4270d437596f8975eb151adabc4fd94a674071fab6"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PartnershipProgress.tsx",
+      "line": 422,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "534c52c9b4d430ff638863ad9b4448a7e6642f166f2acf5b180c1fc5df2c7bda"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PlatformCatalogue.tsx",
+      "line": 103,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "144e7ef6cf463ad5cb94b83332e28db2d27ff21c64e046e9026a6c57c6f7a5d5"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PlatformCatalogue.tsx",
+      "line": 117,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "a37a9d25ec38c8143818c4992e3170da05aa42a99055bb8be9a4387fe91ecd73"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PlatformCatalogue.tsx",
+      "line": 263,
+      "tag": "a",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "3c50206aa8ffea1e8eaab9dfc5fe8eca21b86dc33ae497b2cff6eef80041229f"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/PlatformCatalogue.tsx",
+      "line": 289,
+      "tag": "a",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "ee13f2a9a464adaa9b9286c4dc1f51cc5569b8a692b2fa3a54b0c6e0ec0b3c31"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "line": 106,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "264c8c6eb5941bd1279094138458a7cb7ef9a5aaf491fcb8a151e5e8dd1fc915"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "line": 120,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "cc86e42cf2d9bb4541501cd18f6c3084a303b8fdd2427a692a485da07e51289e"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "line": 130,
+      "tag": "Textarea",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "c50e78f2d7810ad96cb5b74355bbddc97116eb47d0295131428d137949ed367c"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "line": 140,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "8fe85e632a410a0ccf9da18b764858b9c5a61ad5be5bb16f1bd0b379ef09fd21"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "line": 147,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "cd7a449a4240d92309e997f266ab34542e45325405e6e3d42396a15696b61b97"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "line": 155,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "2707a5d95868b78f12580b5b0d38c73d20f6385a1539e934c3fb9a4d63277ceb"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "line": 180,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "2e03b178b452bc4cd8c1b24818d578fe23d6b67b5b5d0cb31c65c35978df6ed0"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "line": 184,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "c8fb7a7eb9a107833dc50716ab5d9e5d6fb5982690ebc82fba81b0c265ef9feb"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "line": 203,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "96a4731f118bbec37eb5b1f0f83995e622a672b96e225ee9a4ace99ae4c26af9"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "line": 212,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "3e7dfa29f7ee5d0afa91afce4eb7e9aa5952fc068440a2771f7db33f2d55ddda"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "line": 229,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "0bb6a9e744f5fd055df5fde20b7ba689b88d2dab158e771cad81e280a8850623"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspacePresets.tsx",
+      "line": 239,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "e270ee0e4cc9b966320de436afa8e61d805153d54b5a52a2070c2d8f7a33fad1"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/WorkspaceSafetyStatus.tsx",
+      "line": 63,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "75aa30b8315aa8ff3989bfc29892e43e97aaaeea3580a2a8ed8f7245f288b5f1"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ui/dialog.tsx",
+      "line": 126,
+      "tag": "DialogPrimitive.Content",
+      "events": [
+        "onEscapeKeyDown"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": true,
+      "expressionDigest": "25e2238631bc46269557c22e0a814d1974d2a9a883ff9c91a598c445cd38860c"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ui/input.tsx",
+      "line": 55,
+      "tag": "input",
+      "events": [
+        "onCompositionEnd",
+        "onCompositionStart",
+        "onKeyDown"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": true,
+      "expressionDigest": "32521b152787f40eaf6e8b53130e3d8074edc953c239e2785179cfc9eea792f7"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/components/ui/textarea.tsx",
+      "line": 55,
+      "tag": "textarea",
+      "events": [
+        "onCompositionEnd",
+        "onCompositionStart",
+        "onKeyDown"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": true,
+      "expressionDigest": "acc6c79e6e7a1fb2f3557af4faa1f00d9ab95f930ab77344d2ee0834225d700f"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 58,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "9daba6dbd152ee94158f6192823f36924cfdcf2aa5a5e71acccb77a08bcc0f27"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 68,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "93270aec38f6c776d44cbeb6bb365c35dd800d791a4edde9c8b30a07c487cddc"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 78,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "047a9d05aebc36919372e8137d156fb9423fe912b60298a4f01762bcfaa7b7e6"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 86,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "3e20c538e0a3db651a463a215e7997f0e26bce761f948494be2c4409f175827c"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 94,
+      "tag": "Link",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "f7fce0497a732053d0a5407691f802fde3118d41a638e7aae855d145a0df0067"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 179,
+      "tag": "Link",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "f7fce0497a732053d0a5407691f802fde3118d41a638e7aae855d145a0df0067"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 187,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "9daba6dbd152ee94158f6192823f36924cfdcf2aa5a5e71acccb77a08bcc0f27"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 206,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "4f3efb6c0f73b522a8cdcf887c4ef682bc3e0241483ac319e2112ca6f9c8f9c4"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 228,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "85ab26b1cd52ab432de8416f3f2ed3348b6b93a9cd65dfface68ed6c30602157"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 239,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "106f97680cbea0bac68972809fbaa368bbabdc4314f080446bf25770e9b4fa8f"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AccountRecovery.tsx",
+      "line": 255,
+      "tag": "Link",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "0b154db36a0db11079f2ffcf216407345e0ca2bfbffc196a953ee0ae5bd9d492"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 31,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "a455f5467422779413f7056e018b2f909564f10216cba875f8cd32a24d87abc0"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 42,
+      "tag": "Redirect",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "c2913f3b91bc77837a37e00a8fa79e4b111e48b632db4d83fb5940fb02f4d430"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 43,
+      "tag": "Redirect",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "675d1e6b52b8279f308f7a0dfeac5a48eb9c7333a12da5f8f18594a259428880"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 52,
+      "tag": "a",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "c3a8849dc1253435276c9032786a3b9cbe8a72c10c087f12e5563e87f87b5b5f"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 156,
+      "tag": "a",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "510654616405257420bdb5408f627c80fcb0fc9bd97e75b28a38a424de1ae9fc"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/AdminSecurity.tsx",
+      "line": 171,
+      "tag": "AdminSecurityPanel",
+      "events": [
+        "onCancel",
+        "onEnroll",
+        "onRefresh",
+        "onRemove",
+        "onVerify"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "3dd5dab5e35f4a3e0f21cf9fa8c7a4151f9c2e3e62945a84df8f7e65a8c8ed01"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Help.tsx",
+      "line": 110,
+      "tag": "a",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "4ca52a02ec12cdbe52b8fcb3929abb47b7623cc44dbfdcdd64e55051cf5d0df4"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Help.tsx",
+      "line": 113,
+      "tag": "a",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "c71719462b3a39bab769cf29cbaefb8800c239d1083ba8153038dd13fbad6a9a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Help.tsx",
+      "line": 138,
+      "tag": "a",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "b8131ed37c0cc1f5bdfc6da3951a0aec9987374b0b30967a96a18cce741919c7"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Help.tsx",
+      "line": 166,
+      "tag": "a",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "e51db9276263a1afa7e4bc4a1e144e0b96ca0f822a34ab12dedd5b515593764b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Home.tsx",
+      "line": 63,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "eb7e9e268108ac24595135fb11926811bc5fafd436f321a0d160c63cb54fa0cb"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Home.tsx",
+      "line": 64,
+      "tag": "Link",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "045c5d9ad342c81e936262366b867a8e4ca91c1046f402a5814772c5925fbdb9"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Home.tsx",
+      "line": 98,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "08b8426533c2dc7fcf13ba33bd6871687122135445671d113e8b7478c048afc3"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Home.tsx",
+      "line": 99,
+      "tag": "Link",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "045c5d9ad342c81e936262366b867a8e4ca91c1046f402a5814772c5925fbdb9"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Home.tsx",
+      "line": 106,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "73acb115fa0364e27969bf86e2d74c9d071663c3226162dffb80515513069e0e"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Home.tsx",
+      "line": 107,
+      "tag": "a",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "5ac7b19ace06f574e00dbe2f0458a9be5eb8b0c08df522edbadef9120c92a4cd"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Login.tsx",
+      "line": 111,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "58e6aedc60d1cbc8f0ed32fbfceaf741e2774b5b942bbaa25c39f2392230b3da"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Login.tsx",
+      "line": 126,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "e83577e59d5eb13a7f9a0bbcba277f1d8ea9cce00ba1910e1681e13a6575de9b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Login.tsx",
+      "line": 138,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "55dc6c87cfe6bf9e9672062dc75ddc44aad1f879589dce2dfe85ea7d5c5a18b5"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Login.tsx",
+      "line": 151,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "7c321dc6d2be9d73119f53d0f63d5559bf1451d060f84b030b52cede39c6c5f7"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Login.tsx",
+      "line": 172,
+      "tag": "Link",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "3d60fcf0d86bb6263144f7252920163be3ef7a2ea91bcff960903b4f35528254"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Login.tsx",
+      "line": 176,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "3ffc455b6eb8efa515892f32644c42e29468370df1908dda06b1613b32a1d485"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Login.tsx",
+      "line": 187,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "14cf2fffa65e8f8f97a979c230fd1e1f075ee2a3088a8253729172bc5a8948f9"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/NotFound.tsx",
+      "line": 48,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "32a7f80767248a377a4dc9b8972fc92f2e41b2ebebc0d84dd564e961741c3651"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 122,
+      "tag": "Redirect",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "c2913f3b91bc77837a37e00a8fa79e4b111e48b632db4d83fb5940fb02f4d430"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 123,
+      "tag": "Redirect",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "675d1e6b52b8279f308f7a0dfeac5a48eb9c7333a12da5f8f18594a259428880"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 131,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "aa8fc73fa9efa529c55670ce27667bd147ff07bab4a9002cdf4425a6385e27c3"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 196,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "950490b6308262c76611757c7304744d58abccf0782c1e84c503e6c7188ca67b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 375,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "79dd0aed4930c43e7681a78732e86ab6ca28297991db1688d4eadb98fabf5921"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 393,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "7f12933ba8bdbaece53f8e16bab3a7f0d137762694d1e4724c32dff0e2fe8bbc"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 420,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "268fd2d3595f1795f4a44e23d955057be7b21573082d83d855b3c91e4b85271b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 447,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "28467485462db3a8ca98917b2e31f1704b54ba8bd74e2ad303b2e9d59c8932c8"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 495,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "ef5c959f026a878c0ad13793ac0b43640285a1f4d5f3665545ca9ab39dca99f8"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 525,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "aef5c8c46dfd6ffafc965b8107a886a5a14c3fe6b3b25010a659d0ceb09feb0b"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 557,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "eba1551298a2c174c126db7aa5111dc51a693f4febf519a765cb0fa718642c64"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 602,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "6fd6821b58e8e37787865ed62f91dc23041ed7e8a93080e63c737a50304cf714"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 632,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "96b709767994b951df9078660fcbaabe01d202feaf40b6f5e8e80b755a1d8753"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 781,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "6210818d9a66b39209c91ebf37f51f0a619d3832db5345aeadd9e23efd2bff62"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 791,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "b7c920918aeec548e8a00ec7502ee00b4b5d01bbe83467fa7f4104e309c94e9c"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/Onboarding.tsx",
+      "line": 796,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "116c30772a556221f406162d7fb8d338bf393068bd8af44de81264a05346e06d"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 333,
+      "tag": "Redirect",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "c2913f3b91bc77837a37e00a8fa79e4b111e48b632db4d83fb5940fb02f4d430"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 334,
+      "tag": "Redirect",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "675d1e6b52b8279f308f7a0dfeac5a48eb9c7333a12da5f8f18594a259428880"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 339,
+      "tag": "CandidateIntake",
+      "events": [
+        "onChanged",
+        "onClose",
+        "onOpen"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "e0a35116eec3aac079a9bbecdd0f984aa3c3f376e65393216be9ed69c07deedc"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 354,
+      "tag": "OutreachDraftManager",
+      "events": [
+        "onChanged",
+        "onClose",
+        "onNavigate"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": true,
+      "expressionDigest": "46f58617f9a01749ed35c140815bd38a181045e8acb65282b84378c4f1ddbbcf"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 372,
+      "tag": "CandidateDetails",
+      "events": [
+        "onChanged",
+        "onClose"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": true,
+      "expressionDigest": "8462f48040a8df9a9e922150b85749584829f011f81be57c5527fa361352686d"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 403,
+      "tag": "a",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "8199f9c7c1b197e5ee5b4c04413479a10cfb976359501e38462de5bb5762e919"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 415,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "1d16f1625c7fe5ba2ff31abb371097785fc4125773dd71b79b47a31e4eda6399"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 422,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "e53396ef8a33f49e3716d5ca7a6c8c3f95f0c941a1fa4e0e96f452b0f64c1ade"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 502,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "53ac010457757af5304b00b38600fa1db25f0545f78ccae89df9ab83b4f789a8"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 515,
+      "tag": "Tabs",
+      "events": [
+        "onValueChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "d421eefc498edc6ec9ffce65a75c6618b8e37b89ad53fc6a99895e9ad5b456a4"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 540,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "24e3da90d16c038eb122d9d10121564fcf5d96ccdfbeb0bd5140df9c19c1ab5a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 600,
+      "tag": "OutreachComposer",
+      "events": [
+        "onCancel",
+        "onSave"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "d5604139d52f0a95a939b750b1bdb726386a45b7cae3032937c71e1b3264d2af"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 618,
+      "tag": "form",
+      "events": [
+        "onSubmit"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "88d2250ae06da170172f085a35148b09d7644b61775ad382cb01fe153150bf83"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 624,
+      "tag": "Textarea",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "c4f6c5454ec691744e0d5403d099b9d5982f0c2c7be7015eb1d0f8ec9bc2e601"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 640,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "1e08141fcd6b24ceb84af29f512fbc4bed543f4c797ba6dbe64e0511972616ef"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 663,
+      "tag": "input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "4df9a5106eb1542305248b7700de6b01ba5021c9992eaa861d99883b531f3fb2"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 682,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "c3b1e5cc4aa85f3329a91739bef49b8c8df690ade79be9bcfb6b59b52cbe89d1"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 696,
+      "tag": "ImportRecoveryNotice",
+      "events": [
+        "onRelease"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "a5ee5ab6b3260c48ca544790bea9c2aa40acbdef6483161924bb77f2b7d82c45"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 742,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "4dc317a5c6cfd19d7abf17a8a09f79011a806e34af4af3f5bb02d277d5312bcc"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 758,
+      "tag": "Input",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "633778f9cffa359905ba629f50e9bbad46e15943f8068da603d51cfb0f33b34e"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 773,
+      "tag": "select",
+      "events": [
+        "onChange"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "8599eaa83985fb106880c97103131c521f37a15ffa824c4e04063e49375a726d"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 801,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "885651d3fc26dcd44c62b07847b8d1d4a3dd9c3ca789b6150ea544d2cca851c5"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 860,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "2ad62647c90cd25c0c3f28536e33f11db12e17730c1416165c518780f4aaa69f"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 880,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "d3ca94f4e7b94bd2fed0d6a1e40422146e6048e99e159c3faf9e3d3409c8ff80"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 893,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "7e8085a8d1d0bbbbac6923d5dfc93dff83f4cd2700f7cca283ba64fc8df16533"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 938,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "c530b2a31a9d2b0ea2c4f22ace00756e26c612705d7c4cdb4f14e6315e45f2b2"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 953,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "08af6fd271b6c823eba4d1292824950bd7438e2a087d2a96198cab66be1428f2"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 971,
+      "tag": "OutreachReviewQueue",
+      "events": [
+        "onManage"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "b8dd3b512f68deb1a2af526e06e1142f58bf3ad10ee2890cb9764ba780a91010"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 1007,
+      "tag": "FollowUpQueue",
+      "events": [
+        "onManage"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "7d0092a0732fb98c65aad9992166436b1daa1e87de01c03339f7979f51c7c9d5"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 1044,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "d43312e676022c19716f3037ea6ee76863b68beb91e8abf5472cdb9585530b40"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 1070,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "3a95ccefe27a2dddd1316a105ada0275170a31f15fdb502362f9e56c132e3f6f"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 1076,
+      "tag": "WorkspacePresets",
+      "events": [
+        "onSave"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "5671d69cf9b8d519881e1aa9627898be9b1432421af63d861896be9e40f6cd32"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/OutreachConsole.tsx",
+      "line": 1117,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "8408731d57953ac5ed5e42caeb319788ae1391608d9bc48db1a8655613beba0f"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/VerifyEmail.tsx",
+      "line": 115,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "8eabaa5165a6a750022cc4c50d3372da74afb60cde9afcd37a4804ed7e278c01"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/VerifyEmail.tsx",
+      "line": 127,
+      "tag": "Button",
+      "events": [],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "eb7e9e268108ac24595135fb11926811bc5fafd436f321a0d160c63cb54fa0cb"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/VerifyEmail.tsx",
+      "line": 128,
+      "tag": "Link",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "d032b28cbcfb2a138de60d87823c5aed520e7b5ecab6bba9b2292fd475f02f2a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/VerifyEmail.tsx",
+      "line": 145,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "94c33e39a1eccc3a2e527b3713b9d303cfc7155d203e41ffd2824e94ddc3f85a"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/VerifyEmail.tsx",
+      "line": 165,
+      "tag": "Button",
+      "events": [
+        "onClick"
+      ],
+      "navigation": false,
+      "possibleImplicitSubmit": true,
+      "disabledAttribute": true,
+      "spreadAttributes": false,
+      "expressionDigest": "e6b93872c874fcf4aa6ff3f45c61001a7ba82567a0fb8330467a726aff67fd0e"
+    },
+    {
+      "source": "apps/cofounder-discovery/client/src/pages/VerifyEmail.tsx",
+      "line": 183,
+      "tag": "Link",
+      "events": [],
+      "navigation": true,
+      "possibleImplicitSubmit": false,
+      "disabledAttribute": false,
+      "spreadAttributes": false,
+      "expressionDigest": "f7fce0497a732053d0a5407691f802fde3118d41a638e7aae855d145a0df0067"
+    }
+  ]
+}

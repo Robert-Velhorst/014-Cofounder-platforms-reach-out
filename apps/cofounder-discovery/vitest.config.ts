@@ -2,9 +2,11 @@ import { defineConfig } from "vitest/config";
 import path from "path";
 
 export default defineConfig({
+  oxc: { jsx: { runtime: "automatic" } },
   root: path.resolve(import.meta.dirname),
   resolve: {
     alias: {
+      "@": path.resolve(import.meta.dirname, "./client/src"),
       "@shared": path.resolve(import.meta.dirname, "./shared"),
     },
   },

@@ -1,0 +1,1 @@
+CREATE INDEX `outreach_owner_reminder_idx` ON `outreach_records` (`user_id`,`follow_up_at`,`id`);
