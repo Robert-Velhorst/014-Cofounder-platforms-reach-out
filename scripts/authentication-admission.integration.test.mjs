@@ -146,6 +146,31 @@ test(
         await new Promise((resolve) => setTimeout(resolve, 200));
       }
       assert.ok(ready, "isolated_database_not_ready");
+      // The production runtime intentionally refuses to serve an unmigrated
+      // schema. Apply the image's bundled migrations only to this disposable,
+      // network-isolated MySQL instance before exercising login admission.
+      docker(
+        "run",
+        "--rm",
+        ...bounds,
+        "--network",
+        `container:${db}`,
+        "--user",
+        "1000:1000",
+        "--memory",
+        "512m",
+        "--memory-swap",
+        "512m",
+        "--tmpfs",
+        "/tmp:rw,noexec,nosuid,size=64m,mode=1777",
+        ...secrets,
+        "-e",
+        "DATABASE_URL_FILE=/run/secrets/database_url",
+        "--entrypoint",
+        "node",
+        runtime,
+        "dist/migrate.js",
+      );
       const app = create("runtime", [
         "run",
         "-d",
