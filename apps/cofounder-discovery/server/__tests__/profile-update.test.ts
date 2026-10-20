@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, it, expect } from "vitest";
 import { eq } from "drizzle-orm";
-import { userProfiles, users } from "../../drizzle/schema";
+import { auditEvents, userProfiles, users } from "../../drizzle/schema";
 import * as db from "../db";
 
 describe("Profile Update", () => {
@@ -15,6 +15,8 @@ describe("Profile Update", () => {
         openId: `profile-test-${Date.now()}-${Math.random()}`,
         email: `profile-${Date.now()}@test.invalid`,
         loginMethod: "test",
+        // This suite exercises verified workspace storage, not inbox acceptance.
+        emailVerified: 1,
       })
       .$returningId();
     testUserId = created.id;
@@ -23,7 +25,12 @@ describe("Profile Update", () => {
   afterAll(async () => {
     const database = await db.getDb();
     if (!database || !testUserId) return;
-    await database.delete(userProfiles).where(eq(userProfiles.userId, testUserId));
+    await database
+      .delete(auditEvents)
+      .where(eq(auditEvents.userId, testUserId));
+    await database
+      .delete(userProfiles)
+      .where(eq(userProfiles.userId, testUserId));
     await database.delete(users).where(eq(users.id, testUserId));
   });
 
@@ -73,5 +80,25 @@ describe("Profile Update", () => {
     expect(profile?.userId).toBe(testUserId);
     expect(profile?.skills).toBeDefined();
     expect(profile?.industries).toBeDefined();
+  });
+
+  it("refuses profile mutation for a currently unverified synthetic owner", async () => {
+    const database = (await db.getDb())!;
+    const before = await db.getUserProfile(testUserId);
+    await database
+      .update(users)
+      .set({ emailVerified: 0 })
+      .where(eq(users.id, testUserId));
+    try {
+      await expect(
+        db.createOrUpdateProfile(testUserId, { bio: "Must not persist" })
+      ).rejects.toMatchObject({ code: "FORBIDDEN" });
+      expect(await db.getUserProfile(testUserId)).toEqual(before);
+    } finally {
+      await database
+        .update(users)
+        .set({ emailVerified: 1 })
+        .where(eq(users.id, testUserId));
+    }
   });
 });

@@ -1,3 +1,4 @@
+import { assertVerifiedWorkspaceWorkAllowed } from "./account-work-fence";
 import {
   eq,
   and,
@@ -39,17 +40,39 @@ import type {
   InsertOutreachRecord,
   InsertAuditEvent,
   InsertIdempotencyRecord,
+  OutreachRecord,
+  Prospect,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
+import { createHash, randomUUID } from "node:crypto";
+import {
+  profilePatchSchema,
+  profileCompleteness,
+} from "../shared/profile-input";
+import { TRPCError } from "@trpc/server";
+import { canTransition, type OutreachState } from "./outreach-state";
+import type { OutreachSourceReceipt } from "./outreach-source-policy";
+import { parseProspectCsv } from "./prospect-csv";
+import { importDeclarationSchema } from "../shared/import-declaration";
+import { resolveOutreachSource } from "./outreach-source-policy";
+import {
+  availableCapacity,
+  lockCapacityResource,
+  throwCapacityReached,
+} from "./capacity";
+import { candidateListProjection } from "./candidate-review";
+import { readRuntimeSecret } from "./runtime-secrets";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
 export async function getDb() {
-  if (!_db && process.env.DATABASE_URL) {
+  const databaseUrl = _db ? undefined : readRuntimeSecret("DATABASE_URL");
+  if (!_db && databaseUrl) {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
-    } catch (error) {
-      console.warn("[Database] Failed to connect:", error);
+      _db = drizzle(databaseUrl);
+    } catch {
+      // Driver configuration errors may embed the complete credential-bearing URL.
+      console.warn("[Database] Connection configuration unavailable");
       _db = null;
     }
   }
@@ -121,9 +144,22 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       updateSet.lastSignedIn = new Date();
     }
 
-    await db.insert(users).values(values).onDuplicateKeyUpdate({
-      set: updateSet,
-    });
+    await db.transaction(
+      async tx => {
+        await lockCapacityResource(tx, "accounts");
+        const [existing] = await tx
+          .select({ id: users.id })
+          .from(users)
+          .where(eq(users.openId, user.openId))
+          .limit(1);
+        if (!existing) await availableCapacity(tx, "accounts");
+        await tx
+          .insert(users)
+          .values(values)
+          .onDuplicateKeyUpdate({ set: updateSet });
+      },
+      { isolationLevel: "read committed" }
+    );
   } catch (error) {
     console.error("[Database] Failed to upsert user:", error);
     throw error;
@@ -132,7 +168,11 @@ export async function upsertUser(user: InsertUser): Promise<void> {
 
 export async function getUserByEmail(email: string) {
   const db = await getDb();
-  if (!db) return null;
+  if (!db)
+    throw new TRPCError({
+      code: "SERVICE_UNAVAILABLE",
+      message: "Account service is temporarily unavailable.",
+    });
   const result = await db
     .select()
     .from(users)
@@ -142,24 +182,79 @@ export async function getUserByEmail(email: string) {
 }
 
 export async function createLocalUser(user: InsertUser) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.insert(users).values(user);
-  return getUserByOpenId(user.openId);
+  try {
+    const db = await getDb();
+    if (!db) throw new Error("account_storage_unavailable");
+    return await db.transaction(
+      async tx => {
+        await lockCapacityResource(tx, "accounts");
+        if (user.email) {
+          const [existing] = await tx
+            .select({ id: users.id })
+            .from(users)
+            .where(eq(users.email, user.email.trim().toLowerCase()))
+            .limit(1);
+          if (existing)
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: "An account already exists for this email",
+            });
+        }
+        await availableCapacity(tx, "accounts");
+        const [created] = await tx
+          .insert(users)
+          .values({ ...user, email: user.email?.trim().toLowerCase() })
+          .$returningId();
+        const [result] = await tx
+          .select()
+          .from(users)
+          .where(eq(users.id, created.id))
+          .limit(1);
+        if (!result) throw new Error("account_create_missing");
+        return result;
+      },
+      { isolationLevel: "read committed" }
+    );
+  } catch (error) {
+    if (error instanceof TRPCError) throw error;
+    throw new TRPCError({
+      code: "SERVICE_UNAVAILABLE",
+      message:
+        "Account creation is temporarily unavailable. Check whether you can sign in before retrying.",
+    });
+  }
 }
+
+function prepareUserLookup(db: NonNullable<Awaited<ReturnType<typeof getDb>>>) {
+  return db
+    .select()
+    .from(users)
+    .where(eq(users.openId, sql.placeholder("openId")))
+    .limit(1)
+    .prepare();
+}
+
+// Reuse SQL/row mapping, never account rows. Weak keys cannot pin closed pools.
+const userLookupQueries = new WeakMap<
+  NonNullable<Awaited<ReturnType<typeof getDb>>>,
+  ReturnType<typeof prepareUserLookup>
+>();
 
 export async function getUserByOpenId(openId: string) {
   const db = await getDb();
   if (!db) {
-    console.warn("[Database] Cannot get user: database not available");
-    return undefined;
+    throw new TRPCError({
+      code: "SERVICE_UNAVAILABLE",
+      message: "Account service is temporarily unavailable.",
+    });
   }
 
-  const result = await db
-    .select()
-    .from(users)
-    .where(eq(users.openId, openId))
-    .limit(1);
+  let query = userLookupQueries.get(db);
+  if (!query) {
+    query = prepareUserLookup(db);
+    userLookupQueries.set(db, query);
+  }
+  const result = await query.execute({ openId });
 
   return result.length > 0 ? result[0] : undefined;
 }
@@ -168,36 +263,93 @@ export async function getUserByOpenId(openId: string) {
 
 export async function createOrUpdateProfile(
   userId: number,
-  profileData: Partial<InsertUserProfile>
+  profileData: Partial<InsertUserProfile>,
+  requestId: string = randomUUID()
 ) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-
-  const existing = await db
-    .select()
-    .from(userProfiles)
-    .where(eq(userProfiles.userId, userId))
-    .limit(1);
-
-  if (existing.length > 0) {
-    await db
-      .update(userProfiles)
-      .set(profileData)
-      .where(eq(userProfiles.userId, userId));
-    const updated = await db
-      .select()
-      .from(userProfiles)
-      .where(eq(userProfiles.userId, userId))
-      .limit(1);
-    return updated[0];
-  } else {
-    await db.insert(userProfiles).values({ userId, ...profileData });
-    const newProfile = await db
-      .select()
-      .from(userProfiles)
-      .where(eq(userProfiles.userId, userId))
-      .limit(1);
-    return newProfile[0];
+  const parsed = profilePatchSchema.safeParse(profileData);
+  if (!parsed.success)
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Profile fields are invalid or exceed the supported limits.",
+    });
+  const { completeness: _clientCompleteness, ...values } = parsed.data;
+  const patch = Object.fromEntries(
+    Object.entries(values).filter(([, value]) => value !== undefined)
+  );
+  try {
+    const db = await getDb();
+    if (!db) throw new Error("profile_storage_unavailable");
+    return await db.transaction(
+      async tx => {
+        const [owner] = await tx
+          .select({
+            id: users.id,
+            deletionFencedAt: users.deletionFencedAt,
+            emailVerified: users.emailVerified,
+          })
+          .from(users)
+          .where(eq(users.id, userId))
+          .for("update");
+        if (!owner)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Account not found",
+          });
+        assertVerifiedWorkspaceWorkAllowed(owner);
+        const [existing] = await tx
+          .select()
+          .from(userProfiles)
+          .where(eq(userProfiles.userId, userId))
+          .orderBy(desc(userProfiles.id))
+          .limit(1)
+          .for("update");
+        // Keep older duplicate records intact; all supported reads use this same
+        // latest-ID rule until an explicit reconciliation workflow is available.
+        const completeness = profileCompleteness({ ...existing, ...patch });
+        let id = existing?.id;
+        if (existing) {
+          await tx
+            .update(userProfiles)
+            .set({ ...patch, completeness })
+            .where(
+              and(
+                eq(userProfiles.id, existing.id),
+                eq(userProfiles.userId, userId)
+              )
+            );
+        } else {
+          const [created] = await tx
+            .insert(userProfiles)
+            .values({ ...patch, userId, isPublic: false, completeness })
+            .$returningId();
+          id = created.id;
+        }
+        await appendWorkspaceAudit(tx, {
+          userId,
+          requestId,
+          action: "profile.save",
+          outcome: "success",
+          entityType: "profile",
+          entityId: String(id),
+          metadata: { fields: Object.keys(patch), created: !existing },
+        });
+        const [saved] = await tx
+          .select()
+          .from(userProfiles)
+          .where(and(eq(userProfiles.id, id!), eq(userProfiles.userId, userId)))
+          .limit(1);
+        if (!saved) throw new Error("profile_readback_missing");
+        return saved;
+      },
+      { isolationLevel: "read committed" }
+    );
+  } catch (error) {
+    if (error instanceof TRPCError) throw error;
+    throw new TRPCError({
+      code: "SERVICE_UNAVAILABLE",
+      message:
+        "Profile storage is temporarily unavailable. Your changes could not be confirmed; retry the same values.",
+    });
   }
 }
 
@@ -209,6 +361,7 @@ export async function getUserProfile(userId: number) {
     .select()
     .from(userProfiles)
     .where(eq(userProfiles.userId, userId))
+    .orderBy(desc(userProfiles.id))
     .limit(1);
   return result.length > 0 ? result[0] : null;
 }
@@ -219,15 +372,39 @@ export async function createProspect(prospectData: InsertProspect) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   if (!prospectData.userId) throw new Error("Prospect owner is required");
+  const userId = prospectData.userId;
 
-  await db.insert(prospects).values(prospectData);
-  const allProspects = await db
-    .select()
-    .from(prospects)
-    .where(eq(prospects.userId, prospectData.userId))
-    .orderBy(desc(prospects.id))
-    .limit(1);
-  return allProspects[0];
+  return db.transaction(
+    async tx => {
+      const [owner] = await tx
+        .select({
+          id: users.id,
+          deletionFencedAt: users.deletionFencedAt,
+          emailVerified: users.emailVerified,
+        })
+        .from(users)
+        .where(eq(users.id, userId))
+        .for("update");
+      if (!owner)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Account not found",
+        });
+      assertVerifiedWorkspaceWorkAllowed(owner);
+      await availableCapacity(tx, "prospects", userId);
+      const [created] = await tx
+        .insert(prospects)
+        .values(prospectData)
+        .$returningId();
+      const allProspects = await tx
+        .select()
+        .from(prospects)
+        .where(and(eq(prospects.id, created.id), eq(prospects.userId, userId)))
+        .limit(1);
+      return allProspects[0];
+    },
+    { isolationLevel: "read committed" }
+  );
 }
 
 export async function getAllProspects(userId?: number) {
@@ -248,7 +425,13 @@ export async function getProspectById(id: number, userId?: number) {
   const result = await db
     .select()
     .from(prospects)
-    .where(and(eq(prospects.id, id), eq(prospects.userId, userId), isNull(prospects.archivedAt)))
+    .where(
+      and(
+        eq(prospects.id, id),
+        eq(prospects.userId, userId),
+        isNull(prospects.archivedAt)
+      )
+    )
     .limit(1);
   return result.length > 0 ? result[0] : null;
 }
@@ -259,13 +442,225 @@ export async function createMatch(matchData: InsertMatch) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  await db.insert(matches).values(matchData);
+  const [created] = await db.insert(matches).values(matchData).$returningId();
   const allMatches = await db
     .select()
     .from(matches)
-    .orderBy(desc(matches.id))
+    .where(
+      and(eq(matches.id, created.id), eq(matches.userId, matchData.userId))
+    )
     .limit(1);
   return allMatches[0];
+}
+
+export async function qualifyProspect(input: {
+  userId: number;
+  prospectId: number;
+  idempotencyKey: string;
+  requestId: string;
+}) {
+  try {
+    const db = await getDb();
+    if (!db) throw new Error("qualification_storage_unavailable");
+    return await db.transaction(
+      async tx => {
+        // Account-first ordering matches draft/import admission and prevents two
+        // same-owner qualification requests from racing to create a first match.
+        const [owner] = await tx
+          .select({
+            id: users.id,
+            deletionFencedAt: users.deletionFencedAt,
+            emailVerified: users.emailVerified,
+          })
+          .from(users)
+          .where(eq(users.id, input.userId))
+          .for("update");
+        if (!owner)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Account not found",
+          });
+        assertVerifiedWorkspaceWorkAllowed(owner);
+        const operation = "prospect.qualify";
+        const [receipt] = await tx
+          .select()
+          .from(idempotencyRecords)
+          .where(
+            and(
+              eq(idempotencyRecords.userId, input.userId),
+              eq(idempotencyRecords.operation, operation),
+              eq(idempotencyRecords.idempotencyKey, input.idempotencyKey)
+            )
+          )
+          .limit(1)
+          .for("update");
+        if (receipt && receipt.result.prospectId !== input.prospectId)
+          throw new TRPCError({
+            code: "CONFLICT",
+            message:
+              "This qualification key belongs to another prospect or an unverifiable receipt.",
+          });
+        const [prospect] = await tx
+          .select()
+          .from(prospects)
+          .where(
+            and(
+              eq(prospects.id, input.prospectId),
+              eq(prospects.userId, input.userId),
+              isNull(prospects.archivedAt)
+            )
+          )
+          .limit(1)
+          .for("share");
+        if (!prospect)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Prospect not found",
+          });
+        if (prospect.consentStatus === "opted_out")
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "This prospect opted out. Qualification is not available.",
+          });
+        if (receipt) {
+          const matchId = receipt.result.matchId;
+          if (
+            typeof matchId !== "number" ||
+            !Number.isSafeInteger(matchId) ||
+            matchId < 1
+          )
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: "The saved qualification receipt cannot be verified.",
+            });
+          const [match] = await tx
+            .select()
+            .from(matches)
+            .where(
+              and(
+                eq(matches.id, matchId),
+                eq(matches.userId, input.userId),
+                eq(matches.prospectId, input.prospectId)
+              )
+            )
+            .limit(1)
+            .for("share");
+          if (!match)
+            throw new TRPCError({
+              code: "CONFLICT",
+              message:
+                "The saved qualification is unavailable for this account and prospect.",
+            });
+          return { match, replayed: true };
+        }
+        const saveReceipt = (matchId: number) =>
+          tx.insert(idempotencyRecords).values({
+            userId: input.userId,
+            operation,
+            idempotencyKey: input.idempotencyKey,
+            result: { prospectId: input.prospectId, matchId },
+          });
+        // Preserve historical assessments; a new retry key is not a rescore request.
+        const [existing] = await tx
+          .select()
+          .from(matches)
+          .where(
+            and(
+              eq(matches.userId, input.userId),
+              eq(matches.prospectId, input.prospectId)
+            )
+          )
+          .orderBy(desc(matches.id))
+          .limit(1)
+          .for("share");
+        if (existing) {
+          await saveReceipt(existing.id);
+          return { match: existing, replayed: true };
+        }
+        const [profile] = await tx
+          .select({
+            lookingFor: userProfiles.lookingFor,
+            targetIndustries: userProfiles.targetIndustries,
+          })
+          .from(userProfiles)
+          .where(eq(userProfiles.userId, input.userId))
+          .orderBy(desc(userProfiles.id))
+          .limit(1)
+          .for("share");
+        const normalize = (value: string) => value.trim().toLowerCase();
+        const wanted = new Set(
+          [...(profile?.lookingFor ?? []), ...(profile?.targetIndustries ?? [])]
+            .map(normalize)
+            .filter(Boolean)
+        );
+        const candidate = new Set(
+          [...(prospect.skills ?? []), ...(prospect.industries ?? [])]
+            .map(normalize)
+            .filter(Boolean)
+        );
+        const overlap = Array.from(candidate).filter(value =>
+          wanted.has(value)
+        );
+        const score = Math.min(
+          95,
+          55 + overlap.length * 10 + (prospect.bio?.trim() ? 5 : 0)
+        );
+        const [created] = await tx
+          .insert(matches)
+          .values({
+            userId: input.userId,
+            prospectId: input.prospectId,
+            overallScore: score,
+            skillsScore: Math.min(100, 40 + overlap.length * 20),
+            reasoning: overlap.length
+              ? `Shared signals: ${overlap.join(", ")}`
+              : "Manual review required; no shared structured signals found",
+            recommendations: [
+              "Verify goals and availability",
+              "Discuss decision rights",
+              "Confirm mutual expectations",
+            ],
+            status: "discovered",
+          })
+          .$returningId();
+        await appendWorkspaceAudit(tx, {
+          userId: input.userId,
+          requestId: input.requestId,
+          action: operation,
+          outcome: "success",
+          entityType: "match",
+          entityId: String(created.id),
+          metadata: {
+            idempotencyKey: input.idempotencyKey,
+            score,
+            method: "local_structured_v1",
+          },
+        });
+        await saveReceipt(created.id);
+        const [match] = await tx
+          .select()
+          .from(matches)
+          .where(
+            and(
+              eq(matches.id, created.id),
+              eq(matches.userId, input.userId),
+              eq(matches.prospectId, input.prospectId)
+            )
+          )
+          .limit(1);
+        if (!match) throw new Error("qualification_readback_missing");
+        return { match, replayed: false };
+      },
+      { isolationLevel: "read committed" }
+    );
+  } catch (error) {
+    if (error instanceof TRPCError) throw error;
+    throw new TRPCError({
+      code: "SERVICE_UNAVAILABLE",
+      message:
+        "Qualification storage is temporarily unavailable. Retry the same request.",
+    });
+  }
 }
 
 export async function getUserMatches(userId: number) {
@@ -451,7 +846,10 @@ export async function getOrCreateConversation(
   return newConv[0];
 }
 
-export async function getConversationMessages(conversationId: number, userId?: number) {
+export async function getConversationMessages(
+  conversationId: number,
+  userId?: number
+) {
   const db = await getDb();
   if (!db || !userId) return [];
 
@@ -459,14 +857,24 @@ export async function getConversationMessages(conversationId: number, userId?: n
   const conv = await db
     .select()
     .from(conversations)
-    .where(and(eq(conversations.id, conversationId), eq(conversations.userId, userId)))
+    .where(
+      and(
+        eq(conversations.id, conversationId),
+        eq(conversations.userId, userId)
+      )
+    )
     .limit(1);
   if (conv.length === 0) return [];
 
   const result = await db
     .select()
     .from(messages)
-    .where(and(eq(messages.userId, userId), eq(messages.conversationId, conversationId)))
+    .where(
+      and(
+        eq(messages.userId, userId),
+        eq(messages.conversationId, conversationId)
+      )
+    )
     .orderBy(messages.sentAt);
   return result;
 }
@@ -511,7 +919,12 @@ export async function updateConversation(
   await db
     .update(conversations)
     .set(updates)
-    .where(and(eq(conversations.id, conversationId), eq(conversations.userId, userId)));
+    .where(
+      and(
+        eq(conversations.id, conversationId),
+        eq(conversations.userId, userId)
+      )
+    );
 }
 
 // ===== Production-safe assisted outreach =====
@@ -522,7 +935,12 @@ export async function findOutreachByIdempotency(userId: number, key: string) {
   const result = await db
     .select()
     .from(outreachRecords)
-    .where(and(eq(outreachRecords.userId, userId), eq(outreachRecords.idempotencyKey, key)))
+    .where(
+      and(
+        eq(outreachRecords.userId, userId),
+        eq(outreachRecords.idempotencyKey, key)
+      )
+    )
     .limit(1);
   return result[0] ?? null;
 }
@@ -530,8 +948,42 @@ export async function findOutreachByIdempotency(userId: number, key: string) {
 export async function createOutreachRecord(record: InsertOutreachRecord) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.insert(outreachRecords).values(record);
-  return findOutreachByIdempotency(record.userId, record.idempotencyKey);
+  return db.transaction(
+    async tx => {
+      const [owner] = await tx
+        .select({
+          id: users.id,
+          deletionFencedAt: users.deletionFencedAt,
+          emailVerified: users.emailVerified,
+        })
+        .from(users)
+        .where(eq(users.id, record.userId))
+        .for("update");
+      if (!owner)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Account not found",
+        });
+      assertVerifiedWorkspaceWorkAllowed(owner);
+      await availableCapacity(tx, "outreach", record.userId);
+      const [created] = await tx
+        .insert(outreachRecords)
+        .values(record)
+        .$returningId();
+      const [result] = await tx
+        .select()
+        .from(outreachRecords)
+        .where(
+          and(
+            eq(outreachRecords.id, created.id),
+            eq(outreachRecords.userId, record.userId)
+          )
+        )
+        .limit(1);
+      return result;
+    },
+    { isolationLevel: "read committed" }
+  );
 }
 
 export async function getOutreachRecord(id: number, userId: number) {
@@ -549,10 +1001,12 @@ export async function listOutreachRecords(userId: number) {
   const db = await getDb();
   if (!db) return [];
   return db
-    .select({ outreach: outreachRecords, prospect: prospects })
+    .select({ outreach: outreachRecords, prospect: candidateListProjection })
     .from(outreachRecords)
     .innerJoin(prospects, eq(outreachRecords.prospectId, prospects.id))
-    .where(and(eq(outreachRecords.userId, userId), eq(prospects.userId, userId)))
+    .where(
+      and(eq(outreachRecords.userId, userId), eq(prospects.userId, userId))
+    )
     .orderBy(desc(outreachRecords.updatedAt));
 }
 
@@ -570,7 +1024,309 @@ export async function updateOutreachRecord(
   return getOutreachRecord(id, userId);
 }
 
+export async function createOutreachDraft(
+  input: {
+    userId: number;
+    prospectId: number;
+    matchId?: number;
+    body: string;
+    idempotencyKey: string;
+    requestId: string;
+  },
+  authorize: (
+    prospect: Prospect,
+    existing: OutreachRecord | undefined
+  ) => OutreachSourceReceipt
+) {
+  try {
+    const db = await getDb();
+    if (!db) throw new Error("outreach_storage_unavailable");
+    return await db.transaction(
+      async tx => {
+        // Account -> outreach -> prospect -> match, shared with transitions.
+        // The account lock serializes even the first use of a draft key.
+        const [owner] = await tx
+          .select({
+            id: users.id,
+            deletionFencedAt: users.deletionFencedAt,
+            emailVerified: users.emailVerified,
+          })
+          .from(users)
+          .where(eq(users.id, input.userId))
+          .for("update");
+        if (!owner)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Account not found",
+          });
+        assertVerifiedWorkspaceWorkAllowed(owner);
+        const [existing] = await tx
+          .select()
+          .from(outreachRecords)
+          .where(
+            and(
+              eq(outreachRecords.userId, input.userId),
+              eq(outreachRecords.idempotencyKey, input.idempotencyKey)
+            )
+          )
+          .limit(1)
+          .for("update");
+        const [prospect] = await tx
+          .select()
+          .from(prospects)
+          .where(
+            and(
+              eq(prospects.id, input.prospectId),
+              eq(prospects.userId, input.userId)
+            )
+          )
+          .limit(1)
+          .for("share");
+        if (!prospect)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Prospect not found",
+          });
+        if (input.matchId !== undefined) {
+          const [match] = await tx
+            .select({ id: matches.id })
+            .from(matches)
+            .where(
+              and(
+                eq(matches.id, input.matchId),
+                eq(matches.userId, input.userId),
+                eq(matches.prospectId, input.prospectId)
+              )
+            )
+            .limit(1)
+            .for("share");
+          if (!match)
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Match not found for this prospect",
+            });
+        }
+        if (
+          existing &&
+          (existing.prospectId !== input.prospectId ||
+            existing.body !== input.body ||
+            (existing.matchId ?? null) !== (input.matchId ?? null))
+        )
+          throw new TRPCError({
+            code: "CONFLICT",
+            message:
+              "This draft key already belongs to different content. Start a new draft.",
+          });
+        const sourcePolicy = authorize(prospect, existing);
+        // Revalidate the original receipt, but never renew it on a retry.
+        if (existing) return { outreach: existing, replayed: true };
+        await availableCapacity(tx, "outreach", input.userId);
+        const [created] = await tx
+          .insert(outreachRecords)
+          .values({
+            userId: input.userId,
+            prospectId: input.prospectId,
+            matchId: input.matchId,
+            body: input.body,
+            idempotencyKey: input.idempotencyKey,
+            state: "draft",
+            generationMode: "user_authored",
+            sourcePolicy,
+            destinationUrl: sourcePolicy.destinationUrl,
+          })
+          .$returningId();
+        await appendWorkspaceAudit(tx, {
+          userId: input.userId,
+          requestId: input.requestId,
+          action: "outreach.draft",
+          outcome: "success",
+          entityType: "outreach",
+          entityId: String(created.id),
+          metadata: {
+            generationMode: "user_authored",
+            sourceId: sourcePolicy.sourceId,
+            policyVersion: sourcePolicy.version,
+          },
+        });
+        const [outreach] = await tx
+          .select()
+          .from(outreachRecords)
+          .where(
+            and(
+              eq(outreachRecords.id, created.id),
+              eq(outreachRecords.userId, input.userId)
+            )
+          )
+          .limit(1);
+        if (!outreach) throw new Error("outreach_create_missing");
+        return { outreach, replayed: false };
+        // Account locking supplies replay serialization. READ COMMITTED avoids
+        // absent-key gap locks coupling unrelated customers' first draft inserts.
+      },
+      { isolationLevel: "read committed" }
+    );
+  } catch (error) {
+    if (error instanceof TRPCError) throw error;
+    throw new TRPCError({
+      code: "SERVICE_UNAVAILABLE",
+      message: "Outreach storage is temporarily unavailable. Please try again.",
+    });
+  }
+}
+
+export async function transitionOutreachRecord(
+  input: {
+    id: number;
+    userId: number;
+    requestId: string;
+    to: OutreachState;
+    updates?: Partial<
+      Pick<
+        InsertOutreachRecord,
+        | "reviewNotes"
+        | "approvedAt"
+        | "confirmedSentAt"
+        | "externalReference"
+        | "responseRecordedAt"
+        | "followUpAt"
+        | "closedAt"
+      >
+    >;
+  },
+  authorize: (record: OutreachRecord, prospect: Prospect) => void
+) {
+  try {
+    const db = await getDb();
+    if (!db) throw new Error("outreach_storage_unavailable");
+    const result = await db.transaction(async tx => {
+      // All transitions share account -> outreach -> prospect lock order with
+      // draft creation. This serializes quota admission across server processes.
+      const [owner] = await tx
+        .select({
+          id: users.id,
+          deletionFencedAt: users.deletionFencedAt,
+          emailVerified: users.emailVerified,
+        })
+        .from(users)
+        .where(eq(users.id, input.userId))
+        .for("update");
+      if (!owner)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Account not found",
+        });
+      assertVerifiedWorkspaceWorkAllowed(owner);
+      const [current] = await tx
+        .select()
+        .from(outreachRecords)
+        .where(
+          and(
+            eq(outreachRecords.id, input.id),
+            eq(outreachRecords.userId, input.userId)
+          )
+        )
+        .limit(1)
+        .for("update");
+      if (!current)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Outreach record not found",
+        });
+      const [prospect] = await tx
+        .select()
+        .from(prospects)
+        .where(
+          and(
+            eq(prospects.id, current.prospectId),
+            eq(prospects.userId, input.userId)
+          )
+        )
+        .limit(1)
+        .for("share");
+      if (!prospect)
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Prospect not found",
+        });
+      authorize(current, prospect);
+      const allowed = canTransition(current.state, input.to);
+      if (allowed) {
+        if (input.to === "manual_action_required") {
+          // Only committed successful preparations consume the rolling allowance.
+          // Retention must preserve these audit events for at least 24 hours.
+          // No earlier snapshot reads: this reads after acquiring the account lock.
+          const usage = await tx
+            .select({ id: auditEvents.id })
+            .from(auditEvents)
+            .where(
+              and(
+                eq(auditEvents.userId, input.userId),
+                eq(auditEvents.action, "outreach.transition"),
+                eq(auditEvents.outcome, "success"),
+                sql`${auditEvents.createdAt} > DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 24 HOUR)`,
+                sql`JSON_UNQUOTE(JSON_EXTRACT(${auditEvents.metadata}, '$.to')) = 'manual_action_required'`
+              )
+            )
+            .limit(20);
+          if (usage.length >= 20)
+            throw new TRPCError({
+              code: "TOO_MANY_REQUESTS",
+              message: "Daily assisted-outreach limit reached",
+            });
+        }
+        await tx
+          .update(outreachRecords)
+          .set({ ...input.updates, state: input.to })
+          .where(
+            and(
+              eq(outreachRecords.id, input.id),
+              eq(outreachRecords.userId, input.userId)
+            )
+          );
+      }
+      await appendWorkspaceAudit(tx, {
+        userId: input.userId,
+        requestId: input.requestId,
+        action: "outreach.transition",
+        outcome: allowed ? "success" : "rejected",
+        entityType: "outreach",
+        entityId: String(input.id),
+        metadata: { from: current.state, to: input.to },
+      });
+      if (!allowed) return { rejected: true as const, from: current.state };
+      const [updated] = await tx
+        .select()
+        .from(outreachRecords)
+        .where(
+          and(
+            eq(outreachRecords.id, input.id),
+            eq(outreachRecords.userId, input.userId)
+          )
+        )
+        .limit(1);
+      if (!updated) throw new Error("outreach_update_missing");
+      return { rejected: false as const, updated };
+    });
+    // A rejected-state audit must commit before the API returns the conflict.
+    if (result.rejected)
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: `Invalid outreach transition: ${result.from} -> ${input.to}`,
+      });
+    return result.updated;
+  } catch (error) {
+    if (error instanceof TRPCError) throw error;
+    throw new TRPCError({
+      code: "SERVICE_UNAVAILABLE",
+      message: "Outreach storage is temporarily unavailable. Please try again.",
+    });
+  }
+}
+
 export async function createAuditEvent(event: InsertAuditEvent) {
+  // Workspace receipts must be atomic with their owner-locked mutation.
+  if (isWorkspaceAuditAction(event.action))
+    throw new Error("workspace_audit_requires_mutation_transaction");
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.insert(auditEvents).values(event);
@@ -608,13 +1364,203 @@ export async function getIdempotencyRecord(
   return rows[0] ?? null;
 }
 
+export async function importProspectsCsv(input: {
+  userId: number;
+  accountId: number;
+  requestId: string;
+  csv: string;
+  idempotencyKey: string;
+  declaration: unknown;
+}) {
+  if (!Number.isSafeInteger(input.accountId) || input.accountId <= 0)
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "A reviewed account is required.",
+    });
+  if (input.accountId !== input.userId)
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message:
+        "The signed-in account changed. Reload and review the import for this account.",
+    });
+  const parsedDeclaration = importDeclarationSchema.safeParse(
+    input.declaration
+  );
+  if (!parsedDeclaration.success)
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message:
+        "Confirm direct-from-person data, processing rights and an opaque evidence reference. Platform exports and scraped/copied member data are not admitted.",
+    });
+  const declaration = parsedDeclaration.data;
+  // Validate the entire bounded file before acquiring any database locks.
+  let rows: ReturnType<typeof parseProspectCsv>;
+  try {
+    rows = parseProspectCsv(input.csv);
+  } catch (error) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: error instanceof Error ? error.message : "Invalid prospect CSV",
+    });
+  }
+  // Resolve source identity only: opted-out records must remain importable for
+  // suppression. This check grants neither platform copying rights nor outreach.
+  const sources = rows.map((row, index) => {
+    const source = resolveOutreachSource({
+      platform: row.platform,
+      profileUrl: row.profileUrl,
+    });
+    if (!source.allowed || !source.sourceId)
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: `CSV record ${index + 1}: ${source.reason}`,
+      });
+    return source.sourceId;
+  });
+  const operation = "prospect.import_csv";
+  const version = "2026-09-13-direct-data-v1" as const;
+  const requestHash = createHash("sha256")
+    .update(JSON.stringify({ version, csv: input.csv, declaration }), "utf8")
+    .digest("hex");
+  try {
+    const db = await getDb();
+    if (!db) throw new Error("import_storage_unavailable");
+    return await db.transaction(
+      async tx => {
+        // Shared account-first ordering serializes same-owner imports and retries.
+        const [owner] = await tx
+          .select({
+            id: users.id,
+            deletionFencedAt: users.deletionFencedAt,
+            emailVerified: users.emailVerified,
+          })
+          .from(users)
+          .where(eq(users.id, input.userId))
+          .for("update");
+        if (!owner)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Account not found",
+          });
+        assertVerifiedWorkspaceWorkAllowed(owner);
+        const [existing] = await tx
+          .select()
+          .from(idempotencyRecords)
+          .where(
+            and(
+              eq(idempotencyRecords.userId, input.userId),
+              eq(idempotencyRecords.operation, operation),
+              eq(idempotencyRecords.idempotencyKey, input.idempotencyKey)
+            )
+          )
+          .limit(1)
+          .for("update");
+        if (existing) {
+          if (existing.result.requestHash !== requestHash)
+            throw new TRPCError({
+              code: "CONFLICT",
+              message:
+                "This import key belongs to different data or an older unverifiable receipt. Review your prospects before starting a new import.",
+            });
+          const { imported, skipped } = existing.result;
+          if (
+            typeof imported !== "number" ||
+            typeof skipped !== "number" ||
+            !Number.isSafeInteger(imported) ||
+            !Number.isSafeInteger(skipped) ||
+            imported < 0 ||
+            skipped < 0 ||
+            imported + skipped !== rows.length
+          )
+            throw new Error("invalid_import_receipt");
+          return { imported, skipped, replayed: true };
+        }
+        let imported = 0;
+        let skipped = 0;
+        let available: number | undefined;
+        const declaredAt = new Date().toISOString();
+        for (let index = 0; index < rows.length; index++) {
+          const row = rows[index];
+          if (row.profileUrl) {
+            const [duplicate] = await tx
+              .select({ id: prospects.id })
+              .from(prospects)
+              .where(
+                and(
+                  eq(prospects.userId, input.userId),
+                  eq(prospects.profileUrl, row.profileUrl)
+                )
+              )
+              .limit(1)
+              .for("share");
+            // Include archived/opted-out records. Never overwrite their data or consent.
+            if (duplicate) {
+              skipped += 1;
+              continue;
+            }
+          }
+          // Count once, only when this batch actually adds a row. Keep the
+          // service lock until the whole batch/audit/receipt commits or rolls back.
+          available ??= await availableCapacity(tx, "prospects", input.userId);
+          if (imported >= available) throwCapacityReached("prospects");
+          await tx.insert(prospects).values({
+            ...row,
+            userId: input.userId,
+            sourceKind: "csv",
+            importProvenance: {
+              ...declaration,
+              version,
+              actorId: input.userId,
+              sourceId: sources[index],
+              importKey: input.idempotencyKey,
+              requestHash,
+              declaredAt,
+            },
+          });
+          imported += 1;
+        }
+        await appendWorkspaceAudit(tx, {
+          userId: input.userId,
+          requestId: input.requestId,
+          action: operation,
+          outcome: "success",
+          entityType: "prospect",
+          metadata: {
+            idempotencyKey: input.idempotencyKey,
+            imported,
+            skipped,
+          },
+        });
+        await tx.insert(idempotencyRecords).values({
+          userId: input.userId,
+          operation,
+          idempotencyKey: input.idempotencyKey,
+          result: { requestHash, imported, skipped },
+        });
+        return { imported, skipped, replayed: false };
+      },
+      { isolationLevel: "read committed" }
+    );
+  } catch (error) {
+    if (error instanceof TRPCError) throw error;
+    throw new TRPCError({
+      code: "SERVICE_UNAVAILABLE",
+      message:
+        "Import storage is temporarily unavailable. No partial import was saved. Retry the same submission.",
+    });
+  }
+}
+
 export async function createIdempotencyRecord(record: InsertIdempotencyRecord) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.insert(idempotencyRecords).values(record).onDuplicateKeyUpdate({
-    // Never overwrite the response from the request that won the race.
-    set: { id: sql`${idempotencyRecords.id}` },
-  });
+  await db
+    .insert(idempotencyRecords)
+    .values(record)
+    .onDuplicateKeyUpdate({
+      // Never overwrite the response from the request that won the race.
+      set: { id: sql`${idempotencyRecords.id}` },
+    });
   return getIdempotencyRecord(
     record.userId,
     record.operation,
@@ -644,48 +1590,93 @@ export async function setVerificationToken(
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  await db
-    .update(users)
-    .set({
-      verificationToken: token,
-      verificationTokenExpiry: expiry,
-    })
-    .where(eq(users.id, userId));
+  if (!/^[A-Za-z0-9_-]{43}$/.test(token) || !Number.isFinite(expiry.getTime()))
+    throw new Error("verification_token_input_invalid");
+  await db.transaction(async tx => {
+    const [owner] = await tx
+      .select({ email: users.email, fencedAt: users.deletionFencedAt })
+      .from(users)
+      .where(eq(users.id, userId))
+      .for("update");
+    if (!owner?.email || owner.fencedAt !== null)
+      throw new Error("verification_account_unavailable");
+    await tx
+      .update(users)
+      .set({
+        verificationToken: createHash("sha256").update(token).digest("hex"),
+        verificationEmailDigest: createHash("sha256")
+          .update(owner.email.trim().toLowerCase())
+          .digest("hex"),
+        verificationTokenExpiry: expiry,
+      })
+      .where(eq(users.id, userId));
+  });
 }
 
-export async function verifyEmailToken(token: string) {
+export async function verifyEmailToken(
+  token: string,
+  requestId: string = randomUUID()
+) {
+  if (!/^[A-Za-z0-9_-]{43}$/.test(token)) return null;
   const db = await getDb();
-  if (!db) return null;
-
-  const result = await db
-    .select()
-    .from(users)
-    .where(eq(users.verificationToken, token))
-    .limit(1);
-
-  if (result.length === 0) return null;
-
-  const user = result[0];
-
-  // Check if token is expired
-  if (
-    user.verificationTokenExpiry &&
-    user.verificationTokenExpiry < new Date()
-  ) {
-    return null;
-  }
-
-  // Mark email as verified
-  await db
-    .update(users)
-    .set({
+  if (!db) throw new Error("Database not available");
+  const digest = createHash("sha256").update(token).digest("hex");
+  return db.transaction(async tx => {
+    const [user] = await tx
+      .select()
+      .from(users)
+      .where(eq(users.verificationToken, digest))
+      .limit(1)
+      .for("update");
+    if (
+      !user?.verificationTokenExpiry ||
+      !user.email ||
+      !user.verificationEmailDigest ||
+      user.verificationEmailDigest !==
+        createHash("sha256")
+          .update(user.email.trim().toLowerCase())
+          .digest("hex") ||
+      user.deletionFencedAt !== null ||
+      user.verificationTokenExpiry <= new Date()
+    )
+      return null;
+    await tx
+      .update(users)
+      .set({
+        emailVerified: 1,
+        verificationToken: null,
+        verificationEmailDigest: null,
+        verificationTokenExpiry: null,
+      })
+      .where(eq(users.id, user.id));
+    await tx.insert(auditEvents).values({
+      userId: user.id,
+      requestId,
+      action: "auth.email_token_redeemed",
+      entityType: "account",
+      entityId: String(user.id),
+      outcome: "success",
+      metadata: {
+        version: 2,
+        method: "email_token_redemption",
+        issuanceAddressBound: true,
+        // Pseudonymous private audit material, not anonymized data. Never return
+        // this digest in the account API, export or operator inspection output.
+        emailDigest: user.email
+          ? createHash("sha256")
+              .update(user.email.trim().toLowerCase())
+              .digest("hex")
+          : null,
+      },
+    });
+    return {
+      ...user,
       emailVerified: 1,
       verificationToken: null,
+      verificationEmailDigest: null,
       verificationTokenExpiry: null,
-    })
-    .where(eq(users.id, user.id));
-
-  return user;
+    };
+  });
 }
 
 // ===== Saved Searches =====
@@ -1219,6 +2210,76 @@ export async function getPlatformStatistics() {
 // Conversation Starters History Functions
 // ============================================
 
+type LegacyTransaction = Parameters<
+  Parameters<NonNullable<Awaited<ReturnType<typeof getDb>>>["transaction"]>[0]
+>[0];
+
+function requireLegacyId(id: number) {
+  if (!Number.isSafeInteger(id) || id <= 0 || id > 2147483647)
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "A valid owned record is required.",
+    });
+}
+
+async function legacyOwnedWrite<T>(
+  userId: number,
+  work: (tx: LegacyTransaction) => Promise<T>
+) {
+  requireLegacyId(userId);
+  try {
+    const db = await getDb();
+    if (!db) throw new Error("legacy_storage_unavailable");
+    return await db.transaction(
+      async tx => {
+        const [owner] = await tx
+          .select({
+            id: users.id,
+            emailVerified: users.emailVerified,
+            deletionFencedAt: users.deletionFencedAt,
+          })
+          .from(users)
+          .where(eq(users.id, userId))
+          .for("update");
+        if (!owner)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Account not found.",
+          });
+        assertVerifiedWorkspaceWorkAllowed(owner);
+        return work(tx);
+      },
+      { isolationLevel: "read committed" }
+    );
+  } catch (error) {
+    if (error instanceof TRPCError) throw error;
+    throw new TRPCError({
+      code: "SERVICE_UNAVAILABLE",
+      message: "Legacy history storage is temporarily unavailable.",
+    });
+  }
+}
+
+async function requireLegacyReference(
+  tx: LegacyTransaction,
+  userId: number,
+  table: typeof prospects | typeof campaigns,
+  id: number
+) {
+  requireLegacyId(id);
+  const [owned] = await tx
+    .select({ id: table.id })
+    .from(table)
+    .where(and(eq(table.id, id), eq(table.userId, userId)))
+    .limit(1)
+    .for("update");
+  if (!owned)
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: "Referenced record not found in this account.",
+    });
+}
+
 export async function saveConversationStarter(data: {
   userId: number;
   prospectId: number;
@@ -1229,28 +2290,54 @@ export async function saveConversationStarter(data: {
   compatibilityScore?: number;
   enrichmentScore?: number;
 }) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const [result] = await db.insert(conversationStartersHistory).values(data);
-  return result.insertId;
+  return legacyOwnedWrite(data.userId, async tx => {
+    await requireLegacyReference(tx, data.userId, prospects, data.prospectId);
+    const [result] = await tx.insert(conversationStartersHistory).values(data);
+    return result.insertId;
+  });
 }
 
-export async function markStarterAsCopied(starterId: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db
-    .update(conversationStartersHistory)
-    .set({ wasCopied: 1, copiedAt: new Date() })
-    .where(eq(conversationStartersHistory.id, starterId));
+async function markOwnedStarter(
+  starterId: number,
+  userId: number,
+  kind: "copied" | "used"
+) {
+  requireLegacyId(starterId);
+  return legacyOwnedWrite(userId, async tx => {
+    const owned = and(
+      eq(conversationStartersHistory.id, starterId),
+      eq(conversationStartersHistory.userId, userId)
+    );
+    const [starter] = await tx
+      .select()
+      .from(conversationStartersHistory)
+      .where(owned)
+      .limit(1)
+      .for("update");
+    if (!starter)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Starter not found in this account.",
+      });
+    await requireLegacyReference(tx, userId, prospects, starter.prospectId);
+    if (kind === "copied" ? starter.wasCopied : starter.wasUsed) return;
+    await tx
+      .update(conversationStartersHistory)
+      .set(
+        kind === "copied"
+          ? { wasCopied: 1, copiedAt: new Date() }
+          : { wasUsed: 1, usedAt: new Date() }
+      )
+      .where(owned);
+  });
 }
 
-export async function markStarterAsUsed(starterId: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db
-    .update(conversationStartersHistory)
-    .set({ wasUsed: 1, usedAt: new Date() })
-    .where(eq(conversationStartersHistory.id, starterId));
+export async function markStarterAsCopied(starterId: number, userId: number) {
+  return markOwnedStarter(starterId, userId, "copied");
+}
+
+export async function markStarterAsUsed(starterId: number, userId: number) {
+  return markOwnedStarter(starterId, userId, "used");
 }
 
 export async function getConversationStartersHistory(
@@ -1336,10 +2423,14 @@ export async function recordSuccessMetric(data: {
   notes?: string;
   value?: number;
 }) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const [result] = await db.insert(successMetrics).values(data);
-  return result.insertId;
+  return legacyOwnedWrite(data.userId, async tx => {
+    if (data.prospectId !== undefined)
+      await requireLegacyReference(tx, data.userId, prospects, data.prospectId);
+    if (data.campaignId !== undefined)
+      await requireLegacyReference(tx, data.userId, campaigns, data.campaignId);
+    const [result] = await tx.insert(successMetrics).values(data);
+    return result.insertId;
+  });
 }
 
 export async function getSuccessMetrics(
@@ -1498,29 +2589,7 @@ export async function updateUserProfile(
   userId: number,
   profileData: Partial<InsertUserProfile>
 ) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-
-  // Check if profile exists
-  const existing = await db
-    .select()
-    .from(userProfiles)
-    .where(eq(userProfiles.userId, userId))
-    .limit(1);
-
-  if (existing.length > 0) {
-    // Update existing profile
-    await db
-      .update(userProfiles)
-      .set(profileData)
-      .where(eq(userProfiles.userId, userId));
-  } else {
-    // Create new profile
-    await db.insert(userProfiles).values({
-      ...profileData,
-      userId,
-    } as InsertUserProfile);
-  }
+  return createOrUpdateProfile(userId, profileData);
 }
 
 // ============================================================================
@@ -1571,3 +2640,4 @@ export async function getTimelineForUser(userId: number, limit: number = 50) {
     .orderBy(desc(timelineEvents.createdAt))
     .limit(limit);
 }
+import { appendWorkspaceAudit, isWorkspaceAuditAction } from "./capacity";

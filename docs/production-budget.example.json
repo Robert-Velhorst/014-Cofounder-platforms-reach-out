@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "currency": "EUR",
+  "categories": [
+    { "category": "hosting", "status": "unconfigured" },
+    { "category": "database", "status": "unconfigured" },
+    { "category": "email", "status": "unconfigured" },
+    { "category": "ai_api", "status": "disabled" },
+    { "category": "storage_backup", "status": "unconfigured" },
+    { "category": "traffic", "status": "unconfigured" },
+    { "category": "domain", "status": "unconfigured" },
+    { "category": "monitoring", "status": "unconfigured" }
+  ]
+}

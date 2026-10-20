@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 20
     services:
       mysql:
-        image: mysql:9.7.2@sha256:c7cb87a9822f499375287930cbff71d6d3b201e346b45108b1115b435ee2df13
+        image: mysql:26.7.0@sha256:893418c8a7a34c60d2d961cc30ef136095da141478562ed2101ae3f5faba9c3f
         env:
           MYSQL_DATABASE: cofounder_test
           MYSQL_USER: cofounder
@@ -23,7 +23,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h localhost -proot"
+          --health-cmd="mysql --no-defaults --host=127.0.0.1 --protocol=TCP --connect-timeout=2 --user=cofounder --password=cofounder cofounder_test --execute='SELECT 1'"
           --health-interval=5s
           --health-timeout=3s
           --health-retries=30
@@ -33,22 +33,46 @@ jobs:
       DATABASE_URL: mysql://cofounder:cofounder@127.0.0.1:3306/cofounder_test
       JWT_SECRET: ci-session-secret-with-at-least-thirty-two-characters
       ENABLE_REGISTRATION: "true"
+      MIGRATION_TEST_ROOT_PASSWORD: root
     steps:
-      - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
         with:
-          version: 12.13.0
-      - uses: actions/setup-node@v7
+          version: 12.14.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 26.12.0
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
+      - name: Check production and development dependency advisories
+        run: pnpm audit --audit-level moderate
       - run: pnpm --dir apps/cofounder-discovery check
+      - run: pnpm test:release-contract
+      - run: pnpm test:requirements
+      - name: Check source-derived API surface and current audit snapshot
+        run: pnpm test:api-audit
+      - name: Check source-derived UI actions and current audit snapshot
+        run: pnpm test:ui-audit
+      - run: pnpm test:budget
+      - run: pnpm test:recovery
+      - run: pnpm test:monitor
+      - run: pnpm test:production-config
+      - run: pnpm test:tunnel
+      - run: pnpm test:support
+      - run: pnpm test:release-inventory
       - run: pnpm --dir apps/cofounder-discovery test:unit
+      - run: pnpm --dir apps/cofounder-discovery build
       - run: pnpm --dir apps/cofounder-discovery db:migrate
       - run: pnpm --dir apps/cofounder-discovery test:integration
-      - run: pnpm --dir apps/cofounder-discovery build
+      - run: pnpm test:readiness:integration
+      - name: Build recovery rehearsal dependencies
+        run: docker build --target integration-test --tag cofounder-recovery-test:local .
+      - name: Build recovery rehearsal production runtime
+        run: docker build --target runtime --tag cofounder-recovery-runtime:local .
+      - run: pnpm test:recovery:integration
+      - run: pnpm test:runtime-startup:integration
+      - run: pnpm test:authentication-admission:integration
       - run: pnpm audit --prod --audit-level high
 
   container-smoke:
@@ -61,9 +85,14 @@ jobs:
       CREDENTIAL_ENCRYPTION_SECRET: ci-container-credential-secret-with-at-least-thirty-two-characters
       ENABLE_REGISTRATION: "false"
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26.12.0
       - name: Build and start the production stack
         run: docker compose up --build --detach --wait --wait-timeout 300
+      - name: Probe production liveness and database readiness
+        run: node scripts/production-monitor.mjs --origin http://127.0.0.1:3014
       - name: Verify the container runtime contract
         run: |
           curl --fail --silent --show-error http://127.0.0.1:3014/api/ready | jq --exit-status '.status == "ready"'
@@ -74,6 +103,19 @@ jobs:
             and .platformAutomation == "disabled"
             and .legacyRoutes == "disabled"'
           test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:3014/api/integrations/hai/feed)" = "503"
+      - name: Verify pruned non-root production runtime
+        run: docker compose exec -T app node --input-type=module < scripts/production-smoke.mjs
+      - name: Verify graceful application shutdown
+        run: |
+          docker compose stop app
+          app_id="$(docker compose ps --all --quiet app)"
+          test -n "$app_id"
+          test "$(docker inspect --format '{{.State.Status}}' "$app_id")" = "exited"
+          test "$(docker inspect --format '{{.State.ExitCode}}' "$app_id")" = "0"
+          case "$(docker logs "$app_id" 2>&1)" in
+            *'"event":"shutdown_completed"'*) ;;
+            *) echo "Missing graceful shutdown acknowledgement"; exit 1 ;;
+          esac
       - name: Show container diagnostics
         if: always()
         run: docker compose ps && docker compose logs --no-color --tail 200

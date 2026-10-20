@@ -398,18 +398,34 @@ class CampaignScheduler {
       let enrichedCount = 0;
       let failedCount = 0;
 
+      const isProfileUrlForHost = (value: unknown, domain: string) => {
+        if (typeof value !== "string") return false;
+        try {
+          const url = new URL(value);
+          return (
+            url.protocol === "https:" &&
+            !url.username &&
+            !url.password &&
+            !url.port &&
+            (url.hostname === domain || url.hostname === `www.${domain}`)
+          );
+        } catch {
+          return false;
+        }
+      };
+
       for (const prospect of prospectsToEnrich) {
         try {
           // Extract enrichment sources from prospect
           const sources: any = {};
 
           // Look for LinkedIn URL in profileUrl or bio
-          if (prospect.profileUrl?.includes("linkedin.com")) {
+          if (isProfileUrlForHost(prospect.profileUrl, "linkedin.com")) {
             sources.linkedInUrl = prospect.profileUrl;
           }
 
           // Look for GitHub URL
-          if (prospect.profileUrl?.includes("github.com")) {
+          if (isProfileUrlForHost(prospect.profileUrl, "github.com")) {
             sources.githubUrl = prospect.profileUrl;
           }
 

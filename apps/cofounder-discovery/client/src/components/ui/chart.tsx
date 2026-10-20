@@ -1,6 +1,10 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
-import type { LegendPayload, TooltipContentProps } from "recharts";
+import type {
+  DefaultLegendContentProps,
+  TooltipContentProps,
+  TooltipValueType,
+} from "recharts";
 
 import { cn } from "@/lib/utils";
 
@@ -117,15 +121,11 @@ function ChartTooltipContent({
   color,
   nameKey,
   labelKey,
-}: Pick<
-  TooltipContentProps,
-  "active" | "payload" | "label" | "labelFormatter" | "formatter"
-> &
+}: TooltipContentProps<TooltipValueType, string> &
   React.ComponentProps<"div"> & {
     hideLabel?: boolean;
     hideIndicator?: boolean;
     indicator?: "line" | "dot" | "dashed";
-    labelClassName?: string;
     nameKey?: string;
     labelKey?: string;
   }) {
@@ -191,14 +191,20 @@ function ChartTooltipContent({
 
             return (
               <div
-                key={String(item.dataKey ?? item.name ?? index)}
+                key={`${item.dataKey ?? item.name ?? index}`}
                 className={cn(
                   "[&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5",
                   indicator === "dot" && "items-center"
                 )}
               >
                 {formatter && item?.value !== undefined && item.name ? (
-                  formatter(item.value, item.name, item, index, item.payload)
+                  formatter(
+                    item.value,
+                    String(item.name),
+                    item,
+                    index,
+                    item.payload
+                  )
                 ) : (
                   <>
                     {itemConfig?.icon ? (
@@ -261,9 +267,8 @@ function ChartLegendContent({
   payload,
   verticalAlign = "bottom",
   nameKey,
-}: React.ComponentProps<"div"> & {
-  payload?: LegendPayload[];
-  verticalAlign?: "top" | "bottom" | "middle";
+}: React.ComponentProps<"div"> &
+  Pick<DefaultLegendContentProps, "payload" | "verticalAlign"> & {
     hideIcon?: boolean;
     nameKey?: string;
   }) {

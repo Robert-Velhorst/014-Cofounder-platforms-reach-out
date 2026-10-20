@@ -1,0 +1,3 @@
+ALTER TABLE `outreach_records` ADD `revises_id` int;--> statement-breakpoint
+ALTER TABLE `outreach_records` ADD CONSTRAINT `outreach_unique_revision_parent` UNIQUE(`revises_id`);--> statement-breakpoint
+ALTER TABLE `outreach_records` ADD CONSTRAINT `outreach_records_revises_id_outreach_records_id_fk` FOREIGN KEY (`revises_id`) REFERENCES `outreach_records`(`id`) ON DELETE no action ON UPDATE no action;
