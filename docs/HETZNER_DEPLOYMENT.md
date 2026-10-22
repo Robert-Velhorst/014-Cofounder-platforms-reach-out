@@ -95,6 +95,10 @@ startup; Compose refuses to silently create missing bind-source paths:
 | `caddy-config` | `/config`        | UID/GID 1000       | Caddy configuration storage                     |
 
 Use restrictive directory permissions and verify actual container access on Linux.
+All three store subdirectories must exist and must not be symlinks/aliases to
+other directories. Mount any approved data volume at the reviewed data root
+instead of aliasing an individual database/certificate store. Preflight refuses
+missing subdirectories and aliases so a valid parent cannot hide a checkout mount.
 The data root itself should be traversable only by reviewed administrators;
 Docker's bind mounts grant the corresponding service its selected subdirectory.
 The Caddy data directory is persistent security state, not a disposable cache.

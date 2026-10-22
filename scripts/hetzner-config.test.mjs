@@ -1,7 +1,15 @@
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, writeFileSync, rmSync, symlinkSync } from "node:fs";
+import {
+  mkdtempSync,
+  writeFileSync,
+  rmSync,
+  symlinkSync,
+  mkdirSync,
+  rmdirSync,
+  unlinkSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -10,6 +18,8 @@ import { tlsIngressOverride } from "./tls-ingress-config.mjs";
 import { randomUUID } from "node:crypto";
 
 const directory = mkdtempSync(join(tmpdir(), "cofounder-hetzner-model-"));
+for (const name of ["mysql", "caddy-data", "caddy-config"])
+  mkdirSync(join(directory, name));
 const blank = join(directory, "empty.env"),
   secret = join(directory, "synthetic.secret");
 writeFileSync(blank, "");
@@ -117,6 +127,25 @@ test("preflight resolves directory junctions before excluding the checkout", () 
     () => validateHetznerInputs({ ...env, HETZNER_DATA_ROOT: link }),
     /hetzner_data_directory_outside_checkout_required/,
   );
+});
+test("preflight rejects a store junction even when its parent data directory is valid", () => {
+  const store = join(directory, "mysql");
+  rmSync(store, { recursive: true });
+  try {
+    symlinkSync(
+      fileURLToPath(new URL("../", import.meta.url)),
+      store,
+      "junction",
+    );
+    assert.throws(
+      () => validateHetznerInputs(env),
+      /hetzner_data_subdirectory_alias_refused/,
+    );
+  } finally {
+    if (process.platform === "win32") rmdirSync(store);
+    else unlinkSync(store);
+    mkdirSync(store);
+  }
 });
 test("real preflight CLI validates quietly and never claims hosted or budget acceptance", () => {
   const script = fileURLToPath(

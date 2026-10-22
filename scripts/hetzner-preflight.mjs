@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { isAbsolute, resolve, sep, parse } from "node:path";
+import { isAbsolute, resolve, sep, parse, join } from "node:path";
 import { homedir } from "node:os";
 import { isIP } from "node:net";
 import { realpathSync, statSync } from "node:fs";
@@ -48,6 +48,17 @@ export function validateHetznerInputs(env) {
     path.startsWith(checkout + sep)
   )
     throw new Error("hetzner_data_directory_outside_checkout_required");
+  for (const name of ["mysql", "caddy-data", "caddy-config"]) {
+    let child;
+    try {
+      child = realpathSync(join(actual, name));
+      if (!statSync(child).isDirectory()) throw new Error();
+    } catch {
+      throw new Error("hetzner_data_subdirectory_unavailable");
+    }
+    if (normalized(child) !== normalized(join(actual, name)))
+      throw new Error("hetzner_data_subdirectory_alias_refused");
+  }
 }
 
 if (

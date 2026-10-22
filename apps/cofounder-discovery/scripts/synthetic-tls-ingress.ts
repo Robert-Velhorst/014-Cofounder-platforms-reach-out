@@ -192,6 +192,7 @@ try {
       {
         "x-forwarded-proto": "http",
         "x-forwarded-for": "203.0.113.55",
+        "x-forwarded-host": "other.example.invalid",
         "x-real-ip": "203.0.113.55",
         forwarded: "for=203.0.113.55;proto=http",
       }
