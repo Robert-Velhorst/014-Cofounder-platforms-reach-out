@@ -6,12 +6,18 @@ decide whether contact is appropriate and send messages yourself. The applicatio
 organizes that work; it does not automatically contact people.
 
 **Status: in development for a free public beta, not approved for public production.**
-Local checks have passed, but live hosting, email, privacy/operator decisions and
-complete release acceptance remain unfinished. This describes the current working
-tree, not a verified GitHub main deployment. Initial budget planning is
+GitHub `main` contains the accumulated implementation from merged PR #83. The
+[October 20 baseline CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39467835793)
+passed build, database, recovery, startup, admission and container checks. Live
+hosting, email, privacy/operator decisions and complete release acceptance remain
+unfinished. The [complete customer-load gate](docs/CUSTOMER_LOAD_ACCEPTANCE.md)
+now retains the original workload in CI; a successful run is required before
+claiming normal 150-request/second capacity. Initial budget planning is
 **EUR 100/month**; no purchase or deployment is authorized by that plan.
 The [October 2 GitHub snapshot](docs/GITHUB_REPOSITORY_STATE_2026-10-02.md) records the historical repository state; current branch and PR status must be checked live.
-Latest local increment uses [one live joined account/session read](docs/AUTH_JOINED_READ_2026-10-03.md)
+Historical October 2–3 local qualification follows; these receipts retain their
+own image and source scope and do not describe a fresh run of the current branch.
+The October 3 increment uses [one live joined account/session read](docs/AUTH_JOINED_READ_2026-10-03.md)
 per authentication instead of two, preserving owner, revocation, expiry and
 deletion-fence checks. Actual SDK regression proves 40 reads instead of 80 for
 40 authentications; typecheck, all 1,036 units and a fresh 11-case MySQL session
