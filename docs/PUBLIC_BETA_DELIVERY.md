@@ -1,5 +1,25 @@
 # Worldwide public beta delivery ledger
 
+## October 23 maintained customer-load gate
+
+The [complete original workload is now a maintained mandatory CI/local gate](CUSTOMER_LOAD_ACCEPTANCE.md).
+Implementation commit `84685b24c92b4519aee39553c289dc070f518561` passed
+[CI run 39867347634](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39867347634):
+1,036 app units, 726 database cases, operator/release checks, build, recovery,
+startup, authentication admission and production container smoke. All 1,500
+scheduled requests at 150/s returned 200, without drops, refusals, retries or
+correctness errors. Both full write tiers and competing-write/owner-isolation
+acceptance passed; post-load readiness/health were 200 and all three exact owned
+load fixtures stopped 0/no OOM and were removed. The workload thresholds, stages
+and one-CPU resource limits were retained. See the linked receipt for immutable
+CI artifact identities, overload results, memory observations and source scope.
+
+The implementation is in [PR #112](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/112).
+This is bounded CI acceptance, not a diagnosis of the old Windows-host failures,
+sustained hosted capacity, published container release, deployment, live mail,
+provider permission, human/privacy approval or whole-goal completion. All 116
+original phases remain Partial; the EUR 100/month ceiling remains in force.
+
 ## October 3 live joined authentication read
 
 [Implemented one live account/session join](AUTH_JOINED_READ_2026-10-03.md),

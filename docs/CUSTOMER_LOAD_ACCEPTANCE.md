@@ -69,6 +69,50 @@ including database/recovery/startup/admission and container smoke checks. That
 workflow did not run this workload, so its green status is not capacity evidence.
 The older full workload failed normal 150/s acceptance on an earlier runtime;
 see [the historical qualification](AUTH_QUERY_REUSE_PACKAGE_2026-10-03.md).
-This new gate requires an actual successful execution before any new capacity
-claim. It does not prove hosted sizing, sustained traffic, live mail/provider
-behavior, budget enforcement, human acceptance, or full goal completion.
+## First successful CI qualification — October 23, 2026
+
+[CI run 39867347634](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39867347634)
+passed against implementation commit `84685b24c92b4519aee39553c289dc070f518561`.
+The complete customer-load fixture took 87.384 seconds. Its immutable artifacts
+were:
+
+- Production application and driver: `sha256:8862a728a9262db2534a07a5a0f2d8ba36f7741b98e411af43542b6ee808f4a5`.
+- Compiled-helper/test image: `sha256:62b6c62a783d21e5b5a10f3dd32dfc848b11ac234b9cb903881624f43d61ed37`.
+- MySQL: `sha256:420f00813dd560a6ffd6a8c8adeb6c7266c7b80d3c3f17c2d64e9b9dfaf1358c`.
+
+| Scheduled rate | Offered | Completed | HTTP 200 | HTTP 503 | Actor/capacity drops | Outcome |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| 50/s | 500 | 500 | 500 | 0 | 0 / 0 | Normal acceptance passed |
+| 150/s | 1,500 | 1,500 | 1,500 | 0 | 0 / 0 | Normal acceptance passed |
+| 500/s | 5,000 | 4,890 | 4,601 | 289 | 78 / 32 | Controlled overload passed |
+
+The 150/s tier's scheduled-response p95 was 3.18 ms. All three scheduled tiers
+reported zero transport failures, late drops, retries, incorrect responses and
+malformed retry headers. The 500/s overload result is not 500 successful
+requests/second capacity.
+
+Both ordinary closed-loop read tiers returned all 6,000 responses successfully;
+the concurrency-100 tier passed its retained overload rules with 1,118 successes
+and 4,882 busy refusals. Each complete 6,000-request write tier passed with 3,000
+committed changes, 1,000 unchanged replays and 1,000 expected stale conflicts,
+including persisted rows and audit ownership checks. The 200 competing-write
+races and all 400 cross-owner mutation denials passed. All 10,000 candidate rows
+and 6,200 audit rows were unchanged by those cross-owner attempts.
+
+Post-load health and readiness both returned 200. Observed memory peaks were
+300,019,712 bytes for the application and 780,787,712 bytes for MySQL. All three
+exact owned fixtures were inspected stopped with exit 0 and no OOM, then removed
+by the successful harness. No persistent data volume or local customer database
+was used.
+
+The same CI run passed 1,036 application unit tests and 726 database integration
+tests, plus the root release/operator checks, recovery, startup, authentication
+admission, dependency audits and separate production container smoke job. The
+PR's CodeQL checks also passed. These are CI-local image identities, not published
+registry artifacts or a reproducible-build attestation.
+
+This is one bounded successful workload execution on the GitHub runner. It does
+not identify the cause of the historical Windows-host failures or prove longer
+soaks, representative hosted sizing, live mail/provider behavior, budget
+enforcement, human acceptance, or full goal completion. All 116 original phases
+retain their Partial status pending their remaining substantive acceptance.

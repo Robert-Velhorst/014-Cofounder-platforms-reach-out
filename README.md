@@ -448,7 +448,8 @@ replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
 | `pnpm test`                       | Root operator/inventory gates and app units; Compose needed for configuration checks                        |
 | `pnpm build`                      | Client and bundled server/operator artifacts                                                                |
 | `pnpm test:integration`           | Mandatory dedicated-database suites; build first                                                            |
-| `pnpm test:all`                   | Root/unit/database checks plus readiness, recovery, runtime-startup and authentication-admission rehearsals |
+| `pnpm test:all`                   | Root/unit/database checks plus readiness, recovery, startup, admission and the complete customer workload |
+| `pnpm test:customer-load:integration` | Full packaged synthetic read/write/race/isolation and scheduled-arrival acceptance; local images required |
 | `pnpm requirements:check`         | Phase/title/evidence-path integrity, not completion                                                         |
 | `pnpm audit:api`, `pnpm audit:ui` | Source inventories, not behavioral acceptance                                                               |
 | `pnpm doctor`                     | Runtime configuration diagnostics                                                                           |
