@@ -15,7 +15,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateHetznerInputs } from "./hetzner-preflight.mjs";
-import { tlsIngressOverride } from "./tls-ingress-config.mjs";
+import { tlsIngressOverride, ownedTlsFixture } from "./tls-ingress-config.mjs";
 import { randomUUID } from "node:crypto";
 
 const directory = mkdtempSync(join(tmpdir(), "cofounder-hetzner-model-"));
@@ -40,6 +40,43 @@ const env = {
   MYSQL_ROOT_PASSWORD_SECRET_FILE: secret,
   HETZNER_DATA_ROOT: directory,
 };
+test("TLS cleanup retains full inspected IDs and refuses foreign or incomplete ownership", () => {
+  const owner = randomUUID(),
+    project = `cofounder-tls-${owner}`;
+  const fixture = {
+    Id: "a".repeat(64),
+    Config: {
+      Labels: {
+        "cofounder.synthetic-owner": owner,
+        "com.docker.compose.project": project,
+        "com.docker.compose.service": "app",
+      },
+    },
+  };
+  assert.deepEqual(ownedTlsFixture(fixture, owner, project), {
+    id: fixture.Id,
+    role: "app",
+  });
+  assert.throws(() =>
+    ownedTlsFixture(
+      { ...fixture, Id: fixture.Id.slice(0, 12) },
+      owner,
+      project,
+    ),
+  );
+  for (const [name, value] of [
+    ["cofounder.synthetic-owner", randomUUID()],
+    ["com.docker.compose.project", "another-project"],
+    ["com.docker.compose.service", "unrelated-service"],
+  ]) {
+    const altered = structuredClone(fixture);
+    altered.Config.Labels[name] = value;
+    assert.throws(() => ownedTlsFixture(altered, owner, project));
+    delete altered.Config.Labels[name];
+    assert.throws(() => ownedTlsFixture(altered, owner, project));
+  }
+});
+
 function model(extra = {}, override) {
   return spawnSync(
     "docker",

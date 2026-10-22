@@ -1,6 +1,17 @@
 import assert from "node:assert/strict";
 import { isAbsolute } from "node:path";
 
+export function ownedTlsFixture(model, owner, project) {
+  // `docker ps -q` returns a shortened ID. Retain the canonical inspected ID
+  // for the final ownership check and all subsequent destructive operations.
+  assert.match(model.Id, /^[a-f0-9]{64}$/);
+  const role = model.Config.Labels["com.docker.compose.service"];
+  assert.ok(["app", "database", "edge"].includes(role));
+  assert.equal(model.Config.Labels["cofounder.synthetic-owner"], owner);
+  assert.equal(model.Config.Labels["com.docker.compose.project"], project);
+  return { id: model.Id, role };
+}
+
 export function tlsIngressOverride(owner, caddyFile) {
   assert.match(
     owner,

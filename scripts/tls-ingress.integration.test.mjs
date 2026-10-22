@@ -14,7 +14,7 @@ import { tmpdir } from "node:os";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { getCiMysqlImage } from "./ci-mysql-image.mjs";
-import { tlsIngressOverride } from "./tls-ingress-config.mjs";
+import { tlsIngressOverride, ownedTlsFixture } from "./tls-ingress-config.mjs";
 
 test(
   "actual Hetzner Compose ingress authenticates through verified TLS and strips hostile forwarding claims",
@@ -177,14 +177,9 @@ test(
         .split(/\s+/)
         .filter(Boolean)) {
         const model = JSON.parse(docker("inspect", id))[0];
-        const role = model.Config.Labels["com.docker.compose.service"];
-        assert.ok(["app", "database", "edge"].includes(role));
-        assert.equal(
-          model.Config.Labels["com.docker.compose.project"],
-          project,
-        );
-        owned.push({ id, role });
-        models.set(role, model);
+        const fixture = ownedTlsFixture(model, owner, project);
+        owned.push(fixture);
+        models.set(fixture.role, model);
       }
       for (const id of docker(
         "network",
