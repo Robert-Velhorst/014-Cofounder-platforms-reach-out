@@ -1,5 +1,11 @@
 # Production container preparation and secret handling
 
+For a new approved Hetzner single-host installation, use the standalone
+[private database/TLS stack and acceptance guide](HETZNER_DEPLOYMENT.md).
+`compose.production.yml` below remains the application-only option for an already
+reviewed private database and external proxy; it must not be mixed with local
+database defaults. The new stack keeps the same closed launch-sensitive settings.
+
 This is an operator runbook, not authorization to deploy. The public beta is
 not ready merely because its containers start. Preserve the full release gates in
 [the delivery ledger](PUBLIC_BETA_DELIVERY.md#release-requirements-and-evidence).

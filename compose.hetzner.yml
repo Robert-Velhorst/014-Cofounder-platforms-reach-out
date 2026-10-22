@@ -1,0 +1,121 @@
+# Standalone Hetzner single-host stack; never merge with docker-compose.yml.
+# Host directories must already exist with the documented numeric ownership.
+services:
+  app:
+    extends:
+      file: compose.production.yml
+      service: app
+    ports: !reset []
+    environment:
+      TRUST_PROXY: "true"
+    networks: [ingress, database]
+    depends_on:
+      database:
+        condition: service_healthy
+
+  database:
+    image: ${PRODUCTION_DATABASE_IMAGE:?Set the reviewed MySQL repository@sha256 digest}
+    user: "999:999"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: "1.0"
+    mem_limit: 2g
+    memswap_limit: 2g
+    pids_limit: 256
+    stop_grace_period: 60s
+    restart: unless-stopped
+    networks: [database]
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+      - /var/run/mysqld:rw,noexec,nosuid,size=16m,mode=1777
+    volumes:
+      - type: bind
+        source: ${HETZNER_DATA_ROOT:?Set the reviewed absolute host data directory}/mysql
+        target: /var/lib/mysql
+        bind:
+          create_host_path: false
+    environment:
+      MYSQL_DATABASE: cofounder
+      MYSQL_USER: cofounder
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_INITDB_SKIP_TZINFO: "1"
+    secrets: [mysql_password, mysql_root_password]
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'MYSQL_PWD="$$(cat /run/secrets/mysql_password)" mysql --no-defaults --host=127.0.0.1 --protocol=TCP --connect-timeout=2 --user=cofounder cofounder --execute="SELECT 1" >/dev/null'
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+    logging:
+      driver: local
+      options: { max-size: "10m", max-file: "3" }
+
+  edge:
+    image: ${PRODUCTION_EDGE_IMAGE:?Set the reviewed edge repository@sha256 digest}
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: "0.5"
+    mem_limit: 256m
+    memswap_limit: 256m
+    pids_limit: 128
+    stop_grace_period: 30s
+    restart: unless-stopped
+    networks: [ingress]
+    ports:
+      - "80:8080/tcp"
+      - "443:8443/tcp"
+    environment:
+      PUBLIC_HOSTNAME: ${PUBLIC_HOSTNAME:?Set the approved DNS hostname without scheme or port}
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m,mode=1777
+    volumes:
+      - type: bind
+        source: ${HETZNER_DATA_ROOT:?Set the reviewed absolute host data directory}/caddy-data
+        target: /data
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${HETZNER_DATA_ROOT:?Set the reviewed absolute host data directory}/caddy-config
+        target: /config
+        bind:
+          create_host_path: false
+    depends_on:
+      app:
+        condition: service_healthy
+    healthcheck:
+      # Process/HTTP redirect only; external HTTPS readiness is checked separately.
+      test:
+        [
+          CMD-SHELL,
+          'curl --fail --silent --max-time 3 --head -H "Host: $$PUBLIC_HOSTNAME" http://127.0.0.1:8080/ >/dev/null',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: local
+      options: { max-size: "10m", max-file: "3" }
+
+networks:
+  ingress:
+    driver: bridge
+  database:
+    driver: bridge
+    internal: true
+
+secrets:
+  database_url:
+    file: ${DATABASE_URL_SECRET_FILE:?Set the protected app MySQL URL file}
+  jwt_secret:
+    file: ${JWT_SECRET_FILE:?Set the protected session-signing secret file}
+  mysql_password:
+    file: ${MYSQL_PASSWORD_SECRET_FILE:?Set the protected app database password file}
+  mysql_root_password:
+    file: ${MYSQL_ROOT_PASSWORD_SECRET_FILE:?Set the protected database administrator password file}
