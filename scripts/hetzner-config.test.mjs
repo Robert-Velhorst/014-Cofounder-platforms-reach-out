@@ -9,6 +9,7 @@ import {
   mkdirSync,
   rmdirSync,
   unlinkSync,
+  readFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -60,6 +61,22 @@ function model(extra = {}, override) {
     },
   );
 }
+test("all persistent stores explicitly disable host-path creation in the source", () => {
+  // Older Compose encoders omit false booleans from JSON. Deployment consumes
+  // this original YAML, so independently require the explicit source setting.
+  const source = readFileSync(
+    new URL("../compose.hetzner.yml", import.meta.url),
+    "utf8",
+  );
+  const stores = source.split(/^\s+- type: bind\s*$/m).slice(1);
+  assert.equal(stores.length, 3);
+  assert.deepEqual(
+    stores.map((block) => block.match(/^\s+target: (\S+)\s*$/m)?.[1]).sort(),
+    ["/config", "/data", "/var/lib/mysql"],
+  );
+  for (const store of stores)
+    assert.match(store, /^\s+bind:\r?\n\s+create_host_path: false(?:\r?\n|$)/m);
+});
 test("the exact TLS rehearsal removes all public ports and persistent stores before startup", () => {
   const owner = randomUUID(),
     caddyFile = join(directory, "Caddyfile");
@@ -239,11 +256,19 @@ test("Hetzner stack exposes only the edge and isolates private application/datab
     false,
   );
   assert.deepEqual(
-    database.volumes.map((v) => [v.type, v.target, v.bind.create_host_path]),
+    database.volumes.map((v) => [
+      v.type,
+      v.target,
+      v.bind.create_host_path ?? false,
+    ]),
     [["bind", "/var/lib/mysql", false]],
   );
   assert.deepEqual(
-    edge.volumes.map((v) => [v.type, v.target, v.bind.create_host_path]),
+    edge.volumes.map((v) => [
+      v.type,
+      v.target,
+      v.bind.create_host_path ?? false,
+    ]),
     [
       ["bind", "/data", false],
       ["bind", "/config", false],
