@@ -1,6 +1,15 @@
 # Goal completion matrix
 
-Updated: 2026-10-02. Overall goal: **not complete**.
+Updated: 2026-10-23. Overall goal: **not complete**.
+
+Publication checkpoint: the accumulated implementation was merged through
+[PR #83](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/83)
+on October 20. Baseline `main` is `65b87547e60c4b466088902a38e55536f29aa7ce`;
+its [CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39467835793)
+passed. The former dirty-branch references below describe the historical audit,
+not the current publication state. Current capacity qualification is tracked by
+[the complete customer-load gate](CUSTOMER_LOAD_ACCEPTANCE.md). All original
+phase statuses remain Partial pending their substantive remaining acceptance.
 
 This replaces the historical range-based table, whose phase subjects did not match
 this specification and whose broad Verified labels did not establish the current

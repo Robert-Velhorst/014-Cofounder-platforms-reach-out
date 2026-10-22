@@ -133,6 +133,7 @@ test("authentication admission uses the built production runtime and remains a m
 // Deliberately checks this workflow's existing scalar-run step convention.
 // This is not a general YAML parser or proof of a successful hosted CI run.
 function activeVerifyCommands(source) {
+  source = source.replaceAll("\r\n", "\n");
   const start = source.indexOf("\n  verify:\n");
   assert.notEqual(start, -1, "verify job missing");
   const rest = source.slice(start + 1);
@@ -194,6 +195,7 @@ test("all-tests command runs local gates before mandatory database/recovery acce
     "pnpm test:recovery:integration",
     "pnpm test:runtime-startup:integration",
     "pnpm test:authentication-admission:integration",
+    "pnpm test:customer-load:integration",
   ]);
 });
 test("every root integration fixture runs exactly once locally and in CI", () => {
@@ -301,6 +303,9 @@ test("workflow command detection ignores conditional or commented-out steps", ()
   const fixture =
     "\n  verify:\n    steps:\n      # - run: pnpm test:budget\n      - run: pnpm test:monitor\n        if: false\n      - run: pnpm test:production-config\n        continue-on-error: true\n      - run: pnpm test:recovery\n  other:\n    steps:\n      - run: pnpm test:budget\n";
   assert.deepEqual(activeVerifyCommands(fixture), ["pnpm test:recovery"]);
+  assert.deepEqual(activeVerifyCommands(fixture.replaceAll("\n", "\r\n")), [
+    "pnpm test:recovery",
+  ]);
   assert.throws(() =>
     activeVerifyCommands(
       fixture.replace("    steps:", "    if: false\n    steps:"),

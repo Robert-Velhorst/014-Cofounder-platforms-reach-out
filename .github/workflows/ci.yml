@@ -11,7 +11,7 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     services:
       mysql:
         image: mysql:26.7.0@sha256:625f74ddf93652d9d0f8d4ea7d741b9189554a5e96d27bb770abd0902d89c6e3
@@ -72,6 +72,8 @@ jobs:
       - run: pnpm test:recovery:integration
       - run: pnpm test:runtime-startup:integration
       - run: pnpm test:authentication-admission:integration
+      - name: Qualify the complete synthetic customer workload
+        run: pnpm test:customer-load:integration
       - run: pnpm audit --prod --audit-level high
 
   container-smoke:
