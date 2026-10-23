@@ -92,6 +92,8 @@ jobs:
         id: native_versions
         run: |
           mkdir -p output
+          docker image inspect --format '{{.Id}}' cofounder-hetzner-edge:local > output/caddy-image-id.txt
+          docker image inspect --format '{{.Id}}' cofounder-hetzner-database:local > output/mysql-image-id.txt
           docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint caddy cofounder-hetzner-edge:local version > output/caddy-version.txt
           docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint cat cofounder-hetzner-edge:local /etc/alpine-release > output/caddy-os-release.txt
           test "$(cat output/caddy-os-release.txt)" = '3.24.3'
@@ -107,7 +109,7 @@ jobs:
           grep -Eq 'golang.org/x/net[[:space:]]+v0[.]61[.]0[[:space:]]' output/caddy-build-info.txt
           grep -Eq 'golang.org/x/crypto[[:space:]]+v0[.]58[.]0[[:space:]]' output/caddy-build-info.txt
           grep -q '26.10.0' output/mysql-version.txt
-      - name: Scan installed edge and database packages
+      - name: Collect complete installed edge and database package scans
         run: |
           status=0
           for target in edge database; do
@@ -117,14 +119,18 @@ jobs:
               --mount "type=bind,source=$GITHUB_WORKSPACE/output/native-$target.tar,target=/scan/image.tar,readonly" \
               aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c \
               image --cache-dir /tmp/trivy-cache --scanners vuln --skip-java-db-update --quiet --list-all-pkgs \
-              --exit-code 1 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL --format json --input /scan/image.tar > "output/image-security-$target.json" || status=1
+              --exit-code 0 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL --format json --input /scan/image.tar > "output/image-security-$target.json" || status=1
           done
           exit "$status"
-      - name: Assess Caddy OpenPGP package applicability while retaining raw scan failure
+      - name: Assess Caddy OpenPGP package applicability while retaining every raw finding
         if: ${{ always() && steps.native_versions.outcome == 'success' }}
         run: |
           curl --fail --silent --show-error --max-time 30 --retry 2 https://vuln.go.dev/ID/GO-2026-5932.json > output/caddy-go-advisory.json
           node scripts/assess-caddy-advisory.mjs > output/caddy-advisory-applicability.json
+      - name: Verify native package policy against exact image and advisory evidence
+        run: |
+          node scripts/check-caddy-root-advisories.mjs
+          node scripts/verify-native-package-security.mjs > output/native-package-security-verification.json
       - name: Retain runtime and native image evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -139,6 +145,9 @@ jobs:
             output/caddy-build-evidence.json
             output/caddy-go-advisory.json
             output/caddy-advisory-applicability.json
+            output/native-package-security-verification.json
+            output/caddy-root-advisories.json
+            output/mysql-image-id.txt
 
 
   container-smoke:

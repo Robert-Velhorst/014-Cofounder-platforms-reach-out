@@ -132,6 +132,33 @@ assessment retains the raw advisory and all other findings; the native scan
 still fails and whole-image acceptance remains false. New-image hosted
 qualification is required before relying on this assessment.
 
+Downloaded head `999948a` confirms the automated assessment succeeds: the
+runtime/build binary hashes agree, the captured graph has 1,031 packages,
+none of the seven affected packages is included, and the edge scan has no
+other findings. The following policy now consumes that verified assessment.
+It collects complete raw scans independently of their finding count, fails on
+scanner errors, recomputes the assessment and rejects every other finding.
+It also binds both scan reports to Docker-captured image IDs, requires the
+actual MySQL version and complete database inventory, and rejects expired OS
+metadata, modified findings or missing evidence. The raw OpenPGP finding is
+retained and explicitly classified, never removed or generally ignored.
+
+The Go scan inventory must cover every linked module in the binary build
+information, plus Go 1.27.3's standard library. The current data verifies all
+159 dependency modules. The locally built Caddy main module lacks a version in
+Go metadata, so a separate timestamped
+[OSV version query](https://google.github.io/osv.dev/api/) checks the verified
+upstream source version `github.com/caddyserver/caddy/v2@v2.11.7`. The inspected
+query reports no advisories. An unavailable, malformed, stale, paginated or
+nonempty response blocks the native policy. This source-version query does not
+alter the original binary metadata or replace dependency scanning.
+
+The complete native policy passes locally against the downloaded 999948a
+reports and a live OSV response, using the independent scanner image IDs for
+that local comparison. New hosted execution additionally captures both IDs
+directly from Docker. Native package-policy acceptance is narrower than
+whole-image, browser, provider or deployment acceptance; those remain unproved.
+
 ## Local verification of the follow-up
 
 The inspected official Caddy image retains Alpine 3.23.7, while Alpine's
@@ -143,6 +170,6 @@ explicit Caddy command, internal high ports and UID/GID 1000. No file capability
 or libcap helper is required. CI must verify the actual OS version, TLS/session,
 recovery, workload and all-severity scan results on this new image.
 
-All 213 operator/configuration tests pass with Node 26.12.1. Workflow YAML
+All 214 operator/configuration tests pass with Node 26.12.1. Workflow YAML
 parses. This does not replace hosted browser, image or application checks.
 The TypeScript vendor compiler's bundled Go/libraries remain separate work.

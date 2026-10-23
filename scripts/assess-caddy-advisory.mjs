@@ -42,12 +42,27 @@ export function assessCaddyAdvisory({advisory,scan,linkedPackages,buildInfo,envi
   assert.equal(scan?.SchemaVersion,2,'INVALID_EDGE_SCAN'); assert.equal(scan.ArtifactType,'container_image','INVALID_EDGE_SCAN');
   assert.equal(scan.Metadata?.OS?.Family,'alpine','WRONG_EDGE_OS'); assert.equal(scan.Metadata.OS.Name,'3.24.3','WRONG_EDGE_OS');
   assert.ok(Array.isArray(scan.Results) && scan.Results.length>0,'MISSING_EDGE_INVENTORY');
-  let osPackages=0,goPackages=0,advisoryFindings=0,otherFindings=0;
+  assert.doesNotMatch(buildInfo,/^\s*=>/m,'UNREVIEWED_MODULE_REPLACEMENT');
+  const modules=[...buildInfo.matchAll(/^\s*dep\s+(\S+)\s+(\S+)/gm)].map(match=>[match[1],match[2]]);
+  assert.ok(modules.length>0,'MISSING_LINKED_MODULES');
+  let osPackages=0,goPackages=0,advisoryFindings=0,otherFindings=0,linkedModulesVerified=0;
   for (const result of scan.Results) {
     assert.ok(Array.isArray(result.Packages) && result.Packages.length>0,'MISSING_EDGE_INVENTORY');
     if (result.Class==='os-pkgs' && result.Type==='alpine') osPackages+=result.Packages.length;
     const caddy=result.Class==='lang-pkgs' && result.Type==='gobinary' && result.Target.replace(/^\//,'')==='usr/bin/caddy';
-    if(caddy) {goPackages+=result.Packages.length; assert.ok(result.Packages.some(pkg=>pkg.Name==='golang.org/x/crypto' && pkg.Version==='v0.58.0'),'MISSING_LINKED_MODULE_INVENTORY');}
+    if(caddy) {
+      goPackages+=result.Packages.length;
+      const inventory=new Set();
+      for(const pkg of result.Packages) {
+        assert.ok(typeof pkg.Name==='string' && pkg.Name.length,'INVALID_GO_PACKAGE');
+        if(pkg.Name==='github.com/caddyserver/caddy/v2') assert.ok(pkg.Version===undefined || pkg.Version==='(devel)' || pkg.Version==='v2.11.7','WRONG_MAIN_MODULE_VERSION');
+        else assert.ok(typeof pkg.Version==='string' && /^v\d+\.\d+\.\d+(?:[-+][\w.-]+)?$/.test(pkg.Version),'UNRESOLVED_GO_PACKAGE_VERSION');
+        inventory.add(pkg.Name+'@'+pkg.Version);
+      }
+      assert.ok(inventory.has('stdlib@v1.27.3'),'MISSING_STANDARD_LIBRARY_INVENTORY');
+      for(const [name,version] of modules) assert.ok(inventory.has(name+'@'+version),'MISSING_LINKED_MODULE_INVENTORY:'+name);
+      linkedModulesVerified+=modules.length;
+    }
     if(Object.hasOwn(result,'ExperimentalModifiedFindings')) assert.ok(Array.isArray(result.ExperimentalModifiedFindings) && result.ExperimentalModifiedFindings.length===0,'MODIFIED_FINDINGS_PRESENT');
     if(Object.hasOwn(result,'Vulnerabilities')) assert.ok(Array.isArray(result.Vulnerabilities),'INVALID_FINDINGS');
     for (const finding of result.Vulnerabilities??[]) {
@@ -56,7 +71,7 @@ export function assessCaddyAdvisory({advisory,scan,linkedPackages,buildInfo,envi
     }
   }
   assert.ok(osPackages>0 && goPackages>0,'MISSING_EDGE_INVENTORY');
-  return {advisory:'GO-2026-5932',decision:'not_affected',justification:'vulnerable_code_not_present',source:'https://vuln.go.dev/ID/GO-2026-5932.json',binarySha256:runtime,linkedPackagesSha256:hash(linkedPackages),compiledPackages:packages.length,affectedPackagesIncluded:included,rawAdvisoryFindingsRetained:advisoryFindings,otherFindings,osPackages,goPackages,wholeImageSecurityAcceptance:false,scope:'package applicability for the recorded Caddy binary only; existing raw scan gate remains required'};
+  return {advisory:'GO-2026-5932',decision:'not_affected',justification:'vulnerable_code_not_present',source:'https://vuln.go.dev/ID/GO-2026-5932.json',binarySha256:runtime,linkedPackagesSha256:hash(linkedPackages),compiledPackages:packages.length,linkedModulesVerified,affectedPackagesIncluded:included,rawAdvisoryFindingsRetained:advisoryFindings,otherFindings,osPackages,goPackages,wholeImageSecurityAcceptance:false,scope:'package applicability for the recorded Caddy binary only; complete raw reports remain required by native package policy'};
 }
 if (process.argv[1] && resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   assert.equal(process.argv.length,2,'UNEXPECTED_ARGUMENTS');

@@ -13,6 +13,8 @@ import { validateUbuntuCoverage } from './check-ubuntu-coverage.mjs';
 import { summarizeUbuntuImageEvidence } from './summarize-ubuntu-image-evidence.mjs';
 import { assessCaddyAdvisory } from './assess-caddy-advisory.mjs';
 import { verifyUbuntuImageSecurity, canonicalDpkgVersion, resolvePrivateComponent } from './verify-ubuntu-image-security.mjs';
+import { verifyNativePackageSecurity } from './verify-native-package-security.mjs';
+import { validateCaddyRootReceipt } from './check-caddy-root-advisories.mjs';
 const script = fileURLToPath(new URL('./stable-runtime.mjs', import.meta.url));
 test('records actual interpreter without connecting to a database', () => {
   const fixture = mkdtempSync(join(tmpdir(), 'cofounder-runtime-'));
@@ -116,7 +118,7 @@ test('Caddy uses current stable Alpine while preserving rootless runtime and per
   assert.ok(workflow.includes('test "$(cat output/caddy-os-release.txt)" = \'3.24.3\''));
 });
 
-test('Caddy applicability binds exact advisory scope and compile graph to the actual runtime hash', () => {
+function caddySecurityFixture() {
   const hash=value=>createHash('sha256').update(value).digest('hex');
   const paths=['golang.org/x/crypto/openpgp','golang.org/x/crypto/openpgp/packet','golang.org/x/crypto/openpgp/armor','golang.org/x/crypto/openpgp/clearsign','golang.org/x/crypto/openpgp/errors','golang.org/x/crypto/openpgp/elgamal','golang.org/x/crypto/openpgp/s2k'];
   const advisory={id:'GO-2026-5932',affected:[{package:{name:'golang.org/x/crypto',ecosystem:'Go'},ecosystem_specific:{imports:paths.map(path=>({path}))}}]};
@@ -124,8 +126,12 @@ test('Caddy applicability binds exact advisory scope and compile graph to the ac
   const buildInfo='/out/caddy: go1.27.3\n\tpath\tgithub.com/caddyserver/caddy/v2/cmd/caddy\n\tdep\tgolang.org/x/crypto\tv0.58.0\tfixture\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=linux\n\tbuild\t-trimpath=true\n';
   const environmentText=JSON.stringify({CGO_ENABLED:'0',GOARCH:'amd64',GOOS:'linux',GOVERSION:'go1.27.3'},null,'\t')+'\n';
   const manifest={binarySha256:'a'.repeat(64),linkedPackagesSha256:hash(linkedPackages),buildInfoSha256:hash(buildInfo),buildEnvironmentSha256:hash(environmentText),sourceSha256:'bb250cdef3e4baad82af6c048ac9754b4d1350d50a55af7c34e8d1aa574a6211',package:'./cmd/caddy',trimpath:true};
-  const scan={SchemaVersion:2,ArtifactType:'container_image',Metadata:{OS:{Family:'alpine',Name:'3.24.3'}},Results:[{Target:'alpine',Class:'os-pkgs',Type:'alpine',Packages:[{Name:'musl',Version:'fixture'}]},{Target:'usr/bin/caddy',Class:'lang-pkgs',Type:'gobinary',Packages:[{Name:'golang.org/x/crypto',Version:'v0.58.0'}],Vulnerabilities:[{VulnerabilityID:'GO-2026-5932',PkgName:'golang.org/x/crypto',InstalledVersion:'v0.58.0'}]}]};
-  const input={advisory,scan,linkedPackages,buildInfo,environmentText,buildHash:'a'.repeat(64)+'  /out/caddy\n',runtimeHash:'a'.repeat(64)+'  /usr/bin/caddy\n',manifest,version:'v2.11.7-cofounder.20261023.2\n'};
+  const scan={SchemaVersion:2,ArtifactType:'container_image',Metadata:{ImageID:'sha256:'+'e'.repeat(64),OS:{Family:'alpine',Name:'3.24.3'}},Results:[{Target:'alpine',Class:'os-pkgs',Type:'alpine',Packages:[{Name:'musl',Version:'fixture'}]},{Target:'usr/bin/caddy',Class:'lang-pkgs',Type:'gobinary',Packages:[{Name:'golang.org/x/crypto',Version:'v0.58.0'},{Name:'stdlib',Version:'v1.27.3'},{Name:'github.com/caddyserver/caddy/v2'}],Vulnerabilities:[{VulnerabilityID:'GO-2026-5932',PkgName:'golang.org/x/crypto',InstalledVersion:'v0.58.0'}]}]};
+  return {advisory,scan,linkedPackages,buildInfo,environmentText,buildHash:'a'.repeat(64)+'  /out/caddy\n',runtimeHash:'a'.repeat(64)+'  /usr/bin/caddy\n',manifest,version:'v2.11.7-cofounder.20261023.2\n'};
+}
+test('Caddy applicability binds exact advisory scope and compile graph to the actual runtime hash', () => {
+  const hash=value=>createHash('sha256').update(value).digest('hex');
+  const input=caddySecurityFixture(); const {advisory,scan,linkedPackages,environmentText,manifest}=input;
   const result=assessCaddyAdvisory(input);
   assert.equal(result.decision,'not_affected'); assert.equal(result.rawAdvisoryFindingsRetained,1); assert.equal(result.wholeImageSecurityAcceptance,false);
   assert.throws(()=>assessCaddyAdvisory({...input,runtimeHash:'b'.repeat(64)+'  /usr/bin/caddy\n'}),/BUILD_RUNTIME_HASH_MISMATCH/);
@@ -142,6 +148,31 @@ test('Caddy applicability binds exact advisory scope and compile graph to the ac
   assert.equal(assessCaddyAdvisory({...input,scan:otherScan}).otherFindings,1);
   const dockerfile=readFileSync(new URL('../Dockerfile.hetzner-edge',import.meta.url),'utf8');
   for (const fragment of ['sha256sum /out/caddy /out/linked-packages.txt /out/build-info.txt /out/build-environment.json','/usr/share/caddy/build-evidence.json']) assert.ok(dockerfile.includes(fragment));
+});
+
+test('native policy accepts only proved package absence and rejects every other finding or stale root query', () => {
+  const now=Date.parse('2026-10-23T12:00:00Z');
+  const rootReceipt={schemaVersion:1,source:'https://api.osv.dev/v1/query',httpStatus:200,query:{package:{name:'github.com/caddyserver/caddy/v2',ecosystem:'Go'},version:'v2.11.7'},checkedAt:'2026-10-23T11:59:00Z',response:{}};
+  const caddy=caddySecurityFixture(); const edgeImageID=caddy.scan.Metadata.ImageID,databaseImageID='sha256:'+'d'.repeat(64);
+  const database={SchemaVersion:2,ArtifactType:'container_image',Metadata:{ImageID:databaseImageID,OS:{Family:'oracle',Name:'9.8'}},Results:[{Target:'db',Class:'os-pkgs',Type:'oracle',Packages:[{Name:'mysql-community-server-minimal',Version:'26.10.0'}]}]};
+  const input={caddy,database,edgeImageID,databaseImageID,mysqlVersion:'/usr/sbin/mysqld  Ver 26.10.0 for Linux on x86_64\n',rootReceipt,now};
+  const result=verifyNativePackageSecurity(input);
+  assert.equal(result.passed,true); assert.equal(result.applicableFindings,0); assert.equal(result.rawFindingsRetained,1); assert.equal(result.notAffectedFindings,1); assert.equal(result.wholeImageSecurityAcceptance,false);
+  const vulnerable=structuredClone(caddy); vulnerable.scan.Results[1].Vulnerabilities.push({VulnerabilityID:'fixture-other'});
+  assert.throws(()=>verifyNativePackageSecurity({...input,caddy:vulnerable}),/APPLICABLE_EDGE_FINDINGS/);
+  const badDatabase=structuredClone(database); badDatabase.Results[0].Vulnerabilities=[{VulnerabilityID:'fixture-database'}];
+  assert.throws(()=>verifyNativePackageSecurity({...input,database:badDatabase}),/DATABASE_FINDINGS_PRESENT/);
+  assert.throws(()=>verifyNativePackageSecurity({...input,edgeImageID:databaseImageID}),/MIXED_EDGE_IMAGE/);
+  assert.throws(()=>verifyNativePackageSecurity({...input,databaseImageID:edgeImageID}),/MIXED_DATABASE_IMAGE/);
+  assert.throws(()=>verifyNativePackageSecurity({...input,rootReceipt:{...rootReceipt,response:{vulns:[{id:'fixture'}]}}}),/CADDY_ROOT_ADVISORIES_PRESENT/);
+  assert.throws(()=>validateCaddyRootReceipt({...rootReceipt,response:{next_page_token:'more'}},now),/INCOMPLETE_ROOT_QUERY/);
+  assert.throws(()=>validateCaddyRootReceipt({...rootReceipt,httpStatus:500},now),/FAILED_ROOT_QUERY/);
+  assert.throws(()=>validateCaddyRootReceipt({...rootReceipt,response:{code:500}},now),/INVALID_ROOT_QUERY_RESPONSE/);
+  assert.throws(()=>validateCaddyRootReceipt(rootReceipt,now+2*86400000),/STALE_ROOT_QUERY/);
+  const missing=structuredClone(caddy); missing.scan.Results[1].Packages=missing.scan.Results[1].Packages.filter(pkg=>pkg.Name!=='golang.org/x/crypto');
+  assert.throws(()=>verifyNativePackageSecurity({...input,caddy:missing}),/MISSING_LINKED_MODULE_INVENTORY/);
+  const workflow=readFileSync(new URL('../.github/workflows/ci.yml',import.meta.url),'utf8');
+  assert.ok(workflow.includes('node scripts/verify-native-package-security.mjs > output/native-package-security-verification.json'));
 });
 
 test('Ubuntu package policy cross-checks image identity, inventories and every scanner finding', () => {
