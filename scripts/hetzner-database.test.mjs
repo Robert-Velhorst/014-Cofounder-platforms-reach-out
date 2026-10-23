@@ -146,13 +146,24 @@ test("database wrapper refuses alternate commands and invalid configuration befo
   const dependency = "source /usr/local/lib/cofounder-validate-secrets.sh";
   assert.equal(original.split(dependency).length, 2);
   const wrapper = original.replace(dependency, 'source "$CF_VALIDATE"');
-  // Stub only process replacement: run the actual wrapper and validator, never mysqld.
+  // Model the container identity and process replacement; execute the actual
+  // wrapper and secret validator, never mysqld.
   const stub =
+    'id() { printf "%s" 999; };\n' +
     'exec() { [[ "$#" -eq 2 && "$1" = /usr/local/bin/docker-entrypoint.sh && "$2" = mysqld ]] || exit 9; printf "%s" official_entrypoint_selected; };\n';
   const accepted = bash(stub + "set -- mysqld;\n" + wrapper);
   assert.equal(accepted.status, 0, accepted.stderr);
   assert.equal(accepted.stdout, "official_entrypoint_selected");
   assert.equal(accepted.stderr, "");
+  for (const identity of [0, 1000]) {
+    const denied = bash(stub + `id() { printf "%s" ${identity}; };\nset -- mysqld;\n` + wrapper);
+    assert.equal(denied.status, 1);
+    assert.equal(denied.stdout, "");
+    assert.equal(denied.stderr.trim(), "cofounder_database_identity_refused");
+  }
+  const wrongGroup = bash(stub + 'id() { if [[ "$1" = -u ]]; then printf 999; else printf 0; fi; };\nset -- mysqld;\n' + wrapper);
+  assert.equal(wrongGroup.status, 1);
+  assert.equal(wrongGroup.stderr.trim(), "cofounder_database_identity_refused");
   for (const prefix of [
     "set --;",
     "set -- sh;",

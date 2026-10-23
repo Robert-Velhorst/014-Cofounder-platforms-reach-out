@@ -40,6 +40,17 @@ unfixed finding or severity is silently excluded. Results must be inspected
 before claiming security acceptance. New dependency versions alone are not
 proof that a vendor binary's bundled libraries are current.
 
+The first hosted run passed the application and database acceptance checks,
+but strict installed-image scans failed. MySQL's optional Shell RPM includes
+Python packages with ten reported findings, and its unused gosu helper has
+61 findings. No repository caller uses mysqlsh; the official entrypoint invokes
+gosu only when started as root. The database image now removes the Shell RPM
+and gosu, asserts the standard server/client/backup tools remain executable,
+and refuses any startup identity other than UID/GID 999. The existing fresh
+initialization, restoration, role and TLS tests must pass again on this image.
+This does not resolve the separate Debian application or Caddy findings, and
+does not establish image acceptance until new installed inventories are scanned.
+
 ## Deployment and data
 
 Hetzner remains the deployment target. Retain the existing secret-file, TLS,
