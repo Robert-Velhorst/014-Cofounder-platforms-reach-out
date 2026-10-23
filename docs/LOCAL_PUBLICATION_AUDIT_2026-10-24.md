@@ -30,6 +30,21 @@ The former Antler date failure was corrected from October 2 to October 23 in its
 test assertion; no catalogue permission or production data was changed by that fix.
 No local Docker build was performed for this follow-up.
 
+### Follow-up documentation head: advisory gate failed
+
+The documentation-only head `4c72d7b625e849fb7c8b8f73ac6e5f3eade77e18` was pushed
+and read back from PR #127. Its
+[CI run 40035740275](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/40035740275)
+failed at `Check production and development dependency advisories`.
+`pnpm audit --audit-level moderate` reported one high-severity `body-parser`
+finding, [GHSA-27r3-jxmh-p828](https://github.com/advisories/GHSA-27r3-jxmh-p828),
+through the Express dependency paths. It exited with code 1. This was not a
+README assertion failure; the later verify steps did not run. Container smoke
+and [CodeQL run 40035737235](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/40035737235)
+passed. No dependency change, audit suppression, local rebuild or merge was made
+as part of recording this result. The previous source-head pass must not be
+presented as current dependency-security clearance.
+
 ## Recovered container source comparison
 
 Six previously preserved source copies were compared byte-for-byte against the

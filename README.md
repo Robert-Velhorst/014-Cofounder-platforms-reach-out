@@ -17,6 +17,14 @@ This is automated candidate evidence, not a merge, deployment, screenshot review
 or approval for public production. No Docker images were rebuilt locally for
 this follow-up.
 
+Important follow-up: the documentation head `4c72d7b` did not repeat that green
+qualification. Its [CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/40035740275)
+stopped at the dependency-advisory gate with a high-severity `body-parser` finding
+([GHSA-27r3-jxmh-p828](https://github.com/advisories/GHSA-27r3-jxmh-p828)). CodeQL
+and container smoke passed, but later verification steps were not reached.
+The earlier pass is historical evidence, not a current dependency-security approval.
+This cleanup/publication follow-up has not changed dependencies or weakened the gate.
+
 The separately verified main checkpoint remains
 [`9e15816`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/9e15816b2f34b06e69635ea475f2aa55f03c02d2).
 It includes the accumulated implementation from PR #83, the maintained full
