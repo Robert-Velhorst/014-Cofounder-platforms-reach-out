@@ -95,6 +95,16 @@ This source-tree proof does not cover every separate patch file, archive,
 database, credential, screenshot or embedded record elsewhere on the device.
 The broader local-removal goal therefore remains open.
 
+The original 934,467-byte unstaged recovery patch was subsequently checked in a
+temporary Git index against its recorded base, without changing the working
+application or its source files. Its SHA-256 is
+`90c74c43c567a6d504198e873b5f3d94635dfb0743bac9c1a428807f2709b25d`.
+It applies successfully to `89557fbc359cfb8e487c5aad1a8e3834c4aa2ceb`.
+All 65 affected paths have exact matching postimage blob IDs in the published
+source archive `9b0b21c59c3ed93124597da8a31f512825b0ab0d`. Thus its source changes
+are preserved; the raw patch file itself was not uploaded. This does not settle
+the disposition of private archives, databases or unrelated project data.
+
 Of its four distinct bundled Git heads, these are ancestors of the inspected
 PR #127 head:
 
