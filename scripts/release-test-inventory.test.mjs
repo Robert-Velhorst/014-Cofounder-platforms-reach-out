@@ -383,6 +383,52 @@ test("README command and license descriptions match current source contracts", (
     );
 });
 
+test("current operator runtime instructions match the pinned CI and release runtime", () => {
+  const version = workflow.match(/node-version: (\d+\.\d+\.\d+)/)?.[1];
+  assert.ok(version, "pinned CI Node version missing");
+  const nextMajor = Number(version.split(".")[0]) + 1;
+  assert.equal(manifest.engines.node, `>=${version} <${nextMajor}`);
+  const runtime = readFileSync(new URL("Dockerfile", root), "utf8");
+  assert.ok(runtime.includes(`https://nodejs.org/dist/v${version}/`));
+  for (const path of [
+    "docs/OPERATING_BUDGET.md",
+    "docs/RUNTIME_MONITORING.md",
+    "docs/DATABASE_RECOVERY.md",
+    "docs/ADMIN_MFA_DESIGN.md",
+  ]) {
+    const source = readFileSync(new URL(path, root), "utf8");
+    assert.ok(source.includes(`Node ${version}`), `${path}: runtime drift`);
+    assert.doesNotMatch(
+      source,
+      /(?:use Node 22|with Node 22:|Node 22 is the repository's container\/CI runtime|\(Node 22 or later\))/,
+      `${path}: obsolete current instruction`,
+    );
+  }
+});
+
+test("current deployment instructions link to the existing repository-root target", () => {
+  for (const path of [
+    "README.md",
+    "docs/OPERATOR_RUNBOOK.md",
+    "docs/GOAL_COMPLETION_MATRIX.md",
+    "docs/HOSTED_TUNNEL.md",
+  ]) {
+    const location = new URL(path, root);
+    const source = readFileSync(location, "utf8");
+    const expected =
+      path === "README.md" ? "DEPLOYMENT_TARGET.md" : "../DEPLOYMENT_TARGET.md";
+    assert.ok(
+      source.includes(`](${expected})`),
+      `${path}: target not navigable`,
+    );
+    assert.match(
+      readFileSync(new URL(expected, location), "utf8"),
+      /# Deployment target/,
+    );
+    assert.doesNotMatch(source, /`DEPLOYMENT_TARGET\.md`/);
+  }
+});
+
 test("workflow command detection ignores conditional or commented-out steps", () => {
   const fixture =
     "\n  verify:\n    steps:\n      # - run: pnpm test:budget\n      - run: pnpm test:monitor\n        if: false\n      - run: pnpm test:production-config\n        continue-on-error: true\n      - run: pnpm test:recovery\n  other:\n    steps:\n      - run: pnpm test:budget\n";

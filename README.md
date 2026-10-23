@@ -8,17 +8,19 @@ organizes that work; it does not automatically contact people.
 **Status: in development for a free public beta, not approved for public production.**
 
 Reviewed October 23, 2026: main checkpoint
-[`cb8944a`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/cb8944afced4b3510a20d5f14a3211579d58defd)
+[`9e15816`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/9e15816b2f34b06e69635ea475f2aa55f03c02d2)
 includes the accumulated implementation from PR #83, the maintained full
 customer-workload gate from PR #112 and the private deployment/read-only migration
-work from PRs #116–118, including separate runtime and migration credentials.
+work from PRs #116–118, including separate runtime and migration credentials,
+plus the restricted WASL/MENA discovery increment from PR #120.
 The merged tree is identical to qualified head
-`7741911`; its [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39883752403)
-passed build, database, readiness, recovery, startup, authentication-admission,
+`8a71007`; its [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39888984086)
+passed 1,043 application unit and 736 database cases, build, readiness, recovery, startup, authentication-admission,
 container, complete synthetic customer-workload, fresh database-role and actual
 HTTPS/session checks. The separate
-[post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887723059)
-was queued at this documentation checkpoint. CI means automated checks on
+[post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39893556582)
+is pending at this documentation checkpoint. Browser candidate PRs #121–122 are
+not included in that qualification. CI means automated checks on
 GitHub—not approval of a public service.
 
 The [workload evidence and limits](docs/CUSTOMER_LOAD_ACCEPTANCE.md) describe the
@@ -647,10 +649,11 @@ database—not the full app or TLS path. See [the evidence and recovery limits](
 
 Public deployment targets Hetzner. The local tunnel launcher is retired. Follow
 [the concrete Hetzner stack and deployment guide](docs/HETZNER_DEPLOYMENT.md)
-and `DEPLOYMENT_TARGET.md`. The candidate stack includes a private custom database,
+and the repository-root [deployment target](DEPLOYMENT_TARGET.md). The candidate stack includes a private custom database,
 separate one-shot migration process and restricted runtime identity, plus a hardened
 TLS proxy, read-only preflight and isolated HTTPS/session rehearsal. Its new
-credential-separation path still needs successful real-container qualification. Complete
+credential-separation path passed the bounded isolated CI rehearsals linked above,
+not live-host acceptance. Complete
 infrastructure, secrets, DNS/ACME, database migration, backup, monitoring and rollback
 acceptance before cutover. Configuration and synthetic tests do not prove an
 actual hosted deployment or approve opening registration.
