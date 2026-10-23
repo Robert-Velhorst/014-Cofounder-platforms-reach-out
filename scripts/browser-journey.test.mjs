@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { createServer } from "node:http";
+import { EventEmitter } from "node:events";
 import {
   BROWSER_JOURNEY_STAGES,
   BROWSER_ONBOARDING_STAGES,
@@ -26,6 +27,7 @@ import {
   measureColdAssetBurst,
   validateColdAssetEvidence,
   runColdAssetCompatibility,
+  captureColdAssetSnapshot,
 } from "../apps/cofounder-discovery/scripts/browser-cold-assets.mjs";
 
 const root = new URL("../", import.meta.url);
@@ -221,6 +223,273 @@ function coldEvidence() {
     })),
   };
 }
+
+// Event/DOM doubles isolate capture accounting. They do not run Chromium,
+// render the product, exercise an inbox or produce screenshot evidence.
+const captureOrigin = "http://127.0.0.1:13216";
+const captureResources = [
+  {
+    path: "/outreach",
+    kind: "document",
+    mime: "text/html",
+    body: "<html>Event fixture</html>",
+  },
+  {
+    path: "/assets/a.js",
+    kind: "script",
+    mime: "text/javascript",
+    body: "let synthetic = 1;",
+  },
+  {
+    path: "/assets/a.css",
+    kind: "stylesheet",
+    mime: "text/css",
+    body: "body{}",
+  },
+];
+class CaptureEventDouble extends EventEmitter {
+  bodyReads = 0;
+  constructor(resources) {
+    super();
+    this.resources = resources;
+  }
+  async setViewportSize() {}
+  async goto() {
+    for (const resource of this.resources) {
+      const request = {
+        url: () => resource.url ?? captureOrigin + resource.path,
+        method: () => resource.method ?? "GET",
+        resourceType: () => resource.kind,
+      };
+      this.emit("request", request);
+      if (resource.failed) {
+        this.emit("requestfailed", request);
+        continue;
+      }
+      if (!resource.noResponse)
+        this.emit("response", {
+          request: () => request,
+          url: request.url,
+          status: () => resource.status ?? 200,
+          headers: () => ({
+            "content-type": resource.mime,
+            ...resource.headers,
+          }),
+          body: async () => {
+            this.bodyReads++;
+            if (resource.bodyError)
+              throw new Error("synthetic private body diagnostic");
+            return Buffer.isBuffer(resource.body)
+              ? resource.body
+              : Buffer.from(resource.body ?? "synthetic");
+          },
+        });
+      if (resource.failureAfterResponse) this.emit("requestfailed", request);
+      else if (!resource.unfinished) this.emit("requestfinished", request);
+    }
+  }
+  getByRole() {
+    return { waitFor: async () => {} };
+  }
+  async waitForLoadState() {}
+  url() {
+    return captureOrigin + "/outreach";
+  }
+  async title() {
+    return "CoFounder Outreach";
+  }
+  locator() {
+    return { count: async () => 0 };
+  }
+  async evaluate() {
+    return true;
+  }
+  async screenshot() {
+    return Buffer.alloc(0);
+  }
+}
+async function captureEvents(resources) {
+  const page = new CaptureEventDouble(resources);
+  try {
+    return await captureColdAssetSnapshot(page, captureOrigin, "desktop");
+  } finally {
+    for (const event of [
+      "request",
+      "response",
+      "requestfinished",
+      "requestfailed",
+    ])
+      assert.equal(page.listenerCount(event), 0);
+  }
+}
+
+test("capture event accounting retains every completed resource including duplicate requests", async () => {
+  const rows = await captureEvents([...captureResources, captureResources[2]]);
+  assert.equal(rows.length, 4);
+  assert.equal(rows.filter((row) => row.path === "/assets/a.css").length, 2);
+  assert.equal(rows[0].sha256.length, 64);
+});
+
+test("capture includes an other-classified favicon without counting API/XHR as static resources", async () => {
+  const rows = await captureEvents([
+    ...captureResources,
+    {
+      path: "/favicon.svg",
+      kind: "other",
+      mime: "image/svg+xml",
+      body: "<svg/>",
+    },
+    { path: "/api/health", kind: "fetch", noResponse: true, unfinished: true },
+  ]);
+  assert.equal(rows.length, 4);
+  assert.equal(rows.find((row) => row.path === "/favicon.svg").kind, "image");
+  await assert.rejects(
+    captureEvents([
+      ...captureResources,
+      { path: "/favicon.svg", kind: "other", failed: true },
+    ]),
+    /cold_asset_capture_refused/,
+  );
+});
+
+test("capture refuses a static font failure without response even when all essential files succeeded", async () => {
+  await assert.rejects(
+    captureEvents([
+      ...captureResources,
+      { path: "/assets/missing.woff2", kind: "font", failed: true },
+    ]),
+    (error) => error.message === "cold_asset_capture_refused",
+  );
+});
+
+test("capture refuses omitted completion, missing responses and failures after headers", async () => {
+  for (const changes of [
+    { unfinished: true },
+    { noResponse: true },
+    { failureAfterResponse: true },
+    { bodyError: true },
+  ]) {
+    await assert.rejects(
+      captureEvents([
+        ...captureResources,
+        {
+          path: "/assets/extra.png",
+          kind: "image",
+          mime: "image/png",
+          ...changes,
+        },
+      ]),
+      (error) => error.message === "cold_asset_capture_refused",
+    );
+  }
+});
+
+test("capture validates each started static destination before accepting an otherwise complete graph", async () => {
+  for (const changes of [
+    { path: "/api/health" },
+    { path: "/%61pi/health" },
+    { path: "/assets/../api/health" },
+    { url: "https://external.example.invalid/assets/image.png" },
+    { url: captureOrigin + "/assets/a.png?private=synthetic" },
+    { url: "http://synthetic@127.0.0.1:13216/assets/a.png" },
+    { method: "POST" },
+    { status: 302 },
+    { status: 404 },
+    { status: 503 },
+  ]) {
+    await assert.rejects(
+      captureEvents([
+        ...captureResources,
+        {
+          path: "/assets/extra.png",
+          kind: "image",
+          mime: "image/png",
+          ...changes,
+        },
+      ]),
+      (error) => error.message === "cold_asset_capture_refused",
+    );
+  }
+});
+
+test("capture resource-count and declared-byte bounds stop additional response-body reads", async () => {
+  const page = new CaptureEventDouble([
+    ...captureResources,
+    ...Array.from({ length: 62 }, (_, index) => ({
+      path: `/assets/image-${index}.png`,
+      kind: "image",
+      mime: "image/png",
+    })),
+  ]);
+  await assert.rejects(
+    captureColdAssetSnapshot(page, captureOrigin, "mobile"),
+    /cold_asset_capture_refused/,
+  );
+  assert.equal(page.bodyReads, 64);
+  for (const length of [
+    String(8 * 1024 * 1024 + 1),
+    "invalid",
+    "-1",
+    "99999999999999999999",
+  ]) {
+    const declared = new CaptureEventDouble([
+      ...captureResources,
+      {
+        path: "/assets/extra.png",
+        kind: "image",
+        mime: "image/png",
+        headers: { "content-length": length },
+      },
+    ]);
+    await assert.rejects(
+      captureColdAssetSnapshot(declared, captureOrigin, "desktop"),
+      /cold_asset_capture_refused/,
+    );
+    assert.equal(declared.bodyReads, 3);
+  }
+});
+
+test("capture checks decoded-body and aggregate snapshot bytes rather than trusting headers", async () => {
+  await assert.rejects(
+    captureEvents([
+      ...captureResources,
+      {
+        path: "/assets/large.png",
+        kind: "image",
+        mime: "image/png",
+        body: Buffer.alloc(8 * 1024 * 1024 + 1),
+        headers: { "content-length": "1" },
+      },
+    ]),
+    /cold_asset_capture_refused/,
+  );
+  const body = Buffer.alloc(8 * 1024 * 1024, 1);
+  await assert.rejects(
+    captureEvents([
+      ...captureResources,
+      ...Array.from({ length: 8 }, (_, index) => ({
+        path: `/assets/large-${index}.png`,
+        kind: "image",
+        mime: "image/png",
+        body,
+      })),
+    ]),
+    /cold_asset_capture_refused/,
+  );
+});
+
+test("capture preflight rejects unexpected origins/viewports before page access", async () => {
+  for (const [origin, viewport] of [
+    ["https://production.example.invalid", "desktop"],
+    [captureOrigin + "/", "desktop"],
+    [captureOrigin, "../../outside"],
+    [captureOrigin, undefined],
+  ])
+    await assert.rejects(
+      captureColdAssetSnapshot(undefined, origin, viewport),
+      /cold_asset_evidence_refused/,
+    );
+});
 
 test("cold asset evidence refuses missing, reduced, retried or incomplete scenarios", () => {
   assert.equal(COLD_ASSET_CLIENTS, 100);

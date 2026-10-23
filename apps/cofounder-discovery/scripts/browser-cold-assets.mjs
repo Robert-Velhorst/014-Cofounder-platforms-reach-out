@@ -25,7 +25,7 @@ const refuse = () => {
   throw new Error("cold_asset_evidence_refused");
 };
 
-function validateResources(origin, resources) {
+function validateOrigin(origin) {
   let address;
   try {
     address = new URL(origin);
@@ -37,7 +37,33 @@ function validateResources(origin, resources) {
     address.protocol !== "http:" ||
     !["127.0.0.1", "localhost"].includes(address.hostname) ||
     !address.port ||
-    Number(address.port) < 1 ||
+    Number(address.port) < 1
+  )
+    refuse();
+}
+
+function validateAssetPath(origin, path, kind) {
+  if (
+    !kinds.has(kind) ||
+    typeof path !== "string" ||
+    path.length > 2048 ||
+    !path.startsWith("/") ||
+    path.startsWith("//") ||
+    /[?#%\\\s]/.test(path) ||
+    !(
+      (path === "/outreach" && kind === "document") ||
+      (path === "/favicon.svg" && kind === "image") ||
+      (/^\/assets\/[A-Za-z0-9_./-]+$/.test(path) && kind !== "document")
+    )
+  )
+    refuse();
+  const resolved = new URL(path, origin);
+  if (resolved.origin !== origin || resolved.pathname !== path) refuse();
+}
+
+function validateResources(origin, resources) {
+  validateOrigin(origin);
+  if (
     !Array.isArray(resources) ||
     resources.length < 3 ||
     resources.length > MAX_RESOURCES
@@ -47,18 +73,6 @@ function validateResources(origin, resources) {
   for (const row of resources) {
     if (
       !row ||
-      typeof row.path !== "string" ||
-      row.path.length > 2048 ||
-      !row.path.startsWith("/") ||
-      row.path.startsWith("//") ||
-      /[?#%\\\s]/.test(row.path) ||
-      !(
-        (row.path === "/outreach" && row.kind === "document") ||
-        (row.path === "/favicon.svg" && row.kind === "image") ||
-        (/^\/assets\/[A-Za-z0-9_./-]+$/.test(row.path) &&
-          row.kind !== "document")
-      ) ||
-      !kinds.has(row.kind) ||
       typeof row.mime !== "string" ||
       !row.mime ||
       !Number.isSafeInteger(row.bytes) ||
@@ -68,8 +82,7 @@ function validateResources(origin, resources) {
       !/^[a-f0-9]{64}$/.test(row.sha256)
     )
       refuse();
-    const resolved = new URL(row.path, origin);
-    if (resolved.origin !== origin || resolved.pathname !== row.path) refuse();
+    validateAssetPath(origin, row.path, row.kind);
     total += row.bytes;
   }
   if (
@@ -241,7 +254,11 @@ export function validateColdAssetEvidence(value) {
   return value;
 }
 
-async function captureAssets(page, origin, viewport) {
+// Used by the real CI browser. Native event doubles test accounting only;
+// they are not evidence of rendered-product or Chromium acceptance.
+export async function captureColdAssetSnapshot(page, origin, viewport) {
+  validateOrigin(origin);
+  if (!["desktop", "mobile"].includes(viewport)) refuse();
   await page.setViewportSize(
     viewport === "desktop"
       ? { width: 1365, height: 1000 }
@@ -249,39 +266,86 @@ async function captureAssets(page, origin, viewport) {
   );
   const rows = [],
     pending = [],
-    failures = [];
+    requests = new Map();
+  let failed = false,
+    snapshotBytes = 0;
+  const started = request => {
+    try {
+      let kind = request.resourceType();
+      if (!kinds.has(kind) && kind !== "other") return;
+      const url = new URL(request.url());
+      // Handle the canonical favicon even if its resource type is "other".
+      // Count that exact static path; do not pull arbitrary API/other traffic
+      // into this deliberately static-only probe.
+      if (kind === "other") {
+        if (url.pathname !== "/favicon.svg") return;
+        kind = "image";
+      }
+      if (requests.has(request) || requests.size >= MAX_RESOURCES) refuse();
+      validateAssetPath(origin, url.pathname, kind);
+      if (request.method() !== "GET" || url.href !== origin + url.pathname)
+        refuse();
+      requests.set(request, { responded: false, finished: false, kind });
+    } catch {
+      failed = true;
+    }
+  };
+  const finished = request => {
+    const state = requests.get(request);
+    if (state) state.finished = true;
+  };
+  const requestFailed = request => {
+    if (requests.has(request)) failed = true;
+  };
   const capture = response => {
     const request = response.request();
-    const kind = request.resourceType();
-    if (!kinds.has(kind)) return;
+    const state = requests.get(request);
+    // A response for an earlier page request is outside this navigation snapshot.
+    if (!state) return;
+    if (state.responded) {
+      failed = true;
+      return;
+    }
+    state.responded = true;
     pending.push(
       (async () => {
         try {
           const url = new URL(response.url());
+          if (url.href !== request.url() || response.status() !== 200) refuse();
+          const headers = response.headers();
+          const declaredBytes = headers["content-length"];
           if (
-            url.origin !== origin ||
-            request.method() !== "GET" ||
-            url.search ||
-            url.hash ||
-            response.status() !== 200
+            declaredBytes !== undefined &&
+            (!/^\d+$/.test(declaredBytes) ||
+              !Number.isSafeInteger(Number(declaredBytes)) ||
+              Number(declaredBytes) > MAX_RESOURCE_BYTES)
           )
             refuse();
           const body = await response.body();
-          if (body.length > MAX_RESOURCE_BYTES) refuse();
+          snapshotBytes += body.length;
+          if (
+            body.length < 1 ||
+            body.length > MAX_RESOURCE_BYTES ||
+            snapshotBytes > MAX_SNAPSHOT_BYTES
+          )
+            refuse();
           rows.push({
             path: url.pathname,
-            kind,
-            mime: mime(response.headers()["content-type"]),
+            kind: state.kind,
+            mime: mime(headers["content-type"]),
             bytes: body.length,
             sha256: sha(body),
           });
         } catch {
-          failures.push("cold_asset_capture_failed");
+          failed = true;
         }
       })()
     );
   };
+  page.on("request", started);
   page.on("response", capture);
+  page.on("requestfinished", finished);
+  page.on("requestfailed", requestFailed);
   try {
     await page.goto(origin + "/outreach");
     await page
@@ -298,10 +362,18 @@ async function captureAssets(page, origin, viewport) {
     );
     await page.screenshot({ path: `/task-output/cold-assets-${viewport}.png` });
   } finally {
+    page.off("request", started);
     page.off("response", capture);
+    page.off("requestfinished", finished);
+    page.off("requestfailed", requestFailed);
     await Promise.all(pending);
   }
-  assert.deepEqual(failures, []);
+  if (
+    failed ||
+    rows.length !== requests.size ||
+    [...requests.values()].some(state => !state.responded || !state.finished)
+  )
+    throw new Error("cold_asset_capture_refused");
   rows.sort((left, right) =>
     JSON.stringify(left).localeCompare(JSON.stringify(right), "en")
   );
@@ -314,8 +386,8 @@ export async function runColdAssetCompatibility({ page, origin, onPhase }) {
   assert.equal(process.env.RUN_SYNTHETIC_BROWSER_JOURNEY, "true");
   assert.equal(origin, "http://localhost:13216");
   onPhase(COLD_ASSET_PHASE);
-  const desktop = await captureAssets(page, origin, "desktop");
-  const mobile = await captureAssets(page, origin, "mobile");
+  const desktop = await captureColdAssetSnapshot(page, origin, "desktop");
+  const mobile = await captureColdAssetSnapshot(page, origin, "mobile");
   const scenarios = [];
   for (const [viewport, resources] of [
     ["desktop", desktop],

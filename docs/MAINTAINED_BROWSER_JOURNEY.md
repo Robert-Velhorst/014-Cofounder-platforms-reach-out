@@ -42,6 +42,47 @@ failures/skips (9,163.5296 ms); the actual complete rerun remains required.
 
 ## Cold static-asset compatibility candidate — not yet qualified
 
+### Capture accounting correction — unqualified source repair
+
+Review found a false-pass path in the original response-only collector: three
+essential responses could be accepted even if another static request failed
+before headers. [Playwright's request lifecycle](https://playwright.dev/docs/api/class-request)
+explicitly allows `requestfailed` without `response`; a response list is not a
+complete request ledger. An in-memory export of the actual earlier capture
+function reproduced the omission with synthetic page/event doubles. Their DOM
+and screenshot responses were stubs; no browser or product acceptance is claimed.
+
+The corrected collector observes request, response, completion and failure.
+Every tracked static request must have one accepted response and a completion;
+failed, missing or unfinished work refuses the snapshot. Distinct duplicate
+requests remain counted. The canonical favicon is also counted if its resource
+type is `other`; arbitrary API/XHR/other traffic stays outside this static probe.
+All four listeners are removed on success or failure. Errors remain content-free.
+
+The existing 64-resource cap is now enforced before retaining more requests or
+reading their bodies. Oversized/invalid declared lengths refuse before body
+retrieval; decoded body and aggregate snapshot counts are checked independently.
+Playwright still returns a whole response body: these checks are not a streaming
+browser-memory bound. Origins and the two allowed viewport names are validated
+before page access. No load population, admission quota, retry, original workflow
+stage, provider action or fixture/resource deadline was relaxed.
+
+On Windows Node 26.12.0, all 25 focused native browser-fixture checks and all
+227 native operator/source checks passed with zero failures/skips (9,654.3188 ms
+for the full native run). Eight new capture cases use explicit event/DOM doubles
+to exercise accounting, duplicate/favicon inclusion, failed/missing completion,
+URL/method/status refusal and resource/byte bounds. They are not rendered tests.
+An in-memory negative control omitted only font requests and the dedicated
+failed-font case correctly failed with a missing-rejection assertion; the
+checked-in-source repeat passed all 25. No production file changed during the
+negative control. Actual compiled/browser/image and fresh scan acceptance remain
+required on the corrected exact head.
+
+Native V8 coverage for `browser-cold-assets.mjs` alone measured 90.71% lines,
+93.55% branches and 92.00% functions. The actual browser orchestration remains
+among the uncovered lines; these percentages do not qualify a UI, release or
+whole-application coverage target.
+
 The latest source extends the combined browser/admission candidate; it does not
 alter the previously assessed PR #125 head. It extracts the existing 60-second,
 1,200-request client and 6,000-request process thresholds to one shared policy

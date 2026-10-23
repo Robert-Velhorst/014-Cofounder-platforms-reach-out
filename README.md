@@ -37,6 +37,9 @@ after the original 24 browser stages and six onboarding stages. It measures
 without changing the frontend admission limits. Its native transport tests are
 not evidence of 100 rendered browser users; full CI, compiled-asset results and
 screenshot review remain pending. This work is published for review, not release.
+The [capture-accounting repair](docs/MAINTAINED_BROWSER_JOURNEY.md#capture-accounting-correction--unqualified-source-repair)
+also refuses failed or unfinished static requests rather than silently omitting
+them from a successful response list. Its native regressions are not browser acceptance.
 
 The [workload evidence and limits](docs/CUSTOMER_LOAD_ACCEPTANCE.md) describe the
 100-account/10,000-candidate rehearsal, including successful 150-request/second

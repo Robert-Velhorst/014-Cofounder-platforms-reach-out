@@ -1,5 +1,24 @@
 # Worldwide public beta delivery ledger
 
+## October 23 cold-capture accounting repair — not browser acceptance
+
+The [capture correction](MAINTAINED_BROWSER_JOURNEY.md#capture-accounting-correction--unqualified-source-repair)
+closes an actual response-only omission: a static font failure before headers
+could disappear from the captured resource graph. The old function reproduced
+that false pass with explicit synthetic event/DOM doubles, not a browser run.
+The revised gate reconciles every observed static request with its response and
+completion, refuses failures/unfinished work, bounds request retention and body
+accounting and handles an `other`-classified canonical favicon. It removes all
+listeners afterward. API traffic remains outside this static-only probe.
+
+All 25 focused and all 227 native checks passed on Node 26.12.0, zero failures/
+skips (9,654.3188 ms for the full suite). The font-omission negative control
+failed the dedicated regression; the checked-in-source repeat passed. These
+cases do not prove actual Chromium, compiled UI, database, provider or hosted
+acceptance. Quotas, 100-set population, retries, original 24+6 stages, fixture
+limits and public/private action boundaries are unchanged. The real source
+repair needs fresh exact-head CI/CodeQL and screenshot review; no phase is promoted.
+
 ## October 23 Spain discovery increment — source candidate, not release acceptance
 
 The [CoFounder Match Spain review](PLATFORM_SPAIN_REVIEW_2026-10-23.md) adds one
