@@ -3,6 +3,11 @@ import fs from "fs";
 import { type Server } from "http";
 import { randomUUID } from "node:crypto";
 import path from "path";
+import { rateLimit } from "express-rate-limit";
+import {
+  createFrontendClientAdmission,
+  FRONTEND_GLOBAL_RATE_OPTIONS,
+} from "../frontend-admission";
 
 export async function setupVite(app: Express, server: Server) {
   // Keep development-only Vite and its plugins out of the pruned production
@@ -24,6 +29,10 @@ export async function setupVite(app: Express, server: Server) {
     appType: "custom",
   });
 
+  app.use(
+    createFrontendClientAdmission(),
+    rateLimit(FRONTEND_GLOBAL_RATE_OPTIONS)
+  );
   app.use(vite.middlewares);
   app.use(async (req, res, next) => {
     const url = req.originalUrl;
@@ -52,17 +61,22 @@ export async function setupVite(app: Express, server: Server) {
   return vite;
 }
 
-export function serveStatic(app: Express) {
+export function serveStatic(app: Express, publicDirectory?: string) {
   const distPath =
-    process.env.NODE_ENV === "development"
+    publicDirectory ??
+    (process.env.NODE_ENV === "development"
       ? path.resolve(import.meta.dirname, "../..", "dist", "public")
-      : path.resolve(import.meta.dirname, "public");
+      : path.resolve(import.meta.dirname, "public"));
   if (!fs.existsSync(distPath)) {
     console.error(
       `Could not find the build directory: ${distPath}, make sure to build the client first`
     );
   }
 
+  app.use(
+    createFrontendClientAdmission(),
+    rateLimit(FRONTEND_GLOBAL_RATE_OPTIONS)
+  );
   app.use(
     express.static(distPath, {
       etag: true,

@@ -8,18 +8,35 @@ organizes that work; it does not automatically contact people.
 **Status: in development for a free public beta, not approved for public production.**
 
 Reviewed October 23, 2026: main checkpoint
-[`cb8944a`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/cb8944afced4b3510a20d5f14a3211579d58defd)
+[`9e15816`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/9e15816b2f34b06e69635ea475f2aa55f03c02d2)
 includes the accumulated implementation from PR #83, the maintained full
 customer-workload gate from PR #112 and the private deployment/read-only migration
-work from PRs #116–118, including separate runtime and migration credentials.
+work from PRs #116–118, including separate runtime and migration credentials,
+plus the restricted WASL/MENA discovery increment from PR #120.
 The merged tree is identical to qualified head
-`7741911`; its [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39883752403)
-passed build, database, readiness, recovery, startup, authentication-admission,
+`8a71007`; its [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39888984086)
+passed 1,043 application unit and 736 database cases, build, readiness, recovery, startup, authentication-admission,
 container, complete synthetic customer-workload, fresh database-role and actual
 HTTPS/session checks. The separate
-[post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887723059)
-was queued at this documentation checkpoint. CI means automated checks on
+[post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39893556582)
+also passed; its CodeQL workflow completed with the two open findings described
+below. Browser candidate PRs #121–122 are
+not included in that qualification. CI means automated checks on
 GitHub—not approval of a public service.
+
+Two open high-severity CodeQL frontend-rate-limit findings were subsequently
+inspected. [The source fix and evidence](docs/SECURITY.md#october-23-frontend-admission-candidate--full-cicodeql-pending)
+are candidates pending full CI and a fresh scan; the alerts were not suppressed.
+The first maintained browser run also failed a font-family assertion; its
+[actual failure and correction](docs/MAINTAINED_BROWSER_JOURNEY.md#first-maintained-execution--failed-not-qualified)
+do not qualify the full browser journey. Passing scan jobs are not zero findings.
+
+The latest source also adds a required [cold static-asset compatibility probe](docs/MAINTAINED_BROWSER_JOURNEY.md#cold-static-asset-compatibility-candidate--not-yet-qualified)
+after the original 24 browser stages and six onboarding stages. It measures
+100 cold asset sets at each of two viewport sizes from one client address,
+without changing the frontend admission limits. Its native transport tests are
+not evidence of 100 rendered browser users; full CI, compiled-asset results and
+screenshot review remain pending. This work is published for review, not release.
 
 The [workload evidence and limits](docs/CUSTOMER_LOAD_ACCEPTANCE.md) describe the
 100-account/10,000-candidate rehearsal, including successful 150-request/second
@@ -441,6 +458,20 @@ revoke permissions on an existing database. Use the
 
 ## CI and verification
 
+The [maintained browser journey](docs/MAINTAINED_BROWSER_JOURNEY.md)
+is a candidate gate; its first execution failed and its corrected full rerun is
+pending. Its source keeps real
+UI/HTTP/persistence, English/Dutch, responsive, export and CSV retry coverage;
+native checks are not a substitute for its full browser run or screenshot review.
+It retains all original 24 stages and adds six required private-profile onboarding
+stages for language/responsive editing, actual private persistence, fresh-cookie
+login, account isolation and publication refusal. This extension is also unexecuted;
+no current onboarding/browser acceptance is claimed from its native tests.
+`pnpm test:browser-journey` checks safety/receipt/source contracts without Docker;
+`pnpm test:browser-journey:integration` runs the isolated synthetic browser workflow
+after its reviewed local images are built. It is mandatory in `pnpm test:all` and
+this candidate's CI; no passing browser result is claimed yet.
+
 Run from the repo root using the pinned package manager:
 The table abbreviates the invocation as `pnpm`; on Windows with blocked shims,
 replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
@@ -638,10 +669,11 @@ database—not the full app or TLS path. See [the evidence and recovery limits](
 
 Public deployment targets Hetzner. The local tunnel launcher is retired. Follow
 [the concrete Hetzner stack and deployment guide](docs/HETZNER_DEPLOYMENT.md)
-and `DEPLOYMENT_TARGET.md`. The candidate stack includes a private custom database,
+and the repository-root [deployment target](DEPLOYMENT_TARGET.md). The candidate stack includes a private custom database,
 separate one-shot migration process and restricted runtime identity, plus a hardened
 TLS proxy, read-only preflight and isolated HTTPS/session rehearsal. Its new
-credential-separation path still needs successful real-container qualification. Complete
+credential-separation path passed the bounded isolated CI rehearsals linked above,
+not live-host acceptance. Complete
 infrastructure, secrets, DNS/ACME, database migration, backup, monitoring and rollback
 acceptance before cutover. Configuration and synthetic tests do not prove an
 actual hosted deployment or approve opening registration.

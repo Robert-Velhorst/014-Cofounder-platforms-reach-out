@@ -8,7 +8,8 @@ created by this tool.
 
 ## Local probe
 
-With the approved local production app running, use Node 22:
+With the approved local production app running, use Node 26.12.0, matching the
+repository's pinned CI/container runtime:
 
 ```sh
 node scripts/production-monitor.mjs --origin http://127.0.0.1:3014

@@ -1,5 +1,59 @@
 # Security
 
+## October 23 frontend admission candidate — full CI/CodeQL pending
+
+Read-only GitHub queries returned zero open Dependabot and secret-scanning alerts,
+but **two open high-severity CodeQL findings**, not a clean security assessment:
+[development HTML handler](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/security/code-scanning/1)
+and [production SPA fallback](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/security/code-scanning/2).
+The latest inspected instances were on `main` at `9e15816`; the handlers were
+also present in the current source. A completed/passing scan job is not zero
+findings, exploitation evidence, hosted exposure or whole-product certification.
+
+The source candidate now registers admission **before** Vite middleware/HTML
+transforms and before production static files/SPA fallback. A separate, existing
+bounded local limiter permits 1,200 requests/client/60 seconds and at most 4,096
+client keys. It stores salted HMACs, groups IPv6 by /56 and uses Express's resolved
+IP rather than independently trusting forwarding headers. Full capacity returns
+503; client exhaustion returns 429. No raw address, path or query is returned.
+An explicit `express-rate-limit` 8.7.1 middleware then imposes a separate 6,000
+request/process/60-second ceiling using one constant key, not an unbounded IP map.
+Refusals are private/no-store with a conservative Retry-After; store errors fail
+closed. API routes are registered earlier and retain their own unchanged guards.
+
+These frontend counters are process-local and reset on restart, not durable fleet
+admission, billing enforcement, user fairness, slow-client protection or a whole
+DoS solution. Shared-NAT users consume one client budget. Approved ingress/host
+abuse controls and representative cold-browser/mixed/soak acceptance remain
+required; these constants are not measured public capacity. No live limits,
+provider account or deployed service was changed. Existing DB/API quotas were
+not changed, and alerts were not dismissed or suppressed.
+
+The pinned dependency and lockfile retain registry integrity; only that package
+and its `ip-address` dependency were added, with existing `debug` reused.
+Use follows [the official configuration guidance](https://express-rate-limit.mintlify.app/reference/configuration)
+and [CodeQL's missing-rate-limit recommendation](https://codeql.github.com/codeql-query-help/javascript/js-missing-rate-limiting/).
+Full-workspace `pnpm audit --audit-level moderate` returned no known advisories.
+That is a dated registry result, not a vulnerability-free claim.
+
+Six focused tests passed twice on Windows **Node 26.12.0 / Vitest 5.0.5** using
+isolated npm-cache dependencies and a temporary runner configuration, not a full
+workspace install. Actual HTTP checks exercised quotas/capacity/expiry, IPv6 and
+untrusted forwarding headers, the constant-key global ceiling, 1,200 successful
+real static/SPA requests followed by 429/HEAD refusal, unchanged earlier health
+access and positive-control-observed filesystem work stopping before refusal.
+An in-memory negative control removed only the two middleware registrations:
+five cases passed and the static-path regression failed as expected (200 versus
+required 429). Checked-in source was not rewritten; its repeat passed all six.
+Scoped strict TypeScript 6.0.3 checking of the guard, route module and test passed.
+All 213 then-current native operator/source tests also passed on Node 26.12.0,
+zero failures/skips (9,673.1858 ms), before the subsequent CJK regression addition.
+
+No full application suite/build, final image/browser/hosted or fresh CodeQL
+qualification is claimed for this candidate. Both findings remain open until
+authoritative scan results establish their status. Public beta and all original
+phase acceptance remain incomplete.
+
 The October 2 development-tool dependency audit found advisories outside the
 production-only scope. Vitest 4.1.11 and a narrow core-utils esbuild 0.25.12
 override cleared the returned advisories; CI now checks all dependency types at

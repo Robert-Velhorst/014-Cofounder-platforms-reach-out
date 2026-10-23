@@ -1,5 +1,120 @@
 # Worldwide public beta delivery ledger
 
+## October 23 combined candidate: frontend admission and actual browser failure
+
+The combined source preserves all four PR #121–124 heads as ancestors, including
+every original browser stage, private-profile extension, diagnostics and current
+operator documentation. It adds [frontend admission](SECURITY.md#october-23-frontend-admission-candidate--full-cicodeql-pending)
+for two actual open high-severity CodeQL findings and corrects the
+[first real browser failure](MAINTAINED_BROWSER_JOURNEY.md#first-maintained-execution--failed-not-qualified).
+It must qualify as a complete exact-head candidate before consolidation into main;
+no failed original head is merged or retroactively described as passing.
+
+Six new real-HTTP/file-work cases passed twice using the actual Node 26.12.0,
+Express 5.3.0 and rate-limit 8.7.1 artifacts from an isolated tool cache. A source-
+unchanged in-memory negative control removed only the two middleware registrations
+and failed exactly the expected static-path case (200 versus required 429); the
+checked-in-source repeat passed all six. Scoped strict TypeScript 6.0.3 and the
+full-workspace moderate-severity dependency audit passed. All 214 native
+operator/source tests passed on Node 26.12.0, zero failures/skips (9,163.5296 ms).
+These are not the full application/build/browser, new-image or hosted qualification.
+
+PR #121 and #122 actually failed after three browser stages because Chromium used
+the installed non-custom WenQuanYi font for all three CJK alias glyphs, not Noto.
+The inspected failure capture shows the characters. The correction accepts the
+two installed CJK families while keeping exactly three non-custom glyphs and all
+other original/emoji assertions. Both failed runs remain available. Their exact
+owned fixtures were removed, with driver exit 1, runtime/database 0 and no OOM.
+No local Docker/database/browser fixture or provider action was created.
+
+Main `9e15816` separately passed post-merge CI `39893556582` and CodeQL workflow
+`39893556531`; both high CodeQL alerts remain open on that actual main revision.
+Zero open Dependabot/secret alerts were returned by successful read-only queries.
+No alert was dismissed, suppressed or declared resolved by a workflow's green
+status. Full CI/CodeQL, complete browser screenshots and broader acceptance remain
+required for the combined candidate; every original phase remains Partial.
+
+## October 23 maintained private-profile browser extension — unexecuted candidate
+
+The [maintained browser journey](MAINTAINED_BROWSER_JOURNEY.md#required-private-profile-onboarding-extension--not-yet-executed)
+now requires six additional private-profile onboarding stages after all original
+24 stages. It covers all four wizard steps, English/Dutch canonical choices,
+desktop/mobile state, real private saves and SQL/audit observations, unsaved-edit
+retention/documented reload loss, fresh-cookie login, HTTP owner/publication
+refusals and another account's empty editor. Both exact ordered stage lists are
+required before the same fixture may emit a passing receipt.
+
+No production UI/component behavior was changed, and the extension does not create
+a separate fixture/account, add secrets/dependencies, change resource/time/network
+limits or mock API replies. It reuses the validated owned fixture and redacted
+failure path. All 213 native operator/source checks passed on Windows Node 25.2.1,
+zero failures/skips (9,437.3625 ms), including 11 focused policy/source tests.
+Those tests execute pure row assertions and refusal guards, not browser behavior.
+
+The actual extended browser/database journey, teardown and screenshot review
+remain unverified. No local image/browser/DB fixture was created, and the older
+policy-held Windows fixture remains unresolved. Existing PRs #121–123 keep their
+original heads and evidence scope; the original browser PR has begun its GitHub
+run, but has not yet qualified its browser stages. No phase is promoted and no
+real inbox, provider, public deployment, erasure or purchase is authorized here.
+
+## October 23 current operator documentation and WASL qualification
+
+PR #120 was merged as `9e15816b2f34b06e69635ea475f2aa55f03c02d2`, with its tree
+checked identical to exact green head `8a71007a2e847c91f159f03263ab59c02c7ee04f`.
+[Its qualification receipt](PLATFORM_WASL_MENA_REVIEW_2026-10-23.md#subsequent-exact-head-ci-and-merge)
+records 1,043 units, 736 database cases, actual role/TLS and full workload checks.
+Browser candidate PRs #121–122 and separate post-merge main runs remain pending;
+CI qualification is not hosted/customer/provider or whole-goal acceptance.
+
+Current budget, monitoring, recovery and administrator guidance now names the
+pinned Node 26.12.0 runtime. The existing repository-root deployment target is
+linked from the README, operator runbook, matrix and retired-tunnel notice.
+Historical runtime versions and failed-attempt receipts were not relabelled.
+Two new mandatory release-contract checks failed against the earlier prose and
+passed after these edits. All 210 native operator/source checks passed locally
+on Windows Node 25.2.1, zero failures/skips (10,269.984 ms); this is not a new
+supported-runtime application or browser run.
+
+The documentation-governance read-only full audit passed with Python UTF-8 mode
+after its default Windows output encoding could not print a checkmark. All
+actual Markdown links resolved. Optional default governance-role/ADR filenames
+are not adopted here; the audit's missing-role and possible-orphan warnings were
+reviewed without creating duplicate documents or deleting history. This audit
+does not validate prose truth, current runtime behavior or phase completion.
+
+## October 23 browser failure diagnostics and current publication checkpoint
+
+The browser fixture now retains bounded, allowlisted driver failure envelopes
+instead of hiding all stderr. It drops raw Docker output, unknown fields and
+stacks, and redacts generated fixture credentials again in the parent. All 208
+native operator/source tests passed locally, zero failures/skips (9,473.2035 ms).
+No new browser/image/database run or local fixture was created by this change.
+The actual maintained browser gate remains pending in PR #121; this follow-up
+does not replace or restart that candidate's exact-head run.
+
+Current main is `a2cead7075da557f64a81ab32f5101e4d514b894`, merged through
+[PR #119](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/119).
+Its tree was rechecked identical to `61b353cb16fbb384f1303b31019c4c6d4ba16c46`,
+which passed [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887876731)
+and [CodeQL](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887872452).
+Main's separate post-merge runs and the WASL/browser candidate PRs remain pending
+at this checkpoint. Historical pending/local-failure sections below are dated
+receipts, not a claim that the later CI never passed. The retained Windows
+fixture is still unresolved, and every original phase remains Partial.
+
+## October 23 maintained browser workflow candidate — not yet executed
+
+The [24-stage browser journey](MAINTAINED_BROWSER_JOURNEY.md) is now maintained
+as source with a mandatory CI/root-all gate, isolated test-only browser image,
+strict synthetic configuration, ordered receipt checks, bounded owner-verified
+fixtures and separate PNG-only screenshot retention. The original real actions,
+persistence, responsive/language and committed-import/lost-response retry checks
+were retained; fixed credentials and proprietary font assumptions were removed.
+All 207 native checks passed locally. Browser image/build/runtime/screenshot
+acceptance has not run, no new local fixture was created, and no phase, provider
+permission or public-production status is promoted by this source candidate.
+
 ## October 23 read-only grant observation and rehearsal transport fix
 
 Read-only queries against the exact retained synthetic database found that raw

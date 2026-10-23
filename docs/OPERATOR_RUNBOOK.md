@@ -24,7 +24,12 @@ separate empty rehearsal target described by that runbook.
 
 ## Hetzner production deployment
 
-Keep the local Compose stack on loopback. Follow `DEPLOYMENT_TARGET.md` and the production container runbook for infrastructure, private database, secrets, DNS/TLS, migration, backup, monitoring and rollback acceptance. The workstation tunnel launcher is retired.
+Keep the local Compose stack on loopback. Follow the repository-root
+[deployment target](../DEPLOYMENT_TARGET.md), the
+[Hetzner stack guide](HETZNER_DEPLOYMENT.md) and
+[production container runbook](PRODUCTION_CONTAINER_RUNBOOK.md) for infrastructure,
+private database, secrets, DNS/TLS, migration, backup, monitoring and rollback
+acceptance. The workstation tunnel launcher is retired.
 
 ## HAI connector
 

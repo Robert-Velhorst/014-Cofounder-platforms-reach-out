@@ -1,6 +1,8 @@
 # Database backup and isolated recovery
 
-The operator CLI is `node scripts/database-recovery.mjs` (Node 22 or later).
+The operator CLI is `node scripts/database-recovery.mjs`. Use the supported
+Node 26.12.0 runtime, matching the repository's pinned CI/container runtime.
+Historical Node 22 evidence below retains its original execution scope.
 It uses Docker's MySQL 8.4 clients, keeps SQL off the host filesystem, and writes
 an authenticated encrypted `.cfb` artifact. This is a local recovery mechanism,
 not a configured remote backup service, retention schedule or production cutover.
