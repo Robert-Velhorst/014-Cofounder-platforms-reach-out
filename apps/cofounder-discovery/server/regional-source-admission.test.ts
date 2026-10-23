@@ -16,6 +16,15 @@ const declaration = {
 
 describe("new regional listings remain discovery-only", () => {
   it.each([
+    ["wasl-network-mena", "https://wasl-network.com/"],
+    ["WASL Network (MENA)", "https://wasl-network.com/matchmaking"],
+    ["WASL Network", "https://www.wasl-network.com/signup"],
+    ["wasl-network.com", "https://wasl-network.com/terms-of-service"],
+    [
+      "Wasl Network MENA",
+      "https://wasl-network.com/privacy-policy?review=synthetic",
+    ],
+    ["  wAsL nEtWoRk  ", "https://WASL-NETWORK.COM/matchmaking#synthetic"],
     ["founderbro-indonesia", "https://founderbro.id/"],
     ["founderbro", "https://www.founderbro.id/"],
     ["founderbro.id", "https://founderbro.id/#terms"],

@@ -1,15 +1,22 @@
 # Co-founder discovery source review
 
+October 23 MENA increment: [WASL Network direct browser review](PLATFORM_WASL_MENA_REVIEW_2026-10-23.md)
+adds one dedicated discovery-only listing. Admin-reviewed matching admission,
+free-registration-only pricing evidence, mutual contact reveal and harvesting
+prohibition remain explicit. It is not a new import/contact workflow or integration.
+
 October 23 Spanish-language/LatAm supplement: [direct review and held decisions](PLATFORM_SPANISH_LATAM_REVIEW_2026-10-23.md)
 adds WeFoundy and pre-launch cofound.space as research leads and resolves the
 earlier cofound.lat page-reader limitation with rendered-browser evidence.
 Access, policy and app-identity gaps remain; no runtime catalogue addition,
 workflow admission or integration permission is implied.
 
-Current catalogue source:68 public discovery records (21 dedicated,24 community/channel,
+Current catalogue source:69 public discovery records (22 dedicated,24 community/channel,
 23 programme/event/ecosystem), plus held F6S internally. This count does not measure
 worldwide completeness or working integrations. Dated supplements retain their
-historical counts; the latest increment is the Indonesia review below. The preceding
+historical counts; the latest increment is the WASL review above. Its exact-package
+qualification remains pending; the Indonesia receipts describe the earlier
+68-source catalogue. The preceding
 qualified immutable 67-source package includes the French additions, with
 997 packaged unit cases, 724 database cases, default startup and six connected
 desktop/mobile catalogue stages, followed by the broader 24-stage connected
