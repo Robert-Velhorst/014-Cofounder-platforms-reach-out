@@ -37,6 +37,8 @@ function fixture(fn) {
     ".gitattributes",
     "Dockerfile",
     ".dockerignore",
+    "scripts/browser-journey.integration.test.mjs",
+    "scripts/browser-journey.test.mjs",
     `${app}/tsconfig.json`,
     `${app}/vite.config.ts`,
   ])

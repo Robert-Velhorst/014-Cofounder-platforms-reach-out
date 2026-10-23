@@ -36,8 +36,24 @@ COPY . .
 WORKDIR /app/apps/cofounder-discovery
 RUN pnpm build \
  && pnpm exec esbuild scripts/synthetic-customer-load.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/synthetic-customer-load.mjs \
- && pnpm exec esbuild scripts/synthetic-tls-ingress.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/synthetic-tls-ingress.mjs
+ && pnpm exec esbuild scripts/synthetic-tls-ingress.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/synthetic-tls-ingress.mjs \
+ && pnpm exec esbuild server/platform-catalogue.ts --platform=node --bundle --format=cjs --outfile=dist/synthetic-browser-catalogue.cjs
 CMD ["sh", "-c", "pnpm db:migrate && pnpm test:integration"]
+
+FROM integration-test AS browser-test
+# Test-only binaries and redistributable fonts; nothing from this target is
+# copied into the production runtime. Use the lockfile's Playwright CLI/version.
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/cofounder-playwright
+ENV XDG_CACHE_HOME=/tmp/cofounder-browser-cache
+RUN pnpm exec playwright install --with-deps chromium \
+ && apt-get update \
+ && apt-get install -y --no-install-recommends fonts-noto-cjk fonts-noto-color-emoji \
+ && fc-cache -f \
+ && rm -rf /var/lib/apt/lists/* \
+ && groupadd --gid 1000 browser-test \
+ && useradd --uid 1000 --gid 1000 --create-home browser-test
+USER 1000:1000
+CMD ["node", "scripts/browser-journey.mjs"]
 
 FROM debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f AS runtime
 ENV NODE_ENV=production
