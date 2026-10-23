@@ -443,10 +443,14 @@ revoke permissions on an existing database. Use the
 
 ## CI and verification
 
-The [maintained 24-stage browser journey](docs/MAINTAINED_BROWSER_JOURNEY.md)
+The [maintained browser journey](docs/MAINTAINED_BROWSER_JOURNEY.md)
 is a new candidate gate, not yet executed or qualified. Its source keeps real
 UI/HTTP/persistence, English/Dutch, responsive, export and CSV retry coverage;
 native checks are not a substitute for its full browser run or screenshot review.
+It retains all original 24 stages and adds six required private-profile onboarding
+stages for language/responsive editing, actual private persistence, fresh-cookie
+login, account isolation and publication refusal. This extension is also unexecuted;
+no current onboarding/browser acceptance is claimed from its native tests.
 `pnpm test:browser-journey` checks safety/receipt/source contracts without Docker;
 `pnpm test:browser-journey:integration` runs the isolated synthetic browser workflow
 after its reviewed local images are built. It is mandatory in `pnpm test:all` and

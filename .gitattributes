@@ -6,4 +6,5 @@
 *.tsx text eol=lf
 *.sh text eol=lf
 apps/cofounder-discovery/scripts/browser-journey*.mjs text eol=lf
+apps/cofounder-discovery/scripts/browser-onboarding-journey.mjs text eol=lf
 scripts/browser-journey*.mjs text eol=lf

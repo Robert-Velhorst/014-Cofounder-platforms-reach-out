@@ -26,6 +26,15 @@ export const BROWSER_JOURNEY_STAGES = Object.freeze([
   "oversized-retained-export-refused-without-partial-download",
 ]);
 
+export const BROWSER_ONBOARDING_STAGES = Object.freeze([
+  "private-profile-first-run-language-and-responsive-review",
+  "private-profile-real-save-retains-canonical-private-data",
+  "private-profile-unsaved-edit-roundtrip-and-reload",
+  "private-profile-second-save-and-fresh-session",
+  "private-profile-http-owner-and-publication-refusals",
+  "private-profile-cross-account-browser-boundary",
+]);
+
 export function validateBrowserFixtureDatabase(value, owner) {
   const refuse = () => {
     throw new Error("browser_journey_config_refused");
@@ -92,7 +101,8 @@ export function browserJourneyFailureDiagnostics(stderr, secrets = []) {
       continue;
     if (
       value.stage !== "startup" &&
-      !BROWSER_JOURNEY_STAGES.includes(value.stage)
+      !BROWSER_JOURNEY_STAGES.includes(value.stage) &&
+      !BROWSER_ONBOARDING_STAGES.includes(value.stage)
     )
       continue;
     const diagnostic = { event: value.event, stage: value.stage };
@@ -125,6 +135,11 @@ export function validateBrowserJourneyReceipt(value) {
     value.stages.length !== BROWSER_JOURNEY_STAGES.length ||
     value.stages.some(
       (name, index) => name !== BROWSER_JOURNEY_STAGES[index]
+    ) ||
+    !Array.isArray(value.onboardingStages) ||
+    value.onboardingStages.length !== BROWSER_ONBOARDING_STAGES.length ||
+    value.onboardingStages.some(
+      (name, index) => name !== BROWSER_ONBOARDING_STAGES[index]
     ) ||
     value.rpcMocks !== 0 ||
     value.responseFaultsInjected !== 1 ||

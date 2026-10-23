@@ -1,5 +1,29 @@
 # Worldwide public beta delivery ledger
 
+## October 23 maintained private-profile browser extension — unexecuted candidate
+
+The [maintained browser journey](MAINTAINED_BROWSER_JOURNEY.md#required-private-profile-onboarding-extension--not-yet-executed)
+now requires six additional private-profile onboarding stages after all original
+24 stages. It covers all four wizard steps, English/Dutch canonical choices,
+desktop/mobile state, real private saves and SQL/audit observations, unsaved-edit
+retention/documented reload loss, fresh-cookie login, HTTP owner/publication
+refusals and another account's empty editor. Both exact ordered stage lists are
+required before the same fixture may emit a passing receipt.
+
+No production UI/component behavior was changed, and the extension does not create
+a separate fixture/account, add secrets/dependencies, change resource/time/network
+limits or mock API replies. It reuses the validated owned fixture and redacted
+failure path. All 213 native operator/source checks passed on Windows Node 25.2.1,
+zero failures/skips (9,437.3625 ms), including 11 focused policy/source tests.
+Those tests execute pure row assertions and refusal guards, not browser behavior.
+
+The actual extended browser/database journey, teardown and screenshot review
+remain unverified. No local image/browser/DB fixture was created, and the older
+policy-held Windows fixture remains unresolved. Existing PRs #121–123 keep their
+original heads and evidence scope; the original browser PR has begun its GitHub
+run, but has not yet qualified its browser stages. No phase is promoted and no
+real inbox, provider, public deployment, erasure or purchase is authorized here.
+
 ## October 23 current operator documentation and WASL qualification
 
 PR #120 was merged as `9e15816b2f34b06e69635ea475f2aa55f03c02d2`, with its tree
