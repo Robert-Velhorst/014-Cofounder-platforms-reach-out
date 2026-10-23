@@ -7,6 +7,7 @@ import {
   validateBrowserFixtureDatabase,
   redactBrowserFailure,
 } from "./browser-journey-policy.mjs";
+import { runSyntheticOnboardingJourney } from "./browser-onboarding-journey.mjs";
 const require = createRequire(import.meta.url);
 const { randomUUID, randomBytes, scryptSync } = require("node:crypto"),
   assert = require("node:assert/strict");
@@ -116,14 +117,10 @@ async function stage(name, run) {
       [randomUUID(), "Synthetic conversation owner", email, hash]
     );
     const owner = created.insertId;
+    const foreignEmail = randomUUID() + "@example.invalid";
     const [foreign] = await db.execute(
       "INSERT INTO users (openId,name,email,password_hash,emailVerified,loginMethod) VALUES (?,?,?,?,1,'local')",
-      [
-        randomUUID(),
-        "Synthetic foreign owner",
-        randomUUID() + "@example.invalid",
-        hash,
-      ]
+      [randomUUID(), "Synthetic foreign owner", foreignEmail, hash]
     );
     await db.execute(
       "INSERT INTO prospects (user_id,name,platform,source_kind,consent_status) VALUES (?,'Foreign export exclusion marker','manual','manual','unknown')",
@@ -2748,11 +2745,28 @@ async function stage(name, run) {
     );
     assert.deepEqual(errors, []);
     assert.deepEqual(external, []);
+    const onboardingStages = await runSyntheticOnboardingJourney({
+      page,
+      context,
+      db,
+      origin,
+      owner,
+      foreignOwner: foreign.insertId,
+      email,
+      foreignEmail,
+      password,
+      onStage: name => {
+        activeStage = name;
+      },
+    });
+    assert.deepEqual(errors, []);
+    assert.deepEqual(external, []);
     console.log(
       JSON.stringify({
         passed: true,
         transport: "isolated-http-loopback",
         stages,
+        onboardingStages,
         rpcMocks: 0,
         responseFaultsInjected: 1,
         externalProviderActions: 0,

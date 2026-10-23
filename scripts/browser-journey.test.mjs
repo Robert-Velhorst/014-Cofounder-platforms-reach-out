@@ -5,11 +5,17 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
   BROWSER_JOURNEY_STAGES,
+  BROWSER_ONBOARDING_STAGES,
   validateBrowserFixtureDatabase,
   redactBrowserFailure,
   browserJourneyFailureDiagnostics,
   validateBrowserJourneyReceipt,
 } from "../apps/cofounder-discovery/scripts/browser-journey-policy.mjs";
+import {
+  SYNTHETIC_PROFILE,
+  assertSyntheticPrivateProfile,
+  runSyntheticOnboardingJourney,
+} from "../apps/cofounder-discovery/scripts/browser-onboarding-journey.mjs";
 
 const root = new URL("../", import.meta.url);
 const driverPath = new URL(
@@ -17,6 +23,11 @@ const driverPath = new URL(
   root,
 );
 const driver = readFileSync(driverPath, "utf8");
+const onboardingPath = new URL(
+  "apps/cofounder-discovery/scripts/browser-onboarding-journey.mjs",
+  root,
+);
+const onboarding = readFileSync(onboardingPath, "utf8");
 const fixture = readFileSync(
   new URL("scripts/browser-journey.integration.test.mjs", root),
   "utf8",
@@ -153,6 +164,7 @@ function receipt() {
     passed: true,
     transport: "isolated-http-loopback",
     stages: [...BROWSER_JOURNEY_STAGES],
+    onboardingStages: [...BROWSER_ONBOARDING_STAGES],
     rpcMocks: 0,
     responseFaultsInjected: 1,
     externalProviderActions: 0,
@@ -172,6 +184,10 @@ test("browser receipt refuses skipped/reordered stages, fabricated provider work
     { stages: BROWSER_JOURNEY_STAGES.slice(1) },
     { stages: [...BROWSER_JOURNEY_STAGES].reverse() },
     { stages: Array(24).fill(BROWSER_JOURNEY_STAGES[0]) },
+    { onboardingStages: undefined },
+    { onboardingStages: [] },
+    { onboardingStages: [...BROWSER_ONBOARDING_STAGES].reverse() },
+    { onboardingStages: Array(6).fill(BROWSER_ONBOARDING_STAGES[0]) },
     { rpcMocks: 1 },
     { responseFaultsInjected: 0 },
     { externalProviderActions: 1 },
@@ -209,9 +225,100 @@ test("all 24 archived workflow stages remain explicit real driver actions", () =
   assert.match(driver, /serviceWorkers: "block"/);
 });
 
+test("six onboarding stages extend rather than replace the original workflow", () => {
+  assert.equal(BROWSER_JOURNEY_STAGES.length, 24);
+  assert.equal(BROWSER_ONBOARDING_STAGES.length, 6);
+  assert.ok(Object.isFrozen(BROWSER_ONBOARDING_STAGES));
+  const names = [...onboarding.matchAll(/await stage\(\s*"([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  assert.deepEqual(names, BROWSER_ONBOARDING_STAGES);
+  assert.ok(
+    driver.indexOf("await runSyntheticOnboardingJourney(") >
+      driver.indexOf(
+        '"oversized-retained-export-refused-without-partial-download"',
+      ),
+  );
+  assert.match(driver, /onboardingStages,/);
+  assert.match(onboarding, /context\.clearCookies\(\)/);
+  assert.match(onboarding, /await login\(foreignEmail\)/);
+  assert.match(onboarding, /profile\.create/);
+  assert.match(onboarding, /isPublic: true/);
+  assert.match(
+    onboarding,
+    /assert\.deepEqual\(await rows\(foreignOwner\), \[\]\)/,
+  );
+  assert.match(onboarding, /\/task-output\//);
+  assert.doesNotMatch(
+    onboarding,
+    /route\.fulfill|INSERT INTO|UPDATE user_profiles|createConnection|chromium\.launch|\.skip\(/,
+  );
+  const failures = browserJourneyFailureDiagnostics(
+    JSON.stringify({
+      event: "browser_journey_failed",
+      stage: BROWSER_ONBOARDING_STAGES[0],
+      error: "synthetic failure",
+    }),
+  );
+  assert.equal(failures[0].stage, BROWSER_ONBOARDING_STAGES[0]);
+});
+
+test("onboarding SQL assertions require one canonical private owned row with stable identity", () => {
+  const row = {
+    id: 3,
+    user_id: 7,
+    ...structuredClone(SYNTHETIC_PROFILE),
+    is_public: 0,
+    completeness: 100,
+  };
+  const location = SYNTHETIC_PROFILE.location;
+  assert.equal(assertSyntheticPrivateProfile([row], 7, location), 3);
+  const encoded = { ...row };
+  for (const key of [
+    "skills",
+    "industries",
+    "looking_for",
+    "target_industries",
+    "work_style",
+    "values",
+  ])
+    encoded[key] = JSON.stringify(encoded[key]);
+  assert.equal(assertSyntheticPrivateProfile([encoded], 7, location, 3), 3);
+  for (const rows of [
+    [],
+    [row, row],
+    [{ ...row, user_id: 8 }],
+    [{ ...row, id: 0 }],
+    [{ ...row, is_public: 1 }],
+    [{ ...row, is_public: null }],
+    [{ ...row, completeness: 13 }],
+    [{ ...row, skills: ["Translated value"] }],
+    [{ ...row, location: "Foreign profile" }],
+  ])
+    assert.throws(() => assertSyntheticPrivateProfile(rows, 7, location));
+  assert.throws(() => assertSyntheticPrivateProfile([row], 7, location, 4));
+});
+
+test("onboarding refuses unexpected origin or owners before browser/database access", async () => {
+  const base = { origin: "http://localhost:13216", owner: 1, foreignOwner: 2 };
+  for (const changes of [
+    { origin: "https://production.invalid" },
+    { origin: "http://127.0.0.1:13216" },
+    { owner: 0 },
+    { owner: "1" },
+    { foreignOwner: 1 },
+    { foreignOwner: -2 },
+  ])
+    await assert.rejects(
+      runSyntheticOnboardingJourney({ ...base, ...changes }),
+      assert.AssertionError,
+    );
+});
+
 test("browser code parses and refuses execution before loading browser/database packages without authorization", () => {
   for (const path of [
     driverPath,
+    onboardingPath,
     new URL("scripts/browser-journey.integration.test.mjs", root),
   ]) {
     const checked = spawnSync(

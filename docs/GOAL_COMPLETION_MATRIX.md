@@ -3,7 +3,8 @@
 Updated: 2026-10-23. Overall goal: **not complete**.
 
 The [maintained browser-journey candidate](MAINTAINED_BROWSER_JOURNEY.md) restores
-the archived 24-stage workflow as a mandatory source-defined gate. Its native
+the archived 24-stage workflow plus six required private-profile onboarding
+stages as a mandatory source-defined gate. Its native
 checks passed, but its image/browser execution and screenshot review remain
 unverified. No phase is promoted by this implementation or its wiring.
 

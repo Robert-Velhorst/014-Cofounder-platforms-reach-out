@@ -50,6 +50,51 @@ that the accounts were preverified synthetically, not through an inbox.
 A record entering `confirmed_sent` here is a test of the user's manual
 acknowledgement path, **not delivery**.
 
+## Required private-profile onboarding extension — not yet executed
+
+The original 24 stages remain unchanged and mandatory. The same owned fixture
+then runs six additional stages from `browser-onboarding-journey.mjs`; the
+passing receipt requires both exact ordered lists, not either one:
+
+1. `private-profile-first-run-language-and-responsive-review`
+2. `private-profile-real-save-retains-canonical-private-data`
+3. `private-profile-unsaved-edit-roundtrip-and-reload`
+4. `private-profile-second-save-and-fresh-session`
+5. `private-profile-http-owner-and-publication-refusals`
+6. `private-profile-cross-account-browser-boundary`
+
+The flow under test is: existing synthetic login -> empty `/onboarding` editor
+-> all four English/Dutch wizard steps -> private save -> real SQL/canonical
+signals/audit checks -> retained unsaved edits and documented reload loss ->
+second save with stable row identity -> new cookie/login -> owner/publication
+HTTP refusals -> a different account's empty editor. Screenshots cover 1365×1000
+and 375×812 for basic/review/unsaved/fresh-session/other-owner states.
+
+Only actual UI/HTTP calls perform profile writes. SQL observes one exact owner
+row, private visibility, all eight completeness signals, two successful saves
+and no foreign-owner profile. Server rejection of `isPublic: true` and a stale
+foreign account key must leave these rows unchanged. No RPC response is mocked.
+The extension creates no additional fixture/account, receives no new secret,
+does not change browser/time/resource/network limits and cannot be run as an
+independent CLI. It reuses the parent's validated synthetic origin/owners and
+credential-redacted failure reporting. Receipt checks refuse missing/reordered
+onboarding stages, including an otherwise passing original 24-stage receipt.
+
+This is source-defined acceptance, not a browser result. Native SQL-row fixtures
+and invalid-configuration/receipt tests exercise those pure assertions and guards,
+not the UI. The actual full journey, teardown and screenshots remain unverified.
+Fresh-cookie login is not a claim of server-side logout/revocation or real inbox
+registration. Admin/recovery/settings/deletion and other retained paths still
+need their own current acceptance; this extension does not close the whole goal.
+
+Local Windows Node 25.2.1 passed all **213 native operator/source checks** with
+zero failures/skips (9,437.3625 ms), including 11 focused browser-policy checks.
+The new tests execute the actual row assertions against canonical/encoded SQL-row
+fixtures and reject duplicate/foreign/public/incomplete/changed-identity rows;
+they also exercise invalid origin/owner refusal before I/O. Syntax checks include
+the new module, and source checks preserve the original 24 stages and require
+the extension before a passing receipt. These are not rendered UI tests.
+
 ## Commands and artifact boundaries
 
 `pnpm test:browser-journey` runs native safety/receipt/source-contract checks;
