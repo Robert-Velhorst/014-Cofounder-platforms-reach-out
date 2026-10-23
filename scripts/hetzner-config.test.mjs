@@ -15,7 +15,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateHetznerInputs } from "./hetzner-preflight.mjs";
-import { tlsIngressOverride, ownedTlsFixture } from "./tls-ingress-config.mjs";
+import {
+  tlsIngressOverride,
+  ownedTlsFixture,
+  tlsNoNewPrivileges,
+  tlsProbeFailurePhase,
+} from "./tls-ingress-config.mjs";
 import { randomUUID } from "node:crypto";
 
 const directory = mkdtempSync(join(tmpdir(), "cofounder-hetzner-model-"));
@@ -40,6 +45,48 @@ const env = {
   MYSQL_ROOT_PASSWORD_SECRET_FILE: secret,
   HETZNER_DATA_ROOT: directory,
 };
+test("TLS inspection accepts only unambiguous enabled no-new-privileges forms", () => {
+  for (const options of [
+    ["no-new-privileges"],
+    ["no-new-privileges:true"],
+    ["seccomp=default", "no-new-privileges:true"],
+  ])
+    assert.equal(tlsNoNewPrivileges(options), true);
+  for (const options of [
+    undefined,
+    [],
+    "no-new-privileges",
+    [null],
+    ["no-new-privileges:false"],
+    ["no-new-privileges=true"],
+    ["no-new-privileges:TRUE"],
+    ["no-new-privileges", "no-new-privileges:false"],
+    ["no-new-privileges:true", "no-new-privileges:true"],
+  ])
+    assert.equal(tlsNoNewPrivileges(options), false);
+});
+
+test("TLS failure diagnostics expose only known phases, never arbitrary probe output", () => {
+  const privateValue = "synthetic-private-value-must-not-escape";
+  assert.equal(
+    tlsProbeFailurePhase(
+      `${privateValue}\n${JSON.stringify({ event: "tls_ingress_failed", phase: "https_readiness", password: privateValue })}`,
+    ),
+    "https_readiness",
+  );
+  for (const output of [
+    undefined,
+    privateValue,
+    JSON.stringify({ event: "tls_ingress_failed", phase: privateValue }),
+    JSON.stringify({ event: "other", phase: "verify" }),
+    JSON.stringify({
+      event: "tls_ingress_failed",
+      phase: { value: privateValue },
+    }),
+  ])
+    assert.equal(tlsProbeFailurePhase(output), "unknown");
+});
+
 test("TLS cleanup retains full inspected IDs and refuses foreign or incomplete ownership", () => {
   const owner = randomUUID(),
     project = `cofounder-tls-${owner}`;

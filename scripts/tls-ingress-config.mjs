@@ -1,6 +1,42 @@
 import assert from "node:assert/strict";
 import { isAbsolute } from "node:path";
 
+export function tlsNoNewPrivileges(options) {
+  if (
+    !Array.isArray(options) ||
+    options.some((value) => typeof value !== "string")
+  )
+    return false;
+  const claims = options.filter((value) =>
+    value.startsWith("no-new-privileges"),
+  );
+  return (
+    claims.length === 1 &&
+    ["no-new-privileges", "no-new-privileges:true"].includes(claims[0])
+  );
+}
+
+export function tlsProbeFailurePhase(stdout) {
+  const phases = new Set([
+    "seed",
+    "verify",
+    "https_readiness",
+    "http_redirect",
+    "https_login_with_hostile_forwarding_headers",
+    "authenticated_session",
+    "cross_origin_mutation_refusal",
+    "https_logout",
+  ]);
+  for (const line of String(stdout ?? "").split(/\r?\n/)) {
+    try {
+      const value = JSON.parse(line);
+      if (value?.event === "tls_ingress_failed" && phases.has(value.phase))
+        return value.phase;
+    } catch {}
+  }
+  return "unknown";
+}
+
 export function ownedTlsFixture(model, owner, project) {
   // `docker ps -q` returns a shortened ID. Retain the canonical inspected ID
   // for the final ownership check and all subsequent destructive operations.

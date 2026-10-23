@@ -14,7 +14,12 @@ import { tmpdir } from "node:os";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { getCiMysqlImage } from "./ci-mysql-image.mjs";
-import { tlsIngressOverride, ownedTlsFixture } from "./tls-ingress-config.mjs";
+import {
+  tlsIngressOverride,
+  ownedTlsFixture,
+  tlsNoNewPrivileges,
+  tlsProbeFailurePhase,
+} from "./tls-ingress-config.mjs";
 
 test(
   "actual Hetzner Compose ingress authenticates through verified TLS and strips hostile forwarding claims",
@@ -245,7 +250,7 @@ test(
         assert.equal(model.HostConfig.MemorySwap, memory);
         assert.equal(model.HostConfig.NanoCpus, cpus);
         assert.ok(model.HostConfig.CapDrop.includes("ALL"));
-        assert.ok(model.HostConfig.SecurityOpt.includes("no-new-privileges"));
+        assert.equal(tlsNoNewPrivileges(model.HostConfig.SecurityOpt), true);
         assert.deepEqual(model.HostConfig.PortBindings || {}, {});
         assert.deepEqual(
           Object.keys(model.NetworkSettings.Networks).sort(),
@@ -292,32 +297,40 @@ test(
             ...mount("jwt-secret", "/run/secrets/jwt_secret"),
             ...mount("password", "/qa/password"),
           );
-        console.log(
-          docker(
-            "run",
-            "--rm",
-            ...bounds,
-            "--network",
-            `container:${namespace}`,
-            ...mounts,
-            "-e",
-            "RUN_SYNTHETIC_TLS_INGRESS=true",
-            "-e",
-            `TLS_PROBE_PHASE=${mode}`,
-            ...(mode === "client"
-              ? []
-              : [
-                  "-e",
-                  "DATABASE_URL_FILE=/run/secrets/database_url",
-                  "-e",
-                  "JWT_SECRET_FILE=/run/secrets/jwt_secret",
-                ]),
-            "--entrypoint",
-            "node",
-            runtime,
-            "/app/synthetic-tls-ingress.mjs",
-          ),
-        );
+        const result = invoke([
+          "run",
+          "--rm",
+          ...bounds,
+          "--network",
+          `container:${namespace}`,
+          ...mounts,
+          "-e",
+          "RUN_SYNTHETIC_TLS_INGRESS=true",
+          "-e",
+          `TLS_PROBE_PHASE=${mode}`,
+          ...(mode === "client"
+            ? []
+            : [
+                "-e",
+                "DATABASE_URL_FILE=/run/secrets/database_url",
+                "-e",
+                "JWT_SECRET_FILE=/run/secrets/jwt_secret",
+              ]),
+          "--entrypoint",
+          "node",
+          runtime,
+          "/app/synthetic-tls-ingress.mjs",
+        ]);
+        if (result.status !== 0)
+          console.log(
+            JSON.stringify({
+              event: "tls_probe_failed",
+              mode,
+              phase: tlsProbeFailurePhase(result.stdout),
+            }),
+          );
+        assert.equal(result.status, 0, "owned_tls_probe_failed");
+        console.log(result.stdout.trim());
       }
       probe("seed", dbId);
       docker(
