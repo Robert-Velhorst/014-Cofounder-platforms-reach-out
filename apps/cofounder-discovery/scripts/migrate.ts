@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { readRuntimeSecret } from "../server/runtime-secrets";
+import { migrationVerificationOnly } from "../server/migration-startup-mode";
 import {
   createConnection,
   type Connection,
@@ -18,7 +19,9 @@ async function main() {
   let locked = false;
   let phase = "migration_configuration_invalid";
   let failure: string | undefined;
+  let verifyOnly = false;
   try {
+    verifyOnly = migrationVerificationOnly(process.argv.slice(2));
     const databaseUrl = readRuntimeSecret("DATABASE_URL");
     if (!databaseUrl) throw new Error();
     const target = new URL(databaseUrl);
@@ -57,19 +60,28 @@ async function main() {
     locked = true;
     phase = "migration_assets_invalid";
     const snapshot = readMigrationSnapshot("./drizzle");
-    phase = "migration_history_review_required";
-    await verifyMigrationHistory(connection, snapshot);
-    phase = "migration_apply_failed";
-    // Use Drizzle's pinned engine and journal format, but pass the captured SQL
-    // instead of letting the public filesystem wrapper reread mutable assets.
-    const dialect = new MySqlDialect();
-    const session = new MySql2Session<
-      Record<string, never>,
-      Record<string, never>
-    >(connection, dialect, undefined, { mode: "default" });
-    await dialect.migrate(snapshot, session, { migrationsFolder: "./drizzle" });
-    phase = "migration_history_verification_failed";
-    await verifyMigrationHistory(connection, snapshot, true);
+    if (verifyOnly) {
+      phase = "migration_history_verification_failed";
+      // Read-only: never invoke Drizzle, create its journal or execute captured
+      // SQL. An empty, incomplete, newer or damaged history must refuse startup.
+      await verifyMigrationHistory(connection, snapshot, true);
+    } else {
+      phase = "migration_history_review_required";
+      await verifyMigrationHistory(connection, snapshot);
+      phase = "migration_apply_failed";
+      // Use Drizzle's pinned engine and journal format, but pass the captured SQL
+      // instead of letting the public filesystem wrapper reread mutable assets.
+      const dialect = new MySqlDialect();
+      const session = new MySql2Session<
+        Record<string, never>,
+        Record<string, never>
+      >(connection, dialect, undefined, { mode: "default" });
+      await dialect.migrate(snapshot, session, {
+        migrationsFolder: "./drizzle",
+      });
+      phase = "migration_history_verification_failed";
+      await verifyMigrationHistory(connection, snapshot, true);
+    }
   } catch {
     // Driver and Drizzle errors can contain SQL, values and connection details.
     failure = phase;
@@ -104,7 +116,12 @@ async function main() {
     );
     process.exitCode = 1;
   } else
-    console.log(JSON.stringify({ level: "info", event: "migrations_applied" }));
+    console.log(
+      JSON.stringify({
+        level: "info",
+        event: verifyOnly ? "migration_history_verified" : "migrations_applied",
+      })
+    );
 }
 
 main().catch(() => {

@@ -302,7 +302,7 @@ The supported app is `apps/cofounder-discovery`, not the historical root demo.
 | ---------- | ------------------------------------------------------------------------------------------------------- |
 | Browser    | React 19, TypeScript, Vite, Wouter, tRPC/React Query                                                    |
 | Server     | Node.js, Express 5, tRPC and validated inputs                                                           |
-| Database   | MySQL (Compose pins 26.7.0), Drizzle schema and versioned migrations                                                      |
+| Database   | MySQL (Compose pins 26.7.0), Drizzle schema and versioned migrations                                    |
 | Accounts   | Scrypt passwords, signed HTTP-only cookies and durable sessions                                         |
 | Workspace  | Owner boundaries, account locks, reviewed revisions, atomic audits and retry records                    |
 | Runtime    | Multi-stage Docker image; nonroot, read-only application filesystem                                     |
@@ -415,21 +415,29 @@ mail service or send test messages. See the
 [mail contract](README_REFERENCE.md#account-mail-dispatch-budget) and
 [production mail guidance](docs/PRODUCTION_CONTAINER_RUNBOOK.md).
 
+For read-only migration-history checking, use `pnpm db:verify` with the approved
+database credentials already configured. Packaged `pnpm start` and the Docker
+entry both use the signal-aware supervisor. Their default is serialized migration
+application; `STARTUP_MIGRATION_MODE=verify` instead requires complete existing
+history before serving. It never skips the guard or provisions restricted database
+roles. See [migration verification and credential separation](docs/DATABASE_MIGRATION_ROLES.md).
+
 ## Environment variables
 
 The [example configuration](apps/cofounder-discovery/.env.example) documents
 settings; it is not a production secret file.
 
-| Group             | Important settings / boundary                                                                    |
-| ----------------- | ------------------------------------------------------------------------------------------------ |
-| Identity/database | `APP_MODE`, `HOST`, `PORT`, `PUBLIC_ORIGIN`, `DATABASE_URL`, `JWT_SECRET`                        |
-| Ingress           | `TRUST_PROXY`: only at a reviewed proxy boundary                                                 |
-| Account access    | Explicit registration; deletion-request intake separately opt-in                                 |
-| Mail              | Resend key, verified sender, independent mail-encryption secret, explicit worker/retention flags |
-| Capacity          | `API_MAX_ACTIVE_WORK`, `CAPACITY_*`, shared mail-attempt ceilings                                |
-| Outreach          | `OUTREACH_PAUSED` blocks preparation, not all research                                           |
-| Legacy providers  | Automation, unsafe routes and owner notifications stay off                                       |
-| HAI               | Token/account binding; content omitted by default                                                |
+| Group             | Important settings / boundary                                                                      |
+| ----------------- | -------------------------------------------------------------------------------------------------- |
+| Identity/database | `APP_MODE`, `HOST`, `PORT`, `PUBLIC_ORIGIN`, `DATABASE_URL`, `JWT_SECRET`                          |
+| Ingress           | `TRUST_PROXY`: only at a reviewed proxy boundary                                                   |
+| Migration startup | `STARTUP_MIGRATION_MODE`: `apply` by default, or read-only `verify`; invalid values refuse startup |
+| Account access    | Explicit registration; deletion-request intake separately opt-in                                   |
+| Mail              | Resend key, verified sender, independent mail-encryption secret, explicit worker/retention flags   |
+| Capacity          | `API_MAX_ACTIVE_WORK`, `CAPACITY_*`, shared mail-attempt ceilings                                  |
+| Outreach          | `OUTREACH_PAUSED` blocks preparation, not all research                                             |
+| Legacy providers  | Automation, unsafe routes and owner notifications stay off                                         |
+| HAI               | Token/account binding; content omitted by default                                                  |
 
 Supported secrets can use documented `NAME_FILE` mounts; conflicting sources
 fail closed. Production uses separate Compose/preflight requirements. Changing
@@ -442,18 +450,18 @@ Run from the repo root using the pinned package manager:
 The table abbreviates the invocation as `pnpm`; on Windows with blocked shims,
 replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
 
-| Command                           | Scope                                                                                                       |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `pnpm check`                      | Application TypeScript                                                                                      |
-| `pnpm test`                       | Root operator/inventory gates and app units; Compose needed for configuration checks                        |
-| `pnpm build`                      | Client and bundled server/operator artifacts                                                                |
-| `pnpm test:integration`           | Mandatory dedicated-database suites; build first                                                            |
-| `pnpm test:all`                   | Root/unit/database checks plus readiness, recovery, startup, admission and the complete customer workload |
+| Command                               | Scope                                                                                                     |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `pnpm check`                          | Application TypeScript                                                                                    |
+| `pnpm test`                           | Root operator/inventory gates and app units; Compose needed for configuration checks                      |
+| `pnpm build`                          | Client and bundled server/operator artifacts                                                              |
+| `pnpm test:integration`               | Mandatory dedicated-database suites; build first                                                          |
+| `pnpm test:all`                       | Root/unit/database checks plus readiness, recovery, startup, admission and the complete customer workload |
 | `pnpm test:customer-load:integration` | Full packaged synthetic read/write/race/isolation and scheduled-arrival acceptance; local images required |
-| `pnpm requirements:check`         | Phase/title/evidence-path integrity, not completion                                                         |
-| `pnpm audit:api`, `pnpm audit:ui` | Source inventories, not behavioral acceptance                                                               |
-| `pnpm doctor`                     | Runtime configuration diagnostics                                                                           |
-| `pnpm verify`                     | App check/units/build/diagnostic pass, not the full root release gate                                       |
+| `pnpm requirements:check`             | Phase/title/evidence-path integrity, not completion                                                       |
+| `pnpm audit:api`, `pnpm audit:ui`     | Source inventories, not behavioral acceptance                                                             |
+| `pnpm doctor`                         | Runtime configuration diagnostics                                                                         |
+| `pnpm verify`                         | App check/units/build/diagnostic pass, not the full root release gate                                     |
 
 Isolated disposable integration workflow:
 
