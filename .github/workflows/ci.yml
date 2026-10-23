@@ -59,6 +59,7 @@ jobs:
       - run: pnpm test:monitor
       - run: pnpm test:production-config
       - run: pnpm test:hetzner-config
+      - run: pnpm test:hetzner-database
       - run: pnpm test:support
       - run: pnpm test:release-inventory
       - run: pnpm --dir apps/cofounder-discovery test:unit
@@ -72,6 +73,8 @@ jobs:
         run: docker build --target runtime --tag cofounder-recovery-runtime:local .
       - name: Build the reviewed Hetzner TLS edge
         run: docker build --file Dockerfile.hetzner-edge --tag cofounder-hetzner-edge:local .
+      - name: Build the privilege-separated Hetzner database
+        run: docker build --file Dockerfile.hetzner-database --tag cofounder-hetzner-database:local .
       - run: pnpm test:recovery:integration
       - run: pnpm test:runtime-startup:integration
       - run: pnpm test:authentication-admission:integration

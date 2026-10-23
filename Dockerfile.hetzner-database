@@ -1,0 +1,13 @@
+# Build and review this artifact separately; the production model requires its digest.
+FROM mysql:26.7.0@sha256:625f74ddf93652d9d0f8d4ea7d741b9189554a5e96d27bb770abd0902d89c6e3
+COPY --chmod=0444 deploy/hetzner/mysql/validate-secrets.sh /usr/local/lib/cofounder-validate-secrets.sh
+COPY --chmod=0555 deploy/hetzner/mysql/entrypoint.sh /usr/local/bin/cofounder-mysql-entrypoint
+# Non-executable: the official entrypoint sources this after creating the fresh DB.
+COPY --chmod=0444 deploy/hetzner/mysql/initialize-roles.sh /docker-entrypoint-initdb.d/010-cofounder-roles.sh
+RUN bash -n /usr/local/bin/cofounder-mysql-entrypoint \
+ && bash -n /usr/local/lib/cofounder-validate-secrets.sh \
+ && bash -n /docker-entrypoint-initdb.d/010-cofounder-roles.sh \
+ && test -x /usr/local/bin/docker-entrypoint.sh
+USER 999:999
+ENTRYPOINT ["/usr/local/bin/cofounder-mysql-entrypoint"]
+CMD ["mysqld"]

@@ -8,13 +8,48 @@ services:
     ports: !reset []
     environment:
       TRUST_PROXY: "true"
+      STARTUP_MIGRATION_MODE: verify
+      STARTUP_DATABASE_AUTHORITY: runtime-dml
     networks: [ingress, database]
     depends_on:
       database:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+
+  # Same reviewed application artifact, separate process and secret boundary.
+  migrate:
+    image: ${PRODUCTION_APP_IMAGE:?Set the reviewed application image digest}
+    command: [node, dist/migrate.js]
+    user: "1000:1000"
+    init: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: "1.0"
+    mem_limit: 512m
+    memswap_limit: 512m
+    pids_limit: 128
+    stop_grace_period: 30s
+    restart: "no"
+    networks: [database]
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --max-old-space-size=320
+      DATABASE_URL_FILE: /run/secrets/migration_database_url
+      MIGRATION_LOCK_TIMEOUT_SECONDS: "60"
+    secrets: [migration_database_url]
+    depends_on:
+      database:
+        condition: service_healthy
+    logging:
+      driver: local
+      options: { max-size: "10m", max-file: "3" }
 
   database:
-    image: ${PRODUCTION_DATABASE_IMAGE:?Set the reviewed MySQL repository@sha256 digest}
+    image: ${PRODUCTION_DATABASE_IMAGE:?Set the reviewed custom Hetzner database repository@sha256 digest}
     user: "999:999"
     read_only: true
     cap_drop: [ALL]
@@ -40,10 +75,11 @@ services:
       MYSQL_USER: cofounder
       MYSQL_PASSWORD_FILE: /run/secrets/mysql_password
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_MIGRATOR_PASSWORD_FILE: /run/secrets/mysql_migrator_password
       # Fresh initialization only; never create a network-accessible root account.
       MYSQL_ROOT_HOST: localhost
       MYSQL_INITDB_SKIP_TZINFO: "1"
-    secrets: [mysql_password, mysql_root_password]
+    secrets: [mysql_password, mysql_root_password, mysql_migrator_password]
     healthcheck:
       test:
         - CMD-SHELL
@@ -117,7 +153,11 @@ secrets:
     file: ${DATABASE_URL_SECRET_FILE:?Set the protected app MySQL URL file}
   jwt_secret:
     file: ${JWT_SECRET_FILE:?Set the protected session-signing secret file}
+  migration_database_url:
+    file: ${MIGRATION_DATABASE_URL_SECRET_FILE:?Set the protected separate migration URL file}
   mysql_password:
     file: ${MYSQL_PASSWORD_SECRET_FILE:?Set the protected app database password file}
   mysql_root_password:
     file: ${MYSQL_ROOT_PASSWORD_SECRET_FILE:?Set the protected database administrator password file}
+  mysql_migrator_password:
+    file: ${MYSQL_MIGRATOR_PASSWORD_SECRET_FILE:?Set the protected separate migration password file}
