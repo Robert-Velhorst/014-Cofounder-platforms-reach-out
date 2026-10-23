@@ -192,10 +192,14 @@ jobs:
             *'"event":"shutdown_completed"'*) ;;
             *) echo "Missing graceful shutdown acknowledgement"; exit 1 ;;
           esac
-      - name: Scan installed production app packages
+      - name: Save built production image for independent scanners
         run: |
           docker image save "$(docker compose images --quiet app | head -n1)" --output output/app-image.tar
           chmod 0444 output/app-image.tar
+      - name: Capture covered Ubuntu application inventory and vulnerability evidence
+        run: bash scripts/capture-ubuntu-image-security.sh
+      - name: Scan installed production app packages
+        run: |
           docker run --rm --read-only --tmpfs /tmp:rw,size=2048m --cap-drop ALL \
             --mount "type=bind,source=$GITHUB_WORKSPACE/output/app-image.tar,target=/scan/image.tar,readonly" \
             aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c \
@@ -214,6 +218,8 @@ jobs:
             output/installed-browser-verification.json
             output/stable-browser-*.png
             output/image-security.json
+            output/ubuntu-app-*.json
+            output/ubuntu-app-archive-sha256.txt
 
       - name: Show container diagnostics
         if: always()

@@ -45,6 +45,20 @@ preceding base scan correctly detected Ubuntu 26.10 and a valid current database
 its Go findings concern the unmodified public base's Pebble helper. That alone
 does not prove OS advisory coverage or application-image acceptance.
 
+At head `e52df801fa5ad9a740ec51d1b5ef388b0aeb1232`, the corrected hosted
+coverage probe passed. Its downloaded database search contains seven active
+Canonical OpenSSL advisory records explicitly scoped to Ubuntu 26.10. This
+establishes release-feed capability; it does not mean that all OS packages or
+the application image have passed a security assessment.
+
+The next follow-up collects a complete Syft 1.55.0 SBOM from the saved final
+application image, scans that exact SBOM with Grype 0.121.0, and retains the
+matching Ubuntu feed rows and archive hash. Both tools are digest-pinned.
+The summarizer requires OS inventory, every direct Node dependency and current
+database metadata; it retains every finding and always reports
+`securityAcceptance: false`. The existing strict Trivy gate remains in place
+until these actual reports are independently inspected. No finding is hidden.
+
 The local bounded Grype probe exited 137; Docker events confirmed an OOM.
 A larger attempt did not launch because the host memory guard failed. Hosted
 CI provides the next capability probe; local OOM is not a coverage result.
@@ -64,6 +78,6 @@ schema. Runtime, build and scanner reports must stay tied to their commit.
 
 ## Local verification of the follow-up
 
-All 209 operator/configuration tests pass with Node 26.12.1. Workflow YAML
+All 210 operator/configuration tests pass with Node 26.12.1. Workflow YAML
 parses. This does not replace hosted browser, image or application checks.
 The TypeScript vendor compiler's bundled Go/libraries remain separate work.

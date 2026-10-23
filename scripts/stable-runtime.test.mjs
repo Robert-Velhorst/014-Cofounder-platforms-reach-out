@@ -9,6 +9,7 @@ import { hooks } from '../.pnpmfile.mjs';
 import { validateImageReport } from './check-image-security.mjs';
 import { validateInstalledBrowserReport, assertBrowserProbeInvocation } from './check-installed-browser-report.mjs';
 import { validateUbuntuCoverage } from './check-ubuntu-coverage.mjs';
+import { summarizeUbuntuImageEvidence } from './summarize-ubuntu-image-evidence.mjs';
 const script = fileURLToPath(new URL('./stable-runtime.mjs', import.meta.url));
 test('records actual interpreter without connecting to a database', () => {
   const fixture = mkdtempSync(join(tmpdir(), 'cofounder-runtime-'));
@@ -78,4 +79,18 @@ test('candidate Ubuntu coverage requires real release records and does not asser
   assert.throws(()=>validateUbuntuCoverage({...scan,distro:{name:'debian',version:'forky'}},feed),/WRONG_SCANNER_DISTRO/);
   assert.throws(()=>validateUbuntuCoverage(scan,[{...feed[0],packages:[]}]),/NO_ACTIVE_UBUNTU_2610_FEED_ROWS/);
   assert.throws(()=>validateUbuntuCoverage({...scan,matches:null},feed),/MISSING_CANDIDATE_REPORT/);
+});
+
+test('full Ubuntu evidence requires inventories, all direct dependencies, current DB and retained findings', () => {
+  const now=Date.parse('2026-10-23T12:00:00Z');
+  const sbom={descriptor:{name:'syft',version:'1.55.0'},distro:{name:'ubuntu',version:'26.10'},artifacts:[{id:'os1',name:'libc6',version:'2.44',type:'deb'},{id:'node1',name:'example',version:'1.0.0',type:'npm'}]};
+  const scan={distro:{name:'ubuntu',version:'26.10'},matches:[{artifact:{id:'node1'}}],ignoredMatches:[],descriptor:{db:{status:{valid:true,built:'2026-10-23T06:30:00Z'},providers:{ubuntu:{captured:'2026-10-23T06:00:00Z'}}}}};
+  const feed=[{vulnerability:{provider:'ubuntu',status:'active',id:'fixture'},packages:[{os:{name:'ubuntu',version:'26.10'},package:{name:'openssl'}}]}];
+  const result=summarizeUbuntuImageEvidence(sbom,scan,feed,{example:'1.0.0'},now);
+  assert.equal(result.evidenceComplete,true); assert.equal(result.securityAcceptance,false); assert.equal(result.findings,1);
+  assert.throws(()=>summarizeUbuntuImageEvidence({...sbom,artifacts:sbom.artifacts.slice(1)},scan,feed,{},now),/MISSING_OS_INVENTORY/);
+  assert.throws(()=>summarizeUbuntuImageEvidence(sbom,scan,feed,{missing:'1.0.0'},now),/MISSING_RUNTIME_DEPENDENCY/);
+  assert.throws(()=>summarizeUbuntuImageEvidence(sbom,scan,[],{},now),/MISSING_UBUNTU_FEED_ROWS/);
+  assert.throws(()=>summarizeUbuntuImageEvidence(sbom,{...scan,matches:[{artifact:{id:'unknown'}}]},feed,{},now),/FINDING_OUTSIDE_SBOM/);
+  assert.throws(()=>summarizeUbuntuImageEvidence(sbom,scan,feed,{},now+6*86400000),/STALE_VULNERABILITY_DATABASE/);
 });
