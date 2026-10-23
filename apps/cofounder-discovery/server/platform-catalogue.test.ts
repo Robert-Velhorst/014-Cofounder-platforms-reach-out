@@ -600,7 +600,7 @@ describe("published platform catalogue", () => {
     ).toEqual(["antler"]);
     const antler = records.find((r: any) => r.id === "antler");
     expect(antler).toMatchObject({
-      reviewedAt: "2026-10-02",
+      reviewedAt: "2026-10-23",
       pricingStatus: "investment-terms",
     });
     expect(antler.access).toMatch(/full-time.*in-person.*10-week/i);
