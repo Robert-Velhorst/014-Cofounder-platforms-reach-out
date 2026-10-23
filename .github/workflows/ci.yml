@@ -248,7 +248,7 @@ jobs:
             -e HOME=/tmp -e GRYPE_DB_CACHE_DIR=/cache -e GOMEMLIMIT=512MiB \
             --mount "type=bind,source=$RUNNER_TEMP/cofounder-grype-cache,target=/cache" \
             anchore/grype:v0.121.0@sha256:621d56d1d68106b787022c81546f7e0a36202a25d1239f0c20195fab8c16f7ea \
-            db search --distro ubuntu:26.10 --provider ubuntu --limit 10 --output json > output/ubuntu-grype-feed.json
+            db search --pkg openssl --distro ubuntu:26.10 --provider ubuntu --limit 0 --output json > output/ubuntu-grype-feed.json
           node scripts/check-ubuntu-coverage.mjs > output/ubuntu-coverage-verification.json
       - name: Retain candidate scanner coverage evidence
         if: always()

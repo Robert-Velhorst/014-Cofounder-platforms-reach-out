@@ -38,6 +38,13 @@ scanner capability evidence only: it does not assert vulnerability acceptance
 or replace the existing strict application-image scan. Grype's matches alone
 are not a complete installed-package inventory. No scanner result is waived.
 
+The first hosted search used a ten-result cap, which Grype treats as an error
+when the query has more matches. The corrected query is restricted to OpenSSL
+records for Ubuntu 26.10 from the Ubuntu provider, with no truncation. The
+preceding base scan correctly detected Ubuntu 26.10 and a valid current database;
+its Go findings concern the unmodified public base's Pebble helper. That alone
+does not prove OS advisory coverage or application-image acceptance.
+
 The local bounded Grype probe exited 137; Docker events confirmed an OOM.
 A larger attempt did not launch because the host memory guard failed. Hosted
 CI provides the next capability probe; local OOM is not a coverage result.
