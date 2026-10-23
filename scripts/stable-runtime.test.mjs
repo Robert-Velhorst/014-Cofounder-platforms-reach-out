@@ -65,6 +65,10 @@ test('native browser evidence cannot pass with missing stdin, an empty report or
 });
 
 test('candidate Ubuntu coverage requires real release records and does not assert security acceptance', () => {
+  const workflow=readFileSync(new URL('../.github/workflows/ci.yml',import.meta.url),'utf8');
+  const job=workflow.split('  ubuntu-coverage:')[1].split('  windows-source:')[0];
+  assert.equal((job.match(/--user "\$\(id -u\):\$\(id -g\)"/g)||[]).length,2);
+  assert.equal((job.match(/--tmpfs \/tmp:rw,size=512m,mode=1777/g)||[]).length,2);
   const scan={distro:{name:'ubuntu',version:'26.10'},matches:[{fixture:true}],descriptor:{db:{built:'synthetic'}}};
   const feed=[{vulnerability:{provider:'ubuntu',status:'active',id:'synthetic-vulnerability'},packages:[{os:{name:'ubuntu',version:'26.10'},package:{name:'synthetic-package'}}]}];
   const result=validateUbuntuCoverage(scan,feed);

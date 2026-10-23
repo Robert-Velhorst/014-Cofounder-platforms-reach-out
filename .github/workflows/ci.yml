@@ -237,14 +237,14 @@ jobs:
           docker image save ubuntu:26.10@sha256:93e29beff5257b2cdf1c024d831f6d2997e53655a653ff76a811fc9e6564a719 --output output/ubuntu-probe.tar
           chmod 0444 output/ubuntu-probe.tar
           docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges --user "$(id -u):$(id -g)" \
-            --cpus 1 --memory 2560m --memory-swap 2560m --pids-limit 128 --tmpfs /tmp:rw,size=128m \
+            --cpus 1 --memory 2560m --memory-swap 2560m --pids-limit 128 --tmpfs /tmp:rw,size=512m,mode=1777 \
             -e HOME=/tmp -e GRYPE_DB_CACHE_DIR=/cache -e GOMEMLIMIT=512MiB \
             --mount "type=bind,source=$RUNNER_TEMP/cofounder-grype-cache,target=/cache" \
             --mount "type=bind,source=$GITHUB_WORKSPACE/output/ubuntu-probe.tar,target=/scan/image.tar,readonly" \
             anchore/grype:v0.121.0@sha256:621d56d1d68106b787022c81546f7e0a36202a25d1239f0c20195fab8c16f7ea \
             docker-archive:/scan/image.tar --output json > output/ubuntu-grype-coverage.json
           docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges --user "$(id -u):$(id -g)" \
-            --cpus 1 --memory 2560m --memory-swap 2560m --pids-limit 128 --tmpfs /tmp:rw,size=128m \
+            --cpus 1 --memory 2560m --memory-swap 2560m --pids-limit 128 --tmpfs /tmp:rw,size=512m,mode=1777 \
             -e HOME=/tmp -e GRYPE_DB_CACHE_DIR=/cache -e GOMEMLIMIT=512MiB \
             --mount "type=bind,source=$RUNNER_TEMP/cofounder-grype-cache,target=/cache" \
             anchore/grype:v0.121.0@sha256:621d56d1d68106b787022c81546f7e0a36202a25d1239f0c20195fab8c16f7ea \
