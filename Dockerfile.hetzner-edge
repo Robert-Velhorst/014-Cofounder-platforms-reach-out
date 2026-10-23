@@ -1,7 +1,47 @@
-# Official image metadata reviewed 2026-10-23; see docs/HETZNER_DEPLOYMENT.md.
-FROM caddy:2.11.7-alpine@sha256:24ec7b05bc532c7bb57f727030c5056e257ff7138b4b50460306819ff79362bd
+# Rebuild the exact stable Caddy source with patched stable Go/network modules.
+# Use the current stable Alpine line in both builder and final runtime.
+FROM golang:1.27.3-alpine3.24@sha256:b8c9b82affbbb82a020bbcf998dad2ba9516944ac7e883524642a481a9505e9c AS edge-build
+ENV GOTOOLCHAIN=local CGO_ENABLED=0
+WORKDIR /src
+COPY deploy/hetzner/caddy/reviewed-modules.txt /tmp/caddy-reviewed-modules.txt
+RUN wget -q https://codeload.github.com/caddyserver/caddy/tar.gz/87c43dc4f54861ec7e54302cfb2ad3e34508b6dc -O caddy.tar.gz \
+ && echo 'bb250cdef3e4baad82af6c048ac9754b4d1350d50a55af7c34e8d1aa574a6211  caddy.tar.gz' | sha256sum -c - \
+ && tar -xzf caddy.tar.gz --strip-components=1 \
+ && rm caddy.tar.gz \
+ && xargs -r go get < /tmp/caddy-reviewed-modules.txt \
+ && go build -trimpath -ldflags '-s -w -X github.com/caddyserver/caddy/v2.CustomVersion=v2.11.7-cofounder.20261023.2' -o /out/caddy ./cmd/caddy \
+ && go version -m /out/caddy > /out/build-info.txt \
+ && go list -deps ./cmd/caddy > /out/linked-packages.unsorted \
+ && sort /out/linked-packages.unsorted > /out/linked-packages.txt \
+ && rm /out/linked-packages.unsorted \
+ && go env -json GOOS GOARCH CGO_ENABLED GOVERSION > /out/build-environment.json \
+ && sha256sum /out/caddy > /out/binary-sha256.txt \
+ && sha256sum /out/caddy /out/linked-packages.txt /out/build-info.txt /out/build-environment.json > /out/evidence-hashes.txt \
+ && printf '{"binarySha256":"%s","linkedPackagesSha256":"%s","buildInfoSha256":"%s","buildEnvironmentSha256":"%s","sourceSha256":"bb250cdef3e4baad82af6c048ac9754b4d1350d50a55af7c34e8d1aa574a6211","package":"./cmd/caddy","trimpath":true}\n' \
+      "$(sed -n '1s/ .*//p' /out/evidence-hashes.txt)" \
+      "$(sed -n '2s/ .*//p' /out/evidence-hashes.txt)" \
+      "$(sed -n '3s/ .*//p' /out/evidence-hashes.txt)" \
+      "$(sed -n '4s/ .*//p' /out/evidence-hashes.txt)" > /out/build-evidence.json
+
+# The official Caddy image still uses Alpine 3.23. Reproduce its required
+# filesystem/command contract on the current stable Alpine runtime instead.
+FROM alpine:3.24.3@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a
+RUN apk upgrade --no-cache \
+ && apk add --no-cache ca-certificates curl mailcap \
+ && mkdir -p /config/caddy /data/caddy /etc/caddy /usr/share/caddy /srv \
+ && chown 1000:1000 /config /config/caddy /data /data/caddy \
+ && chmod 0700 /config /config/caddy /data /data/caddy
+ENV CADDY_VERSION=v2.11.7 XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data
 # Internal high ports need no file capability or added runtime capability.
-RUN setcap -r /usr/bin/caddy
+COPY --from=edge-build /out/caddy /usr/bin/caddy
+COPY --from=edge-build /out/build-info.txt /usr/share/caddy/build-info.txt
+COPY --from=edge-build /out/linked-packages.txt /usr/share/caddy/linked-packages.txt
+COPY --from=edge-build /out/build-environment.json /usr/share/caddy/build-environment.json
+COPY --from=edge-build /out/binary-sha256.txt /usr/share/caddy/binary-sha256.txt
+COPY --from=edge-build /out/build-evidence.json /usr/share/caddy/build-evidence.json
 COPY deploy/hetzner/Caddyfile /etc/caddy/Caddyfile
-RUN PUBLIC_HOSTNAME=cofounder.example.invalid caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null
+WORKDIR /srv
+EXPOSE 8080 8443
 USER 1000:1000
+RUN PUBLIC_HOSTNAME=cofounder.example.invalid caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile >/dev/null
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]

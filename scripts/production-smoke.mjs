@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { existsSync } from "node:fs";
 
 assert.equal(process.env.NODE_ENV, "production");
+assert.equal(process.versions.node, "26.12.1");
 assert.equal(process.env.ENABLE_OWNER_NOTIFICATIONS, "false");
 assert.equal(typeof process.getuid, "function", "Linux runtime required");
 assert.notEqual(
@@ -179,6 +180,9 @@ assert.equal((await oversizedBody.json()).error, "request_body_too_large");
 console.log(
   JSON.stringify({
     event: "production_smoke_passed",
+    node: process.versions.node,
+    openssl: process.versions.openssl,
+    uid: process.getuid(),
     nonRoot: true,
     providersDisabled: true,
     databaseReady: true,

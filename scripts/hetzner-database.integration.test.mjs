@@ -379,6 +379,8 @@ test(
         "run",
         "--rm",
         ...bounds,
+        "--user",
+        "999:999",
         "--network",
         "none",
         "-e",
@@ -391,6 +393,17 @@ test(
         invalid.stderr.trim(),
         "cofounder_database_configuration_refused",
       );
+      // Exercise the identity gate separately; otherwise the generic fixture
+      // UID 1000 masks the remote-root configuration check above.
+      for (const user of ["0:0", "1000:1000", "999:0"]) {
+        const invalidIdentity = invoke([
+          "run", "--rm", ...bounds, "--user", user,
+          "--network", "none", image,
+        ]);
+        assert.equal(invalidIdentity.status, 1);
+        assert.equal(invalidIdentity.stdout, "");
+        assert.equal(invalidIdentity.stderr.trim(), "cofounder_database_identity_refused");
+      }
       console.log(
         JSON.stringify({
           event: "hetzner_database_authority_verified",
@@ -405,6 +418,7 @@ test(
           migratorRejectedAsRuntime: true,
           remoteRootRefused: true,
           wrapperRefusal: true,
+          wrongIdentityRefused: true,
           fullApplicationVerified: false,
           tlsVerified: false,
         }),
