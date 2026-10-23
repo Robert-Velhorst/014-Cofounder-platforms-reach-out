@@ -1,5 +1,39 @@
 # Worldwide public beta delivery ledger
 
+## October 23 combined candidate: frontend admission and actual browser failure
+
+The combined source preserves all four PR #121–124 heads as ancestors, including
+every original browser stage, private-profile extension, diagnostics and current
+operator documentation. It adds [frontend admission](SECURITY.md#october-23-frontend-admission-candidate--full-cicodeql-pending)
+for two actual open high-severity CodeQL findings and corrects the
+[first real browser failure](MAINTAINED_BROWSER_JOURNEY.md#first-maintained-execution--failed-not-qualified).
+It must qualify as a complete exact-head candidate before consolidation into main;
+no failed original head is merged or retroactively described as passing.
+
+Six new real-HTTP/file-work cases passed twice using the actual Node 26.12.0,
+Express 5.3.0 and rate-limit 8.7.1 artifacts from an isolated tool cache. A source-
+unchanged in-memory negative control removed only the two middleware registrations
+and failed exactly the expected static-path case (200 versus required 429); the
+checked-in-source repeat passed all six. Scoped strict TypeScript 6.0.3 and the
+full-workspace moderate-severity dependency audit passed. All 214 native
+operator/source tests passed on Node 26.12.0, zero failures/skips (9,163.5296 ms).
+These are not the full application/build/browser, new-image or hosted qualification.
+
+PR #121 and #122 actually failed after three browser stages because Chromium used
+the installed non-custom WenQuanYi font for all three CJK alias glyphs, not Noto.
+The inspected failure capture shows the characters. The correction accepts the
+two installed CJK families while keeping exactly three non-custom glyphs and all
+other original/emoji assertions. Both failed runs remain available. Their exact
+owned fixtures were removed, with driver exit 1, runtime/database 0 and no OOM.
+No local Docker/database/browser fixture or provider action was created.
+
+Main `9e15816` separately passed post-merge CI `39893556582` and CodeQL workflow
+`39893556531`; both high CodeQL alerts remain open on that actual main revision.
+Zero open Dependabot/secret alerts were returned by successful read-only queries.
+No alert was dismissed, suppressed or declared resolved by a workflow's green
+status. Full CI/CodeQL, complete browser screenshots and broader acceptance remain
+required for the combined candidate; every original phase remains Partial.
+
 ## October 23 maintained private-profile browser extension — unexecuted candidate
 
 The [maintained browser journey](MAINTAINED_BROWSER_JOURNEY.md#required-private-profile-onboarding-extension--not-yet-executed)

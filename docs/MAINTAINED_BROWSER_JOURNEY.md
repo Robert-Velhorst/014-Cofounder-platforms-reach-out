@@ -1,8 +1,44 @@
 # Maintained synthetic browser journey
 
-Status on October 23, 2026: **implemented in source, not yet executed or qualified**.
+Status on October 23, 2026: **first execution failed; corrected candidate unqualified**.
 The native checks below are not browser, database, image-build or production
 acceptance. Keep this candidate unmerged until its full CI and screenshot review.
+
+### First maintained execution — failed, not qualified
+
+[CI run 39892721763](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39892721763)
+executed head `aa554fab3e68c5d2e98bfe06727c9e97f705ac97`. Application/container,
+database, recovery, full load and actual TLS gates passed, and the browser image
+built. The real browser completed the first three stages, then failed the
+catalogue stage because the CJK assertion required a Noto postscript name.
+Chromium's actual platform-font evidence reported `WenQuanYiZenHei`, non-custom,
+with exactly three glyphs. The captured screen was inspected and showed the
+three Chinese alias characters, not replacement boxes or a framework overlay.
+[Debian's package record](https://packages.debian.org/trixie/fonts-wqy-zenhei)
+documents the font's simplified/Traditional Chinese coverage.
+
+The source correction accepts the installed Noto CJK or WenQuanYi family while
+still requiring **exactly three non-custom glyphs**. Native tests execute both
+positive cases and refuse missing/custom/last-resort/unrelated/wrong-count fonts.
+No CSS, screenshot, rendered text, image font package, workflow stage, threshold
+or emoji coverage check was changed to manufacture a pass. The complete rerun
+and all-stage screenshot review remain required; this is not browser acceptance.
+
+All three exact owned CI fixtures were removed: driver exited 1 for the failed
+assertion, runtime/database exited 0, none was OOM-killed. The seven-day PNG-only
+artifact is `synthetic-browser-screenshots-39892721763-1` (719,883 bytes compressed).
+Six synthetic captures were downloaded outside the checkout for inspection;
+no secret/archive/account-JSON artifact was downloaded. The failed run and
+its head are retained, not rerun without a source correction or merged as green.
+
+[The independent PR #122 run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39893322814)
+failed at the same CJK assertion with the same three WenQuanYi glyphs. Its newly
+maintained redacted failure envelopes exposed the exact stage/error and recorded
+zero console errors/external requests at that point. All three owned fixtures
+were removed (driver 1, runtime/database 0, no OOM). This validates diagnostic
+reporting for that failure, not successful completion of the journey. After the
+source correction, all 214 native checks passed on Node 26.12.0 with zero
+failures/skips (9,163.5296 ms); the actual complete rerun remains required.
 
 ## What this gate proves when it passes
 

@@ -4,8 +4,9 @@ Updated: 2026-10-23. Overall goal: **not complete**.
 
 The [maintained browser-journey candidate](MAINTAINED_BROWSER_JOURNEY.md) restores
 the archived 24-stage workflow plus six required private-profile onboarding
-stages as a mandatory source-defined gate. Its native
-checks passed, but its image/browser execution and screenshot review remain
+stages as a mandatory source-defined gate. Its native checks passed. The first
+unextended browser run failed on a font-family assertion; the corrected full
+candidate's image/browser execution and all-stage screenshot review remain
 unverified. No phase is promoted by this implementation or its wiring.
 
 Publication checkpoint: the accumulated implementation was merged through
@@ -18,8 +19,10 @@ passed. The latest merged checkpoint is now `9e15816b2f34b06e69635ea475f2aa55f03
 through [PR #120](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/120).
 Its tree was checked identical to head `8a71007a2e847c91f159f03263ab59c02c7ee04f`,
 which passed [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39888984086).
-The separate post-merge main CI/CodeQL runs and PRs 121–122 are still pending at this
-checkpoint; neither browser acceptance nor their candidate changes are qualified.
+The separate post-merge main CI and CodeQL workflows also completed successfully;
+the scan still reports the two open findings in [the security record](SECURITY.md).
+PRs 121–122 failed the CJK font-family assertion. Their corrected full candidate
+is unqualified; neither browser acceptance nor candidate changes are promoted.
 Dirty-branch descriptions in dated evidence refer to the historical audit,
 not this publication checkpoint. Current capacity qualification is tracked by
 [the complete customer-load gate](CUSTOMER_LOAD_ACCEPTANCE.md). All original

@@ -6,6 +6,7 @@ import {
   BROWSER_JOURNEY_STAGES,
   validateBrowserFixtureDatabase,
   redactBrowserFailure,
+  hasSyntheticCjkGlyphs,
 } from "./browser-journey-policy.mjs";
 import { runSyntheticOnboardingJourney } from "./browser-onboarding-journey.mjs";
 const require = createRequire(import.meta.url);
@@ -574,11 +575,8 @@ async function stage(name, run) {
           })
         );
         assert.ok(
-          renderedFonts.some(
-            font =>
-              /^NotoSansCJK/i.test(font.postScriptName) && font.glyphCount === 3
-          ),
-          "test-image CJK font renders the three Traditional Chinese alias glyphs"
+          hasSyntheticCjkGlyphs(renderedFonts),
+          "test-image NotoSansCJK or WenQuanYiZenHei font renders all three Traditional Chinese alias glyphs"
         );
         await cdp.detach();
         assert.equal(

@@ -19,9 +19,17 @@ passed 1,043 application unit and 736 database cases, build, readiness, recovery
 container, complete synthetic customer-workload, fresh database-role and actual
 HTTPS/session checks. The separate
 [post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39893556582)
-is pending at this documentation checkpoint. Browser candidate PRs #121–122 are
+also passed; its CodeQL workflow completed with the two open findings described
+below. Browser candidate PRs #121–122 are
 not included in that qualification. CI means automated checks on
 GitHub—not approval of a public service.
+
+Two open high-severity CodeQL frontend-rate-limit findings were subsequently
+inspected. [The source fix and evidence](docs/SECURITY.md#october-23-frontend-admission-candidate--full-cicodeql-pending)
+are candidates pending full CI and a fresh scan; the alerts were not suppressed.
+The first maintained browser run also failed a font-family assertion; its
+[actual failure and correction](docs/MAINTAINED_BROWSER_JOURNEY.md#first-maintained-execution--failed-not-qualified)
+do not qualify the full browser journey. Passing scan jobs are not zero findings.
 
 The [workload evidence and limits](docs/CUSTOMER_LOAD_ACCEPTANCE.md) describe the
 100-account/10,000-candidate rehearsal, including successful 150-request/second
@@ -444,7 +452,8 @@ revoke permissions on an existing database. Use the
 ## CI and verification
 
 The [maintained browser journey](docs/MAINTAINED_BROWSER_JOURNEY.md)
-is a new candidate gate, not yet executed or qualified. Its source keeps real
+is a candidate gate; its first execution failed and its corrected full rerun is
+pending. Its source keeps real
 UI/HTTP/persistence, English/Dutch, responsive, export and CSV retry coverage;
 native checks are not a substitute for its full browser run or screenshot review.
 It retains all original 24 stages and adds six required private-profile onboarding

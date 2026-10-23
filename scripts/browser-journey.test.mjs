@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import {
   BROWSER_JOURNEY_STAGES,
   BROWSER_ONBOARDING_STAGES,
+  hasSyntheticCjkGlyphs,
   validateBrowserFixtureDatabase,
   redactBrowserFailure,
   browserJourneyFailureDiagnostics,
@@ -223,6 +224,42 @@ test("all 24 archived workflow stages remain explicit real driver actions", () =
   assert.match(driver, /WASL Network \(MENA\)/);
   assert.match(driver, /context\.on\("page"/);
   assert.match(driver, /serviceWorkers: "block"/);
+});
+
+test("actual CJK coverage accepts installed Noto/WenQuanYi but not missing, custom or last-resort glyphs", () => {
+  const observed = {
+    familyName: "WenQuanYi Zen Hei",
+    postScriptName: "WenQuanYiZenHei",
+    isCustomFont: false,
+    glyphCount: 3,
+  };
+  assert.equal(
+    hasSyntheticCjkGlyphs([
+      { postScriptName: "LiberationSans", isCustomFont: false, glyphCount: 84 },
+      observed,
+    ]),
+    true,
+  );
+  assert.equal(
+    hasSyntheticCjkGlyphs([
+      { ...observed, postScriptName: "NotoSansCJKtc-Regular" },
+    ]),
+    true,
+  );
+  for (const invalid of [
+    undefined,
+    [],
+    [null],
+    [{ ...observed, glyphCount: 0 }],
+    [{ ...observed, glyphCount: 2 }],
+    [{ ...observed, glyphCount: 4 }],
+    [{ ...observed, isCustomFont: true }],
+    [{ ...observed, postScriptName: "LastResort" }],
+    [{ ...observed, postScriptName: "LiberationSans" }],
+    [{ ...observed, postScriptName: "WenQuanYiZenHeiFake" }],
+  ])
+    assert.equal(hasSyntheticCjkGlyphs(invalid), false);
+  assert.match(driver, /hasSyntheticCjkGlyphs\(renderedFonts\)/);
 });
 
 test("six onboarding stages extend rather than replace the original workflow", () => {

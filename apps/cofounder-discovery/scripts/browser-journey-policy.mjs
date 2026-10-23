@@ -35,6 +35,22 @@ export const BROWSER_ONBOARDING_STAGES = Object.freeze([
   "private-profile-cross-account-browser-boundary",
 ]);
 
+// Both are OS CJK fonts in the reviewed Debian/Playwright test environment.
+// Retain actual three-glyph coverage; reject custom/last-resort font reports.
+export function hasSyntheticCjkGlyphs(fonts) {
+  return (
+    Array.isArray(fonts) &&
+    fonts.some(
+      font =>
+        font &&
+        typeof font.postScriptName === "string" &&
+        /^(?:NotoSansCJK|WenQuanYiZenHei$)/i.test(font.postScriptName) &&
+        font.isCustomFont === false &&
+        font.glyphCount === 3
+    )
+  );
+}
+
 export function validateBrowserFixtureDatabase(value, owner) {
   const refuse = () => {
     throw new Error("browser_journey_config_refused");
