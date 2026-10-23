@@ -13,7 +13,7 @@ is inserted, so identical contents yield identical digests.
 
 ## Included and excluded scope
 
-Included fixed inputs: root package/lock/workspace manifests, .npmrc, Dockerfile,
+Included fixed inputs: root package/lock/workspace manifests, .npmrc, .gitattributes, Dockerfile,
 .dockerignore, application package/TypeScript/Vite configuration. Application
 client/src, server, shared, scripts and drizzle directories include regular
 TS/TSX/JS/MJS/CSS/HTML/JSON/SQL files. The local dist directory includes non-hidden
@@ -23,6 +23,9 @@ Other hidden entries, node_modules, coverage, logs, tmp/temp, environment files,
 root operator source/docs, host configuration and registry/container layers are
 outside this scope. The root .npmrc is now a required hashed input because Docker
 copies it before dependency installation; missing/symlinked configuration fails.
+The checkout byte policy in .gitattributes is also required and hashed. Audited
+TypeScript is checked out as LF on Windows and Linux so the original exact-byte
+API/UI snapshots agree without normalizing or weakening their digest checks.
 Only its byte length and hash are reported, never its contents or configuration
 values. User/global package-manager configuration and environment are not covered;
 this is still **not a complete build-input attestation**. It is not a secret scanner:

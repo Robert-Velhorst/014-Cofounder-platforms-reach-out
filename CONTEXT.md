@@ -1,5 +1,9 @@
 # Co-founder discovery and assisted outreach
 
+Current source qualification checkpoint: [October 23 combined beta candidate](docs/BETA_CONSOLIDATION_2026-10-23.md).
+It preserves PRs 113–115 and records native checks plus unfinished CI/release gates.
+It is not proof of merge, deployment, provider permission or whole-goal completion.
+
 This context helps founders discover people and privately record their own reviewed outreach and progress.
 
 ## Language

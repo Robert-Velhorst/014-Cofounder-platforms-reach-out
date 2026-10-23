@@ -6,6 +6,46 @@ import { mkdtempSync, writeFileSync, rmSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  startupMigrationArguments,
+  migrationVerificationOnly,
+} from "../apps/cofounder-discovery/server/migration-startup-mode.ts";
+
+test("migration startup never silently skips or accepts an unknown verification mode", () => {
+  assert.deepEqual(startupMigrationArguments(undefined), []);
+  assert.deepEqual(startupMigrationArguments("apply"), []);
+  assert.deepEqual(startupMigrationArguments("verify"), ["--verify-only"]);
+  for (const value of [
+    "",
+    "false",
+    "skip",
+    "VERIFY",
+    "verify-only",
+    " verify",
+    "private-mode-value",
+  ])
+    assert.throws(
+      () => startupMigrationArguments(value),
+      /^Error: runtime_migration_mode_invalid$/,
+    );
+});
+test("migration CLI recognizes only an explicit read-only flag and optional package separator", () => {
+  for (const args of [[], ["--"]])
+    assert.equal(migrationVerificationOnly(args), false);
+  for (const args of [["--verify-only"], ["--", "--verify-only"]])
+    assert.equal(migrationVerificationOnly(args), true);
+  for (const args of [
+    ["--skip"],
+    ["--verify-only", "--verify-only"],
+    ["--verify-only=false"],
+    ["--verify-only", "private-value"],
+    ["--", "--", "--verify-only"],
+  ])
+    assert.throws(
+      () => migrationVerificationOnly(args),
+      /^Error: migration_arguments_invalid$/,
+    );
+});
 
 const directory = mkdtempSync(join(tmpdir(), "cofounder-compose-fixture-"));
 const blankEnv = join(directory, "empty.env");
@@ -17,12 +57,34 @@ writeFileSync(syntheticSecret, "synthetic-only-not-a-real-key\n", {
 after(() => rmSync(directory, { recursive: true, force: true }));
 const image = `example.invalid/cofounder@sha256:${"a".repeat(64)}`;
 test("production runtime launches migration/server through the signal-aware Node entry", () => {
-  const dockerfile = readFileSync(new URL("../Dockerfile", import.meta.url), "utf8");
-  const command = dockerfile.split(/\r?\n/).filter(line => line.startsWith("CMD ")).at(-1);
-  assert.deepEqual(JSON.parse(command.slice(4)), ["node", "dist/start-runtime.js"]);
-  const app = JSON.parse(readFileSync(new URL("../apps/cofounder-discovery/package.json", import.meta.url), "utf8"));
+  const dockerfile = readFileSync(
+    new URL("../Dockerfile", import.meta.url),
+    "utf8",
+  );
+  const command = dockerfile
+    .split(/\r?\n/)
+    .filter((line) => line.startsWith("CMD "))
+    .at(-1);
+  assert.deepEqual(JSON.parse(command.slice(4)), [
+    "node",
+    "dist/start-runtime.js",
+  ]);
+  const app = JSON.parse(
+    readFileSync(
+      new URL("../apps/cofounder-discovery/package.json", import.meta.url),
+      "utf8",
+    ),
+  );
   assert.ok(app.scripts.build.includes("esbuild scripts/start-runtime.ts"));
   assert.ok(app.scripts.build.includes("--outfile=dist/start-runtime.js"));
+  assert.equal(
+    app.scripts.start,
+    "cross-env NODE_ENV=production node dist/start-runtime.js",
+  );
+  assert.equal(
+    app.scripts["db:verify"],
+    "tsx scripts/migrate.ts --verify-only",
+  );
 });
 const env = {
   ...process.env,
@@ -57,6 +119,23 @@ function model(extra = {}, mail = false) {
     timeout: 15_000,
   });
 }
+
+test("production Compose preserves explicit verify mode without silently repairing invalid values", () => {
+  for (const [input, expected] of [
+    [undefined, "apply"],
+    ["apply", "apply"],
+    ["verify", "verify"],
+    ["", ""],
+    ["skip", "skip"],
+  ]) {
+    const result = model({ STARTUP_MIGRATION_MODE: input });
+    assert.equal(result.status, 0);
+    assert.equal(
+      JSON.parse(result.stdout).services.app.environment.STARTUP_MIGRATION_MODE,
+      expected,
+    );
+  }
+});
 
 test("build context excludes local evidence and browser artifacts without dropping source fixtures", () => {
   const rules = readFileSync(

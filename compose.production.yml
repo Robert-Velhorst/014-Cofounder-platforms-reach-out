@@ -27,6 +27,7 @@ services:
       NODE_OPTIONS: --max-old-space-size=320
       PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:?Set the approved HTTPS public origin}
       DATABASE_URL_FILE: /run/secrets/database_url
+      STARTUP_MIGRATION_MODE: ${STARTUP_MIGRATION_MODE-apply}
       JWT_SECRET_FILE: /run/secrets/jwt_secret
       ENABLE_REGISTRATION: "false"
       ENABLE_ACCOUNT_DELETION_REQUESTS: "false"

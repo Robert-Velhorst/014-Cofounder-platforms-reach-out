@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { assertCancelledMigrationReleased } from "./runtime-startup-observation.mjs";
 
 test("cancelled migration observation preserves the shared deadline and every invariant", async () => {
@@ -72,6 +73,23 @@ test("cancelled migration observation preserves the shared deadline and every in
 });
 
 const root = new URL("../", import.meta.url);
+test("audited TypeScript checkouts retain exact LF source bytes across platforms", () => {
+  const paths = [
+    "apps/cofounder-discovery/server/routers.ts",
+    "apps/cofounder-discovery/client/src/App.tsx",
+  ];
+  const attributes = execFileSync(
+    "git",
+    ["check-attr", "eol", "--", ...paths],
+    { cwd: root, encoding: "utf8" },
+  )
+    .trim()
+    .split(/\r?\n/);
+  assert.deepEqual(
+    attributes,
+    paths.map((path) => `${path}: eol: lf`),
+  );
+});
 const manifest = JSON.parse(
   readFileSync(new URL("package.json", root), "utf8"),
 );
@@ -86,6 +104,7 @@ const operators = [
   "test:monitor",
   "test:recovery",
   "test:production-config",
+  "test:hetzner-config",
   "test:release-contract",
   "test:requirements",
   "test:support",
@@ -196,6 +215,7 @@ test("all-tests command runs local gates before mandatory database/recovery acce
     "pnpm test:runtime-startup:integration",
     "pnpm test:authentication-admission:integration",
     "pnpm test:customer-load:integration",
+    "pnpm test:tls-ingress:integration",
   ]);
 });
 test("every root integration fixture runs exactly once locally and in CI", () => {

@@ -7,14 +7,17 @@ organizes that work; it does not automatically contact people.
 
 **Status: in development for a free public beta, not approved for public production.**
 
-Reviewed October 23, 2026: the verified main checkpoint is
-[`4f0a696`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/4f0a69653a5e8656e39825de217aecfc12023c08).
-It includes the accumulated implementation from PR #83 and the maintained full
-customer-workload gate from PR #112. Its
-[post-merge CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39870898817)
+Reviewed October 23, 2026: main checkpoint
+[`68d46fc`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/68d46fcc37e6123028f908374835d3258c204e81)
+includes the accumulated implementation from PR #83, the maintained full
+customer-workload gate from PR #112 and the private deployment/read-only migration
+work consolidated in PR #116. The merged tree is identical to qualified head
+`2da786b`; its [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39883590317)
 passed build, database, readiness, recovery, startup, authentication-admission,
-container and complete synthetic customer-workload checks. CI means automated
-checks on GitHub—not approval of a public service.
+container, complete synthetic customer-workload and actual HTTPS/session checks.
+The separate [post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887250880)
+was queued at this documentation checkpoint. CI means automated checks on
+GitHub—not approval of a public service.
 
 The [workload evidence and limits](docs/CUSTOMER_LOAD_ACCEPTANCE.md) describe the
 100-account/10,000-candidate rehearsal, including successful 150-request/second
@@ -26,8 +29,7 @@ remain available with their original dates and artifact scope.
 Public hosting, real email delivery, privacy/operator decisions, off-host recovery,
 provider permissions and complete release/customer acceptance remain unfinished.
 All [116 original phases](docs/GOAL_COMPLETION_MATRIX.md) remain incomplete.
-Additional deployment and database-role work is tracked separately in
-[PR #116](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/116),
+Additional database-role isolation and rehearsal work is tracked separately in
 [PR #117](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/117)
 and [PR #118](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/118);
 inspect their current state before relying on branch-only features.
@@ -391,21 +393,29 @@ mail service or send test messages. See the
 [mail contract](README_REFERENCE.md#account-mail-dispatch-budget) and
 [production mail guidance](docs/PRODUCTION_CONTAINER_RUNBOOK.md).
 
+For read-only migration-history checking, use `pnpm db:verify` with the approved
+database credentials already configured. Packaged `pnpm start` and the Docker
+entry both use the signal-aware supervisor. Their default is serialized migration
+application; `STARTUP_MIGRATION_MODE=verify` instead requires complete existing
+history before serving. It never skips the guard or provisions restricted database
+roles. See [migration verification and credential separation](docs/DATABASE_MIGRATION_ROLES.md).
+
 ## Environment variables
 
 The [example configuration](apps/cofounder-discovery/.env.example) documents
 settings; it is not a production secret file.
 
-| Group             | Important settings / boundary                                                                    |
-| ----------------- | ------------------------------------------------------------------------------------------------ |
-| Identity/database | `APP_MODE`, `HOST`, `PORT`, `PUBLIC_ORIGIN`, `DATABASE_URL`, `JWT_SECRET`                        |
-| Ingress           | `TRUST_PROXY`: only at a reviewed proxy boundary                                                 |
-| Account access    | Explicit registration; deletion-request intake separately opt-in                                 |
-| Mail              | Resend key, verified sender, independent mail-encryption secret, explicit worker/retention flags |
-| Capacity          | `API_MAX_ACTIVE_WORK`, `CAPACITY_*`, shared mail-attempt ceilings                                |
-| Outreach          | `OUTREACH_PAUSED` blocks preparation, not all research                                           |
-| Legacy providers  | Automation, unsafe routes and owner notifications stay off                                       |
-| HAI               | Token/account binding; content omitted by default                                                |
+| Group             | Important settings / boundary                                                                      |
+| ----------------- | -------------------------------------------------------------------------------------------------- |
+| Identity/database | `APP_MODE`, `HOST`, `PORT`, `PUBLIC_ORIGIN`, `DATABASE_URL`, `JWT_SECRET`                          |
+| Ingress           | `TRUST_PROXY`: only at a reviewed proxy boundary                                                   |
+| Migration startup | `STARTUP_MIGRATION_MODE`: `apply` by default, or read-only `verify`; invalid values refuse startup |
+| Account access    | Explicit registration; deletion-request intake separately opt-in                                   |
+| Mail              | Resend key, verified sender, independent mail-encryption secret, explicit worker/retention flags   |
+| Capacity          | `API_MAX_ACTIVE_WORK`, `CAPACITY_*`, shared mail-attempt ceilings                                  |
+| Outreach          | `OUTREACH_PAUSED` blocks preparation, not all research                                             |
+| Legacy providers  | Automation, unsafe routes and owner notifications stay off                                         |
+| HAI               | Token/account binding; content omitted by default                                                  |
 
 Supported secrets can use documented `NAME_FILE` mounts; conflicting sources
 fail closed. Production uses separate Compose/preflight requirements. Changing
@@ -418,18 +428,22 @@ Run from the repo root using the pinned package manager:
 The table abbreviates the invocation as `pnpm`; on Windows with blocked shims,
 replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
 
-| Command                               | Scope                                                                                                     |
-| ------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `pnpm check`                          | Application TypeScript                                                                                    |
-| `pnpm test`                           | Root operator/inventory gates and app units; Compose needed for configuration checks                      |
-| `pnpm build`                          | Client and bundled server/operator artifacts                                                              |
-| `pnpm test:integration`               | Mandatory dedicated-database suites; build first                                                          |
-| `pnpm test:all`                       | Root/unit/database checks plus readiness, recovery, startup, admission and the complete customer workload |
-| `pnpm test:customer-load:integration` | Full packaged synthetic read/write/race/isolation and scheduled-arrival acceptance; local images required |
-| `pnpm requirements:check`             | Phase/title/evidence-path integrity, not completion                                                       |
-| `pnpm audit:api`, `pnpm audit:ui`     | Source inventories, not behavioral acceptance                                                             |
-| `pnpm doctor`                         | Runtime configuration diagnostics                                                                         |
-| `pnpm verify`                         | App check/units/build/diagnostic pass, not the full root release gate                                     |
+| Command                               | Scope                                                                                                           |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `pnpm check`                          | Application TypeScript                                                                                          |
+| `pnpm test`                           | Root operator/inventory gates and app units; Compose needed for configuration checks                            |
+| `pnpm build`                          | Client and bundled server/operator artifacts                                                                    |
+| `pnpm test:integration`               | Mandatory dedicated-database suites; build first                                                                |
+| `pnpm test:all`                       | Root/unit/database checks plus readiness, recovery, startup, admission and the complete customer workload       |
+| `pnpm test:customer-load:integration` | Full packaged synthetic read/write/race/isolation and scheduled-arrival acceptance; local images required       |
+| `pnpm test:hetzner-config`            | Read-only private-stack model and preflight checks                                                              |
+| `pnpm hetzner:preflight`              | Validate reviewed Hetzner inputs and the Compose model without starting services                                |
+| `pnpm test:tls-ingress:integration`   | Real TLS/session/forwarding rehearsal using the isolated Hetzner stack and synthetic data                       |
+| `pnpm db:verify`                      | Read-only exact migration-history check against the configured database; not schema repair or role provisioning |
+| `pnpm requirements:check`             | Phase/title/evidence-path integrity, not completion                                                             |
+| `pnpm audit:api`, `pnpm audit:ui`     | Source inventories, not behavioral acceptance                                                                   |
+| `pnpm doctor`                         | Runtime configuration diagnostics                                                                               |
+| `pnpm verify`                         | App check/units/build/diagnostic pass, not the full root release gate                                           |
 
 Isolated disposable integration workflow:
 
@@ -597,4 +611,10 @@ is complete. See
 
 ## Deployment target
 
-Public deployment targets Hetzner. The local tunnel launcher is retired. Follow `DEPLOYMENT_TARGET.md` and complete infrastructure, secrets, DNS/TLS, database migration, backup, monitoring and rollback acceptance before cutover. Local checks do not prove a hosted deployment.
+Public deployment targets Hetzner. The local tunnel launcher is retired. Follow
+[the concrete Hetzner stack and deployment guide](docs/HETZNER_DEPLOYMENT.md)
+and `DEPLOYMENT_TARGET.md`. The stack includes a private database and hardened TLS
+proxy, with a read-only preflight and isolated HTTPS/session rehearsal. Complete
+infrastructure, secrets, DNS/ACME, database migration, backup, monitoring and rollback
+acceptance before cutover. Configuration and synthetic tests do not prove an
+actual hosted deployment or approve opening registration.
