@@ -188,6 +188,13 @@ These are not 70 working integrations or a complete worldwide list. Regional
 supplements cover multiple ecosystems; geographic, native-language and
 membership-only gaps remain.
 
+Latest regional recheck: [Australia/New Zealand/Pacific](docs/PLATFORM_OCEANIA_REVIEW_2026-10-23.md).
+It improves the existing Antler programme record's Australian search/evidence;
+it does not add a dedicated matcher or expand action permissions. Lineup and
+other unresolved leads remain held. Source lookup also now refuses ambiguous
+labels, hosts and duplicate/reserved identities instead of silently choosing a
+record; the current 70-source catalogue has no observed collisions.
+
 Latest source increment: [CoFounder Match / Spain review](docs/PLATFORM_SPAIN_REVIEW_2026-10-23.md).
 It adds a separate Spanish-language discovery-only route. Advertised free core
 features are not verified account access; collection/contact consent and all

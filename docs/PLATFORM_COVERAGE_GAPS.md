@@ -1,5 +1,12 @@
 # Worldwide discovery coverage: evidence and open work
 
+October 23 Oceania recheck: [Australia/New Zealand/Pacific review](PLATFORM_OCEANIA_REVIEW_2026-10-23.md)
+enriches the existing Antler investment-programme record with Australian city
+search and dated co-founder formation evidence. It is not an independent matcher,
+new record, admission grant or free matching entitlement. Lineup's homepage is
+now readable, but the observed policy routes return homepage text; its hold and
+other unresolved leads remain. The dedicated ANZ/Pacific gap is not closed.
+
 October 23 Spain increment: [CoFounder Match review](PLATFORM_SPAIN_REVIEW_2026-10-23.md)
 adds a separate Spanish-language discovery-only service. Free core features are
 advertised, not account-tested. It does not resolve held Spanish/LatAm brands,

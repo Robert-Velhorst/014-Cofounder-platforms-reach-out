@@ -1242,19 +1242,23 @@ const sources: ReviewedSource[] = [
     category: "program",
     aliases: ["Antler MENAP", "MENAP", "Antler Dubai", "Antler Riyadh"],
     audience:
-      "Early-stage founders across continents. MENAP route: Dubai / UAE / United Arab Emirates and Riyadh / Saudi Arabia / Middle East; regional venture focus required.",
+      "Early-stage founders across continents. Australia: Sydney, Melbourne and Brisbane co-founder formation within a selected investment residency, not a standalone matching marketplace. MENAP route: Dubai / UAE / United Arab Emirates and Riyadh / Saudi Arabia / Middle East; regional venture focus required.",
     access:
-      "Location-specific selection. MENAP describes a full-time, in-person 10-week residency for individuals or teams; visa arrangements are the founder's responsibility, without sponsorship. Current cohort dates and account access untested.",
+      "Location-specific selection. Australia advertises an eight-week full-time residency; solo entrants may form teams, but investment is for teams. As reviewed 2026-10-23, the cohort page lists 8 February 2027 for Brisbane/Sydney/Melbourne: a start date, not an application deadline or admission guarantee. Australian foreign-applicant/visa eligibility and account access untested. MENAP describes a full-time, in-person 10-week residency for individuals or teams; visa arrangements are the founder's responsibility, without sponsorship. Other cohort dates and account access untested.",
     pricingStatus: "investment-terms",
     pricing:
-      "MENAP advertises no residency fee, but investment is selective and equity-bearing, not guaranteed. Travel/living costs and signed terms need review. Other locations may differ.",
+      "Australia's 7 April 2026 article advertises AU$260,000 for 12% equity for selected backed teams, not guaranteed funding or free matching. Australian fees, travel/living costs and current signed terms unverified. MENAP advertises no residency fee, but investment is selective and equity-bearing, not guaranteed. Travel/living costs and signed terms need review. Other locations may differ.",
     restrictions:
-      "MENAP discovery evidence does not expand existing manual workflow review or grant collection/contact rights. No visa, funding or application commitment; API and live access unverified.",
+      "Regional discovery evidence does not expand existing manual workflow review or grant collection/contact rights. MENAP no-fee/visa statements do not apply automatically to Australia. The global privacy page names Antler Innovation Pte Ltd and associates, but the Australian contracting entity and participation terms remain unresolved; its displayed update date is 11 December 2020. No visa, funding or application commitment; API and live access unverified.",
     evidence: [
       "https://www.antler.co/",
       "https://www.antler.co/location/menap",
+      "https://www.antler.co/location/australia",
+      "https://www.antler.co/cohort-start-dates",
+      "https://www.antler.co/blog/behind-the-scenes-a-look-inside-antlers-residency-in-australia",
+      "https://www.antler.co/legal/privacy-policy",
     ],
-    reviewedAt: "2026-10-02",
+    reviewedAt: "2026-10-23",
   },
   {
     id: "startup-weekend",

@@ -1,5 +1,36 @@
 # Worldwide public beta delivery ledger
 
+## October 23 source identity guard and Oceania recheck — unqualified candidate
+
+The [source identity guard](SECURITY.md#october-23-source-identity-ambiguity-guard--bounded-source-evidence)
+refuses ambiguous labels/hosts and duplicate/reserved IDs instead of inheriting
+first/last-record admission. The real catalogue has no observed collisions and
+599 enumerated existing decisions retain an identical before/after digest.
+All 14 new ambiguity cases pass; substituting the actual old policy only in
+memory makes seven fail, while the seven compatible controls still pass.
+
+The [Oceania primary-source review](PLATFORM_OCEANIA_REVIEW_2026-10-23.md) does not
+justify a new dedicated listing. Independently re-read Antler evidence instead
+enriches its existing `program` record with Australia/Sydney/Melbourne/Brisbane
+discovery, dated advertised cohort/investment details and unresolved contract/
+fee/eligibility limits. MENAP was rechecked without exporting its no-fee/visa
+terms to Australia. The served global privacy page's 2020 update date is explicit.
+No new action alias, record, account, integration or collection/contact permission
+is added; counts remain 70 total, 23 manual-reviewed and 47 discovery-only.
+Lineup and other unresolved leads stay held. Search is not member acceptance.
+
+All 69 focused actual-module cases across ambiguity, existing source policy,
+Spain and six new Oceania cases pass. Four Australian search queries are added
+to the existing browser catalogue stage, not substituted for any of the 34
+required stages or cold probes. A checked-in-source repeat also passes all 69;
+scoped strict TypeScript 6.0.3 over the three production policy/catalogue roots
+returns zero diagnostics, not a full application typecheck. All 232 native
+checks pass with zero failures/skips (9,379.5577 ms). Both source inventories were
+regenerated and compared: the API inventory is unchanged; only two UI input
+hashes and its aggregate digest changed, not any of the 230 UI actions or counts.
+Full exact-head build/database/browser/scan and
+provider/member/hosted acceptance remain unqualified; no phase is promoted.
+
 ## October 23 connected account-request candidate — not yet executed
 
 Four mandatory stages now extend the original 24 workflow and six onboarding

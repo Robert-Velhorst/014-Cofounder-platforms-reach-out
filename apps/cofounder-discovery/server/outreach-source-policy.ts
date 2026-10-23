@@ -27,16 +27,40 @@ const RECEIPT_LIFETIME_MS = 30 * 24 * 60 * 60 * 1000;
 const sources = publicPlatformCatalogue();
 const normalize = (value: string) => value.trim().toLowerCase();
 const normalizeHost = (value: string) => value.replace(/^www\./, "");
-const labels = new Map<string, string>();
+// Catalogue growth must not silently select the first host or last label.
+// Same-source aliases are harmless; identities shared by different sources
+// remain unresolved until a separate, explicit source-scope review.
+function registerIdentity(
+  index: Map<string, string | null>,
+  key: string,
+  sourceId: string
+) {
+  if (!index.has(key)) index.set(key, sourceId);
+  else if (index.get(key) !== sourceId) index.set(key, null);
+}
+const labels = new Map<string, string | null>();
+const hosts = new Map<string, string | null>();
+const seenIds = new Set<string>();
+const ambiguousIds = new Set<string>();
 for (const source of sources) {
+  if (seenIds.has(source.id) || ["manual", "f6s"].includes(source.id))
+    ambiguousIds.add(source.id);
+  seenIds.add(source.id);
   for (const label of [source.id, source.name, ...source.aliases]) {
-    labels.set(normalize(label), source.id);
+    registerIdentity(labels, normalize(label), source.id);
   }
+  registerIdentity(
+    hosts,
+    normalizeHost(new URL(source.url).hostname),
+    source.id
+  );
 }
 // Internal legacy ID, not a new public alias or a claim about HN.
-labels.set("ycombinator", "yc-cofounder");
-labels.set("f6s", "f6s");
-labels.set("manual", "manual");
+registerIdentity(labels, "ycombinator", "yc-cofounder");
+registerIdentity(labels, "f6s", "f6s");
+registerIdentity(labels, "manual", "manual");
+registerIdentity(hosts, "f6s.com", "f6s");
+registerIdentity(hosts, "starthawk.io", "foundercloud");
 
 function denied(
   reason: string,
@@ -47,17 +71,13 @@ function denied(
 
 function sourceForUrl(url: URL): string | undefined {
   const host = normalizeHost(url.hostname);
-  if (host === "f6s.com") return "f6s";
-  if (host === "starthawk.io") return "foundercloud";
-  const source = sources.find(
-    row => normalizeHost(new URL(row.url).hostname) === host
-  );
+  const sourceId = hosts.get(host);
   if (
-    source?.id === "reddit-cofounder" &&
+    sourceId === "reddit-cofounder" &&
     !/^\/r\/cofounder(?:\/|$)/i.test(url.pathname)
   )
     return undefined;
-  return source?.id;
+  return sourceId ?? undefined;
 }
 
 /**
@@ -106,6 +126,11 @@ export function resolveOutreachSource(
   if (!sourceId)
     return denied(
       "Choose a reviewed source, or explicit manual contact without a platform URL."
+    );
+  if (ambiguousIds.has(sourceId))
+    return denied(
+      "This source identity is ambiguous. Separate source review is required before importing candidates or preparing outreach.",
+      sourceId
     );
   if (sourceId === "f6s")
     return denied(

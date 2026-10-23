@@ -740,7 +740,7 @@ describe("published platform catalogue", () => {
     ).toEqual(["tech-talents-match"]);
     expect(
       filterPlatforms(records, "Australia", "program").map((row: any) => row.id)
-    ).toEqual(["startmate-anz"]);
+    ).toEqual(["antler", "startmate-anz"]);
     expect(
       filterPlatforms(records, "India", "program").map((row: any) => row.id)
     ).toContain("entrepreneurs-first");

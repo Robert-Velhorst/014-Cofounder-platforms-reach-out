@@ -1,5 +1,34 @@
 # Security
 
+## October 23 source identity ambiguity guard — bounded source evidence
+
+The current 70-source catalogue was enumerated with no normalized label/alias or
+canonical-host collisions. This is preventive growth hardening, not a claim of
+an exploited current bypass. Previously source lookup silently used the last
+label and first hostname; future conflicting records could inherit one row's
+manual-workflow admission. A synthetic-catalogue negative control against the
+actual prior policy reproduced seven failures out of 14 new regression cases.
+The old policy was substituted only in memory; no checked-in source was changed
+by that control.
+
+The production resolver now keeps conflicting labels/hosts unresolved regardless
+of record order or later collisions. Duplicate source IDs and attempts to claim
+reserved `manual`/`f6s` IDs also refuse action. Reserved labels and the legacy
+StartHawk hostname participate in collision detection rather than overriding a
+catalogue record. Repeated same-source aliases remain usable. F6S/channel holds,
+Reddit's exact community scope, human-original declarations and body/owner/
+destination/expiry checks retain their existing behavior. No action permission
+or provider/API capability is added.
+
+All 14 new ambiguity cases and the existing source-policy/Spain suites passed.
+Before and after the guard, 599 enumerated current-catalogue resolutions (labels,
+names, aliases, canonical URLs and bounded reserved/legacy probes) had identical
+SHA-256 `49e575284c9a1b27290488eb4f71e5531e12fab61b9a42216c2d00b6995ecdc6`.
+This is a finite behavior comparison, not all-input or endpoint/database proof.
+Synthetic catalogue tests exercise the actual policy with an explicit data double;
+they do not authorize providers or close full exact-head CI/CodeQL, connected
+workflow, browser or production acceptance. No security alert is suppressed.
+
 ## October 23 frontend admission candidate — full CI/CodeQL pending
 
 Read-only GitHub queries returned zero open Dependabot and secret-scanning alerts,

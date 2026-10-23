@@ -516,6 +516,10 @@ async function stage(name, run) {
             "https://parallel18.com/",
           ],
           ["Xpand", "Parallel18 (Puerto Rico)", "https://parallel18.com/"],
+          ["Antler Australia", "Antler", "https://www.antler.co/"],
+          ["Antler Sydney", "Antler", "https://www.antler.co/"],
+          ["Antler Melbourne", "Antler", "https://www.antler.co/"],
+          ["Antler Brisbane", "Antler", "https://www.antler.co/"],
         ]) {
           await search.fill(query);
           await section
