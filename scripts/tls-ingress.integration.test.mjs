@@ -282,6 +282,59 @@ test(
         "--mount",
         `type=bind,source=${join(directory, name)},target=${target},readonly`,
       ];
+      // Inspect only aggregate account scope inside this owned empty database.
+      // The application's container never receives the administrator password.
+      const rootScope = docker(
+        "exec",
+        dbId,
+        "bash",
+        "-ec",
+        "MYSQL_PWD=\"$(cat /run/secrets/mysql_root_password)\" mysql --no-defaults --protocol=socket --user=root --batch --skip-column-names --execute=\"SELECT COUNT(*), SUM(Host='localhost'), SUM(Host<>'localhost') FROM mysql.user WHERE User='root'\"",
+      );
+      assert.equal(
+        rootScope,
+        "1\t1\t0",
+        "fresh_database_root_must_be_local_only",
+      );
+      console.log(
+        JSON.stringify({
+          event: "tls_root_scope_verified",
+          localRootAccounts: 1,
+          remoteRootAccounts: 0,
+        }),
+      );
+      // Independent client shares only the app's isolated network namespace.
+      // First prove the route/authentication with the schema user; only explicit
+      // root authentication/host rejection counts, never a DNS/connection error.
+      const rootRefusal = docker(
+        "run",
+        "--rm",
+        ...bounds,
+        "--network",
+        `container:${models.get("app").Id}`,
+        ...mount("mysql-password", "/qa/app-password"),
+        ...mount("root-password", "/qa/root-password"),
+        "--tmpfs",
+        "/var/lib/mysql:rw,noexec,nosuid,size=1m,uid=1000,gid=1000,mode=0700",
+        "--entrypoint",
+        "bash",
+        database,
+        "-ec",
+        `MYSQL_PWD="$(cat /qa/app-password)" mysql --no-defaults --host=database --protocol=TCP --connect-timeout=3 --user=cofounder cofounder_test --execute="SELECT 1" >/dev/null 2>&1 || exit 31
+if rejected="$(MYSQL_PWD="$(cat /qa/root-password)" mysql --no-defaults --host=database --protocol=TCP --connect-timeout=3 --user=root cofounder_test --execute="SELECT 1" 2>&1)"; then exit 32; fi
+case "$rejected" in
+  *"ERROR 1045 (28000)"*|*"ERROR 1130 (HY000)"*) printf '%s' 'root_remote_access_refused' ;;
+  *) exit 33 ;;
+esac`,
+      );
+      assert.equal(rootRefusal, "root_remote_access_refused");
+      console.log(
+        JSON.stringify({
+          event: "tls_root_network_refused",
+          schemaUserReachable: true,
+          rootLoginRefused: true,
+        }),
+      );
       function probe(mode, namespace) {
         const mounts = [
           ...mount("probe.mjs", "/app/synthetic-tls-ingress.mjs"),

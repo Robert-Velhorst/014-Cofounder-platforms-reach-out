@@ -127,6 +127,19 @@ For existing MySQL data, changing an initialization password file does not rotat
 the existing database account. Perform a reviewed credential rotation with its
 corresponding URL, connection lifecycle, recovery and rollback checks instead.
 
+Fresh initialization explicitly sets `MYSQL_ROOT_HOST=localhost`, avoiding the
+official entrypoint's default remote-root account. This is not a grant repair for
+an existing data directory. Inventory and separately approve any existing remote
+administrator access before migration; do not infer its removal from a new
+environment value. The [official image entrypoint](https://github.com/docker-library/mysql/blob/master/innovation/docker-entrypoint.sh)
+and [initialization documentation](https://hub.docker.com/_/mysql) distinguish
+initial setup from already initialized data. The maintained synthetic rehearsal
+checks aggregate root-account scope locally, then proves ordinary schema-user
+connectivity and explicit root-login refusal from the application-side network.
+It supplies the administrator file only to an independent short-lived test client,
+never to the application. Actual execution on the selected pinned image remains
+required; native configuration checks alone do not prove these account properties.
+
 ## Local validation before an authorized start
 
 Provide these non-secret environment values through the approved host mechanism:

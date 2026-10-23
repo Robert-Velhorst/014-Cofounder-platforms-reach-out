@@ -301,6 +301,7 @@ test("Hetzner stack exposes only the edge and isolates private application/datab
     ],
   );
   assert.equal(app.environment.TRUST_PROXY, "true");
+  assert.equal(database.environment.MYSQL_ROOT_HOST, "localhost");
   assert.equal(
     app.environment.PUBLIC_ORIGIN,
     `https://${edge.environment.PUBLIC_HOSTNAME}`,

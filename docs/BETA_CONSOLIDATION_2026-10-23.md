@@ -47,6 +47,14 @@ required. Earlier green main and partial/failed PR runs retain their source scop
 
 ## Remaining release conditions
 
+Subsequent fresh-database hardening explicitly sets `MYSQL_ROOT_HOST=localhost`.
+The unchanged 182 root native cases passed again in 9,850.0765 ms. The maintained
+synthetic rehearsal now also checks aggregate root-account scope inside its own
+database, verifies ordinary schema-user connectivity from the app-side namespace,
+and accepts only explicit root authentication/host rejection there. No real
+database account was changed. These actual MySQL probes still await execution on
+the selected pinned image; native configuration success does not prove them.
+
 Keep this candidate draft until its exact head passes the complete maintained
 workflow and substantive receipts are reviewed. Merge normally against the pinned
 head under Robert's existing consolidation authority, preserving source histories.

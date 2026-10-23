@@ -40,6 +40,8 @@ services:
       MYSQL_USER: cofounder
       MYSQL_PASSWORD_FILE: /run/secrets/mysql_password
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      # Fresh initialization only; never create a network-accessible root account.
+      MYSQL_ROOT_HOST: localhost
       MYSQL_INITDB_SKIP_TZINFO: "1"
     secrets: [mysql_password, mysql_root_password]
     healthcheck:
