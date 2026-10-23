@@ -21,7 +21,7 @@
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-          "line": 15,
+          "line": 17,
           "hook": "useQuery",
           "reachableFromApp": true
         }
@@ -57,7 +57,7 @@
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-          "line": 24,
+          "line": 26,
           "hook": "useMutation",
           "reachableFromApp": true
         }
@@ -75,7 +75,7 @@
       "clientHooks": [
         {
           "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-          "line": 28,
+          "line": 30,
           "hook": "useMutation",
           "reachableFromApp": true
         }
@@ -2656,7 +2656,7 @@
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-      "sha256": "fcd9d6ee7c3540c03826f8a4aeacb9de59eacfafbf7d04f79b5dccbf36ff739c"
+      "sha256": "c2908f1b10399b485798a7c736540179f06460db6a33f1b9ac9ca3b747500aaa"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/AdminSecurityPanel.tsx",
@@ -3259,5 +3259,5 @@
       "sha256": "8fc8134b60025ffa401508f9ea0030e12b595c09200da78db8c1d307e6e8147c"
     }
   ],
-  "inputDigest": "3a01f6cb36391385554c3117896672f5b8ff60c188c3b34c1f4aa58781768099"
+  "inputDigest": "3827f57b84bc9294d4dd42e080f3e4aac9dc09b48d3da181f6a9031725cb76f6"
 }

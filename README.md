@@ -41,6 +41,12 @@ The [capture-accounting repair](docs/MAINTAINED_BROWSER_JOURNEY.md#capture-accou
 also refuses failed or unfinished static requests rather than silently omitting
 them from a successful response list. Its native regressions are not browser acceptance.
 
+The account-deletion request panel now follows the English/Dutch language choice,
+including review/withdrawal states and warnings. It records a request for operator
+review, not completed erasure. Focused server-rendered markup tests cover its
+initial safeguards; connected browser, database and actual erasure acceptance
+are separate and remain unqualified. See the [delivery ledger](docs/PUBLIC_BETA_DELIVERY.md#october-23-account-deletion-request-language--markup-evidence-only).
+
 The [workload evidence and limits](docs/CUSTOMER_LOAD_ACCEPTANCE.md) describe the
 100-account/10,000-candidate rehearsal, including successful 150-request/second
 scheduled acceptance. This is bounded CI evidence, not a service-level guarantee,

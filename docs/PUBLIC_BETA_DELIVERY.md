@@ -1,5 +1,34 @@
 # Worldwide public beta delivery ledger
 
+## October 23 account-deletion request language — markup evidence only
+
+The existing account-deletion request panel now follows the current English/Dutch
+selection for controls, review/withdrawal states, warnings and date formatting.
+Service errors retain their original English text with an explicit language
+annotation and translated label. This is request intake held for operator review,
+not erasure, account suspension, an email send or a promised completion date.
+
+The canonical wire confirmation, owner checks, keyed account boundary, retry keys,
+revision handling, password clearing and five-attempt/15-minute quota remain in
+place. No backend, schema, worker, intake flag or production configuration changed.
+All 15 new actual-panel/shared-UI server-rendered cases and four existing account
+export cases passed using Node 26.12.0 and the locked React 19.3.1 dependencies.
+Hooks are explicit doubles; tests cover both languages, all three request states,
+intake-off pending withdrawal, blocked/stale/refreshing accounts, initially
+unchecked/disabled controls and escaped original errors. They do not execute
+form submission, authentication, database transitions or browser interactions.
+
+Both source-derived inventories were regenerated and reviewed: only the panel's
+hash, hook/action positions and derived digests changed. Totals remain 165 API
+operations, 58 default-admitted/107 denied, and 230 UI actions over 151 files.
+The existing maintained browser remains the original 24+6 stages followed by
+cold-asset probes; no connected deletion-request language journey was added or
+claimed. All 227 native checks also passed, zero failures/skips (9,751.0091 ms),
+including current-source equality for both inventories.
+Full exact-head CI/typecheck/build/database/browser/security acceptance
+remains pending. All original phases remain Partial; this is a publication
+checkpoint, not production readiness.
+
 ## October 23 cold-capture accounting repair — not browser acceptance
 
 The [capture correction](MAINTAINED_BROWSER_JOURNEY.md#capture-accounting-correction--unqualified-source-repair)

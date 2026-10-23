@@ -8,7 +8,7 @@
     "navigationElements": 26,
     "spreadActionElements": 5
   },
-  "apiInputDigest": "3a01f6cb36391385554c3117896672f5b8ff60c188c3b34c1f4aa58781768099",
+  "apiInputDigest": "3827f57b84bc9294d4dd42e080f3e4aac9dc09b48d3da181f6a9031725cb76f6",
   "apiReferences": [
     {
       "operation": "auth.me",
@@ -31,19 +31,19 @@
     {
       "operation": "accountData.deletionStatus",
       "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-      "line": 15,
+      "line": 17,
       "hook": "useQuery"
     },
     {
       "operation": "accountData.requestDeletion",
       "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-      "line": 24,
+      "line": 26,
       "hook": "useMutation"
     },
     {
       "operation": "accountData.withdrawDeletion",
       "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-      "line": 28,
+      "line": 30,
       "hook": "useMutation"
     },
     {
@@ -350,7 +350,7 @@
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-      "sha256": "fcd9d6ee7c3540c03826f8a4aeacb9de59eacfafbf7d04f79b5dccbf36ff739c"
+      "sha256": "c2908f1b10399b485798a7c736540179f06460db6a33f1b9ac9ca3b747500aaa"
     },
     {
       "path": "apps/cofounder-discovery/client/src/components/AdminSecurityPanel.tsx",
@@ -941,7 +941,7 @@
       "sha256": "8fc8134b60025ffa401508f9ea0030e12b595c09200da78db8c1d307e6e8147c"
     }
   ],
-  "inputDigest": "68b0258e70c0f308a4bf8783251a3aa0a1deb6ed54d2960319a56af182fff104",
+  "inputDigest": "dc59da87639f35d8724ec19a9d18fda4488f0c8a169833e2ddd1aa324f6af3d2",
   "actions": [
     {
       "source": "apps/cofounder-discovery/client/src/App.tsx",
@@ -1006,7 +1006,7 @@
     },
     {
       "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-      "line": 193,
+      "line": 234,
       "tag": "Button",
       "events": [
         "onClick"
@@ -1019,7 +1019,7 @@
     },
     {
       "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-      "line": 207,
+      "line": 270,
       "tag": "form",
       "events": [
         "onSubmit"
@@ -1032,7 +1032,7 @@
     },
     {
       "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-      "line": 212,
+      "line": 278,
       "tag": "Input",
       "events": [
         "onChange"
@@ -1045,7 +1045,7 @@
     },
     {
       "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-      "line": 222,
+      "line": 288,
       "tag": "input",
       "events": [
         "onChange"
@@ -1058,7 +1058,7 @@
     },
     {
       "source": "apps/cofounder-discovery/client/src/components/AccountDeletionRequest.tsx",
-      "line": 240,
+      "line": 312,
       "tag": "Button",
       "events": [],
       "navigation": false,
