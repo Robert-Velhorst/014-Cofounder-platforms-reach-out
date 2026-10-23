@@ -86,6 +86,7 @@ const operators = [
   "test:monitor",
   "test:recovery",
   "test:production-config",
+  "test:hetzner-config",
   "test:release-contract",
   "test:requirements",
   "test:support",
@@ -196,6 +197,7 @@ test("all-tests command runs local gates before mandatory database/recovery acce
     "pnpm test:runtime-startup:integration",
     "pnpm test:authentication-admission:integration",
     "pnpm test:customer-load:integration",
+    "pnpm test:tls-ingress:integration",
   ]);
 });
 test("every root integration fixture runs exactly once locally and in CI", () => {

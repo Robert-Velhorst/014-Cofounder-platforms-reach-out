@@ -58,6 +58,7 @@ jobs:
       - run: pnpm test:recovery
       - run: pnpm test:monitor
       - run: pnpm test:production-config
+      - run: pnpm test:hetzner-config
       - run: pnpm test:support
       - run: pnpm test:release-inventory
       - run: pnpm --dir apps/cofounder-discovery test:unit
@@ -69,11 +70,15 @@ jobs:
         run: docker build --target integration-test --tag cofounder-recovery-test:local .
       - name: Build recovery rehearsal production runtime
         run: docker build --target runtime --tag cofounder-recovery-runtime:local .
+      - name: Build the reviewed Hetzner TLS edge
+        run: docker build --file Dockerfile.hetzner-edge --tag cofounder-hetzner-edge:local .
       - run: pnpm test:recovery:integration
       - run: pnpm test:runtime-startup:integration
       - run: pnpm test:authentication-admission:integration
       - name: Qualify the complete synthetic customer workload
         run: pnpm test:customer-load:integration
+      - name: Verify actual HTTPS ingress and session boundaries
+        run: pnpm test:tls-ingress:integration
       - run: pnpm audit --prod --audit-level high
 
   container-smoke:

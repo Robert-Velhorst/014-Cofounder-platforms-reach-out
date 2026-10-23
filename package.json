@@ -10,9 +10,9 @@
     "build": "pnpm --dir apps/cofounder-discovery build",
     "start": "pnpm --dir apps/cofounder-discovery start",
     "check": "pnpm --dir apps/cofounder-discovery check",
-    "test": "pnpm test:release-contract && pnpm test:requirements && pnpm test:api-audit && pnpm test:ui-audit && pnpm test:budget && pnpm test:monitor && pnpm test:recovery && pnpm test:production-config && pnpm test:support && pnpm test:release-inventory && pnpm --dir apps/cofounder-discovery test:unit",
+    "test": "pnpm test:release-contract && pnpm test:requirements && pnpm test:api-audit && pnpm test:ui-audit && pnpm test:budget && pnpm test:monitor && pnpm test:recovery && pnpm test:production-config && pnpm test:hetzner-config && pnpm test:support && pnpm test:release-inventory && pnpm --dir apps/cofounder-discovery test:unit",
     "test:integration": "pnpm --dir apps/cofounder-discovery test:integration",
-    "test:all": "pnpm test && pnpm test:integration && pnpm test:readiness:integration && pnpm test:recovery:integration && pnpm test:runtime-startup:integration && pnpm test:authentication-admission:integration && pnpm test:customer-load:integration",
+    "test:all": "pnpm test && pnpm test:integration && pnpm test:readiness:integration && pnpm test:recovery:integration && pnpm test:runtime-startup:integration && pnpm test:authentication-admission:integration && pnpm test:customer-load:integration && pnpm test:tls-ingress:integration",
     "db:migrate": "pnpm --dir apps/cofounder-discovery db:migrate",
     "doctor": "pnpm --dir apps/cofounder-discovery doctor",
     "verify": "pnpm --dir apps/cofounder-discovery verify",
@@ -36,7 +36,10 @@
     "test:authentication-admission:integration": "node --test scripts/authentication-admission.integration.test.mjs",
     "test:runtime-startup:integration": "node --test scripts/runtime-startup.integration.test.mjs",
     "test:readiness:integration": "node --test scripts/database-readiness.integration.test.mjs",
-    "test:customer-load:integration": "node --test scripts/customer-load.integration.test.mjs"
+    "test:customer-load:integration": "node --test scripts/customer-load.integration.test.mjs",
+    "test:hetzner-config": "node --test scripts/hetzner-config.test.mjs",
+    "hetzner:preflight": "node scripts/hetzner-preflight.mjs",
+    "test:tls-ingress:integration": "node --test scripts/tls-ingress.integration.test.mjs"
   },
   "engines": {
     "node": ">=26.12.0 <27"

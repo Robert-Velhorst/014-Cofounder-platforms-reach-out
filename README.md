@@ -450,6 +450,9 @@ replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
 | `pnpm test:integration`           | Mandatory dedicated-database suites; build first                                                            |
 | `pnpm test:all`                   | Root/unit/database checks plus readiness, recovery, startup, admission and the complete customer workload |
 | `pnpm test:customer-load:integration` | Full packaged synthetic read/write/race/isolation and scheduled-arrival acceptance; local images required |
+| `pnpm test:hetzner-config` | Read-only private-stack model and preflight checks |
+| `pnpm hetzner:preflight` | Validate reviewed Hetzner inputs and the Compose model without starting services |
+| `pnpm test:tls-ingress:integration` | Real TLS/session/forwarding rehearsal using the isolated Hetzner stack and synthetic data |
 | `pnpm requirements:check`         | Phase/title/evidence-path integrity, not completion                                                         |
 | `pnpm audit:api`, `pnpm audit:ui` | Source inventories, not behavioral acceptance                                                               |
 | `pnpm doctor`                     | Runtime configuration diagnostics                                                                           |
@@ -616,4 +619,10 @@ Third-party notices and service terms need separate review. See
 
 ## Deployment target
 
-Public deployment targets Hetzner. The local tunnel launcher is retired. Follow `DEPLOYMENT_TARGET.md` and complete infrastructure, secrets, DNS/TLS, database migration, backup, monitoring and rollback acceptance before cutover. Local checks do not prove a hosted deployment.
+Public deployment targets Hetzner. The local tunnel launcher is retired. Follow
+[the concrete Hetzner stack and deployment guide](docs/HETZNER_DEPLOYMENT.md)
+and `DEPLOYMENT_TARGET.md`. The stack includes a private database and hardened TLS
+proxy, with a read-only preflight and isolated HTTPS/session rehearsal. Complete
+infrastructure, secrets, DNS/ACME, database migration, backup, monitoring and rollback
+acceptance before cutover. Configuration and synthetic tests do not prove an
+actual hosted deployment or approve opening registration.
