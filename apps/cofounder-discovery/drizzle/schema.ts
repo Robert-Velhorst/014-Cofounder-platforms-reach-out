@@ -10,7 +10,9 @@ import {
   float,
   index,
   unique,
+  type AnyMySqlColumn,
 } from "drizzle-orm/mysql-core";
+import type { ImportProvenance } from "../shared/import-declaration";
 
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
@@ -24,8 +26,13 @@ export const users = mysqlTable("users", {
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
   emailVerified: int("emailVerified").default(0).notNull(),
+  // Internal deletion preparation fence; not proof or authorization of erasure.
+  deletionFencedAt: timestamp("deletion_fenced_at"),
   verificationToken: varchar("verificationToken", { length: 64 }),
   verificationTokenExpiry: timestamp("verificationTokenExpiry"),
+  verificationEmailDigest: varchar("verification_email_digest", { length: 64 }),
+  passwordResetToken: varchar("password_reset_token", { length: 64 }).unique(),
+  passwordResetTokenExpiry: timestamp("password_reset_token_expiry"),
 
   // Connected Accounts
   linkedinId: varchar("linkedin_id", { length: 255 }),
@@ -47,6 +54,160 @@ export const users = mysqlTable("users", {
   notifyMessages: int("notify_messages").default(1).notNull(),
   weeklySummaryEnabled: int("weekly_summary_enabled").default(1).notNull(),
 });
+
+// One bounded settings document per owner. Revision serializes edits across tabs.
+export const workspacePresets = mysqlTable("workspace_presets", {
+  userId: int("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  revision: int("revision").notNull(),
+  settings: json("settings")
+    .$type<import("../shared/workspace-presets").PresetSettings>()
+    .notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const accountSessions = mysqlTable(
+  "account_sessions",
+  {
+    tokenDigest: varchar("token_digest", { length: 64 }).primaryKey(),
+    userId: int("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    expiresAt: timestamp("expires_at").notNull(),
+    adminVerifiedUntil: timestamp("admin_verified_until"),
+  },
+  table => [
+    index("account_sessions_user_idx").on(table.userId),
+    index("account_sessions_expiry_idx").on(table.expiresAt),
+  ]
+);
+
+export const accountMailQuotas = mysqlTable(
+  "account_mail_quotas",
+  {
+    key: varchar("quota_key", { length: 64 }).primaryKey(),
+    used: int("used").notNull().default(0),
+    expiresAt: timestamp("expires_at").notNull(),
+  },
+  table => [index("account_mail_quotas_expiry_idx").on(table.expiresAt)]
+);
+
+// One security-state row per administrator; one outstanding ceremony per account.
+export const adminMfaState = mysqlTable("admin_mfa_state", {
+  userId: int("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  userHandle: varchar("user_handle", { length: 86 }).notNull(),
+  attempts: int("attempts").notNull().default(0),
+  attemptWindowExpiresAt: timestamp("attempt_window_expires_at").notNull(),
+  bootstrapDigest: varchar("bootstrap_digest", { length: 64 }),
+  bootstrapExpiresAt: timestamp("bootstrap_expires_at"),
+  challengeId: varchar("challenge_id", { length: 36 }),
+  challenge: varchar("challenge", { length: 43 }),
+  purpose: mysqlEnum("purpose", ["bootstrap", "enroll", "authenticate"]),
+  sessionDigest: varchar("session_digest", { length: 64 }),
+  origin: varchar("origin", { length: 512 }),
+  challengeExpiresAt: timestamp("challenge_expires_at"),
+});
+
+export const adminPasskeys = mysqlTable(
+  "admin_passkeys",
+  {
+    keyId: varchar("key_id", { length: 36 }).primaryKey(),
+    credentialDigest: varchar("credential_digest", { length: 64 })
+      .notNull()
+      .unique(),
+    userId: int("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    credentialId: text("credential_id").notNull(),
+    publicKey: text("public_key").notNull(),
+    counter: int("counter", { unsigned: true }).notNull().default(0),
+    label: varchar("label", { length: 80 }).notNull(),
+    transports: json("transports").$type<string[]>(),
+    deviceType: varchar("device_type", { length: 16 }).notNull(),
+    backedUp: boolean("backed_up").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    lastUsedAt: timestamp("last_used_at"),
+  },
+  table => [index("admin_passkeys_owner_idx").on(table.userId)]
+);
+
+/** Shared auth admission; never contains passwords, reset links or raw identities. */
+export const loginAttemptQuotas = mysqlTable(
+  "login_attempt_quotas",
+  {
+    key: varchar("quota_key", { length: 64 }).primaryKey(),
+    used: int("used").notNull().default(0),
+    expiresAt: timestamp("expires_at").notNull(),
+  },
+  table => [index("login_attempt_quotas_expiry_idx").on(table.expiresAt)]
+);
+
+/** Durable sensitive-export attempt window, including failed reauthentication. */
+export const accountExportQuotas = mysqlTable("account_export_quotas", {
+  userId: int("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  attempts: int("attempts").notNull().default(0),
+  expiresAt: timestamp("expires_at").notNull(),
+});
+
+// One bounded intake/status row per account, including failed confirmation attempts.
+// This is a review request, not an erasure authorization or completion receipt.
+export const accountDeletionRequests = mysqlTable("account_deletion_requests", {
+  userId: int("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  requestKey: varchar("request_key", { length: 36 }),
+  status: mysqlEnum("status", ["none", "pending_review", "withdrawn"])
+    .notNull()
+    .default("none"),
+  revision: int("revision").notNull().default(0),
+  requestedAt: timestamp("requested_at"),
+  withdrawnAt: timestamp("withdrawn_at"),
+  attempts: int("attempts").notNull().default(0),
+  attemptWindowExpiresAt: timestamp("attempt_window_expires_at").notNull(),
+});
+
+// Transaction mutexes only: counts come from retained records, not resettable
+// counters. All application writers must acquire the matching resource lock.
+export const capacityLocks = mysqlTable("capacity_locks", {
+  resource: varchar("resource", { length: 32 }).primaryKey(),
+});
+
+export const accountMailJobs = mysqlTable(
+  "account_mail_jobs",
+  {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    quotaKey: varchar("quota_key", { length: 64 }).notNull(),
+    kind: mysqlEnum("kind", ["password_reset", "password_changed"]).notNull(),
+    payload: text("payload"),
+    userId: int("user_id").references(() => users.id, { onDelete: "cascade" }),
+    state: mysqlEnum("state", [
+      "queued",
+      "sending",
+      "accepted",
+      "discarded",
+      "failed",
+    ])
+      .notNull()
+      .default("queued"),
+    availableAt: timestamp("available_at").notNull().defaultNow(),
+    expiresAt: timestamp("expires_at").notNull(),
+    leaseUntil: timestamp("lease_until"),
+    attempts: int("attempts").notNull().default(0),
+    providerId: varchar("provider_id", { length: 255 }),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  table => [
+    index("account_mail_jobs_ready_idx").on(table.state, table.availableAt),
+    index("account_mail_jobs_quota_idx").on(table.quotaKey),
+    index("account_mail_jobs_expiry_idx").on(table.expiresAt),
+  ]
+);
 
 export const userProfiles = mysqlTable("user_profiles", {
   id: int("id").autoincrement().primaryKey(),
@@ -85,122 +246,135 @@ export const userProfiles = mysqlTable("user_profiles", {
 
   // Metadata
   completeness: int("completeness").default(0),
-  isPublic: boolean("is_public").default(true),
+  isPublic: boolean("is_public").default(false),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
 });
 
-export const prospects = mysqlTable("prospects", {
-  id: int("id").autoincrement().primaryKey(),
-  // Nullable only so pre-hardening rows can be quarantined during migration.
-  // Every application-created prospect is required to carry an owner.
-  userId: int("user_id").references(() => users.id),
-  name: varchar("name", { length: 255 }).notNull(),
-  title: varchar("title", { length: 255 }),
-  location: varchar("location", { length: 255 }),
-  bio: text("bio"),
+export const prospects = mysqlTable(
+  "prospects",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    // Nullable only so pre-hardening rows can be quarantined during migration.
+    // Every application-created prospect is required to carry an owner.
+    userId: int("user_id").references(() => users.id),
+    name: varchar("name", { length: 255 }).notNull(),
+    title: varchar("title", { length: 255 }),
+    location: varchar("location", { length: 255 }),
+    bio: text("bio"),
 
-  // Professional Info
-  skills: json("skills").$type<string[]>(),
-  experience: varchar("experience", { length: 50 }),
-  industries: json("industries").$type<string[]>(),
-  currentCompany: varchar("current_company", { length: 255 }),
+    // Professional Info
+    skills: json("skills").$type<string[]>(),
+    experience: varchar("experience", { length: 50 }),
+    industries: json("industries").$type<string[]>(),
+    currentCompany: varchar("current_company", { length: 255 }),
 
-  // Startup Info
-  lookingFor: json("looking_for").$type<string[]>(),
-  startupStage: varchar("startup_stage", { length: 50 }),
+    // Startup Info
+    lookingFor: json("looking_for").$type<string[]>(),
+    startupStage: varchar("startup_stage", { length: 50 }),
 
-  // Source Platform
-  platform: varchar("platform", { length: 50 }),
-  profileUrl: varchar("profile_url", { length: 500 }),
-  sourceKind: mysqlEnum("source_kind", ["manual", "csv", "provider"])
-    .default("manual")
-    .notNull(),
-  consentStatus: mysqlEnum("consent_status", [
-    "unknown",
-    "legitimate_interest",
-    "opted_in",
-    "opted_out",
-  ])
-    .default("unknown")
-    .notNull(),
+    // Source Platform
+    platform: varchar("platform", { length: 50 }),
+    profileUrl: varchar("profile_url", { length: 500 }),
+    sourceKind: mysqlEnum("source_kind", ["manual", "csv", "provider"])
+      .default("manual")
+      .notNull(),
+    // Null is deliberately retained for legacy data; never infer collection rights.
+    importProvenance: json("import_provenance").$type<ImportProvenance>(),
+    consentStatus: mysqlEnum("consent_status", [
+      "unknown",
+      "legitimate_interest",
+      "opted_in",
+      "opted_out",
+    ])
+      .default("unknown")
+      .notNull(),
 
-  // Enrichment Data
-  enrichmentScore: int("enrichment_score").default(0),
-  lastEnriched: timestamp("last_enriched"),
-  linkedInData: json("linkedin_data"),
-  githubData: json("github_data"),
-  companyData: json("company_data"),
+    // Enrichment Data
+    enrichmentScore: int("enrichment_score").default(0),
+    lastEnriched: timestamp("last_enriched"),
+    linkedInData: json("linkedin_data"),
+    githubData: json("github_data"),
+    companyData: json("company_data"),
 
-  // Metadata
-  importedAt: timestamp("imported_at").defaultNow().notNull(),
-  lastUpdated: timestamp("last_updated").defaultNow().onUpdateNow().notNull(),
-  archivedAt: timestamp("archived_at"),
-}, table => ({
-  uniqueOwnedProfile: unique().on(table.userId, table.profileUrl),
-  ownerImportedIndex: index("prospects_owner_imported_idx").on(table.userId, table.importedAt),
-}));
+    // Metadata
+    importedAt: timestamp("imported_at").defaultNow().notNull(),
+    lastUpdated: timestamp("last_updated").defaultNow().onUpdateNow().notNull(),
+    archivedAt: timestamp("archived_at"),
+  },
+  table => ({
+    uniqueOwnedProfile: unique().on(table.userId, table.profileUrl),
+    ownerImportedIndex: index("prospects_owner_imported_idx").on(
+      table.userId,
+      table.importedAt
+    ),
+  })
+);
 
-export const matches = mysqlTable("matches", {
-  id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id")
-    .notNull()
-    .references(() => users.id),
-  prospectId: int("prospect_id")
-    .notNull()
-    .references(() => prospects.id),
-  campaignId: int("campaign_id").references(() => campaigns.id),
+export const matches = mysqlTable(
+  "matches",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("user_id")
+      .notNull()
+      .references(() => users.id),
+    prospectId: int("prospect_id")
+      .notNull()
+      .references(() => prospects.id),
+    campaignId: int("campaign_id").references(() => campaigns.id),
 
-  // Compatibility Scores
-  overallScore: int("overall_score").notNull(),
-  skillsScore: int("skills_score"),
-  industryScore: int("industry_score"),
-  visionScore: int("vision_score"),
-  workStyleScore: int("work_style_score"),
-  locationScore: int("location_score"),
+    // Compatibility Scores
+    overallScore: int("overall_score").notNull(),
+    skillsScore: int("skills_score"),
+    industryScore: int("industry_score"),
+    visionScore: int("vision_score"),
+    workStyleScore: int("work_style_score"),
+    locationScore: int("location_score"),
 
-  // Match Details
-  reasoning: text("reasoning"),
-  recommendations: json("recommendations").$type<string[]>(),
-  successProbability: int("success_probability"),
+    // Match Details
+    reasoning: text("reasoning"),
+    recommendations: json("recommendations").$type<string[]>(),
+    successProbability: int("success_probability"),
 
-  // Enhanced Status Tracking
-  status: mysqlEnum("status", [
-    "new", // Legacy - will be migrated to discovered
-    "viewed", // Legacy - will be migrated to discovered
-    "interested", // Legacy - will be migrated to responded
-    "discovered", // AI found this match
-    "queued", // Waiting for approval (semi-automatic mode)
-    "approved", // User approved (ready to contact)
-    "rejected", // User rejected
-    "contacted", // Message sent
-    "responded", // Prospect replied
-    "meeting_scheduled", // Meeting booked
-    "partnership_formed", // Success!
-    "no_response", // Contacted but no reply after 14 days
-    "not_interested", // Prospect declined
-  ]).default("discovered"),
+    // Enhanced Status Tracking
+    status: mysqlEnum("status", [
+      "new", // Legacy - will be migrated to discovered
+      "viewed", // Legacy - will be migrated to discovered
+      "interested", // Legacy - will be migrated to responded
+      "discovered", // AI found this match
+      "queued", // Waiting for approval (semi-automatic mode)
+      "approved", // User approved (ready to contact)
+      "rejected", // User rejected
+      "contacted", // Message sent
+      "responded", // Prospect replied
+      "meeting_scheduled", // Meeting booked
+      "partnership_formed", // Success!
+      "no_response", // Contacted but no reply after 14 days
+      "not_interested", // Prospect declined
+    ]).default("discovered"),
 
-  // Timestamps for tracking
-  matchedAt: timestamp("matched_at").defaultNow().notNull(),
-  lastScoredAt: timestamp("last_scored_at").defaultNow().notNull(),
-  approvedAt: timestamp("approved_at"),
-  rejectedAt: timestamp("rejected_at"),
-  contactedAt: timestamp("contacted_at"),
-  responseReceivedAt: timestamp("response_received_at"),
-  meetingScheduledAt: timestamp("meeting_scheduled_at"),
-  partnershipFormedAt: timestamp("partnership_formed_at"),
+    // Timestamps for tracking
+    matchedAt: timestamp("matched_at").defaultNow().notNull(),
+    lastScoredAt: timestamp("last_scored_at").defaultNow().notNull(),
+    approvedAt: timestamp("approved_at"),
+    rejectedAt: timestamp("rejected_at"),
+    contactedAt: timestamp("contacted_at"),
+    responseReceivedAt: timestamp("response_received_at"),
+    meetingScheduledAt: timestamp("meeting_scheduled_at"),
+    partnershipFormedAt: timestamp("partnership_formed_at"),
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
-}, table => ({
-  ownerStatusScoreIndex: index("matches_owner_status_score_idx").on(
-    table.userId,
-    table.status,
-    table.overallScore
-  ),
-}));
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  },
+  table => ({
+    ownerStatusScoreIndex: index("matches_owner_status_score_idx").on(
+      table.userId,
+      table.status,
+      table.overallScore
+    ),
+  })
+);
 
 export const campaigns = mysqlTable("campaigns", {
   id: int("id").autoincrement().primaryKey(),
@@ -270,6 +444,9 @@ export const outreachRecords = mysqlTable(
       .notNull()
       .references(() => prospects.id),
     matchId: int("match_id").references(() => matches.id),
+    revisesId: int("revises_id").references(
+      (): AnyMySqlColumn => outreachRecords.id
+    ),
     subject: varchar("subject", { length: 255 }),
     body: text("body").notNull(),
     state: mysqlEnum("state", [
@@ -285,10 +462,18 @@ export const outreachRecords = mysqlTable(
     ])
       .default("draft")
       .notNull(),
-    generationMode: mysqlEnum("generation_mode", ["template", "ai"])
+    generationMode: mysqlEnum("generation_mode", [
+      "template",
+      "ai",
+      "user_authored",
+    ])
       .default("template")
       .notNull(),
     destinationUrl: varchar("destination_url", { length: 1000 }),
+    sourcePolicy:
+      json("source_policy").$type<
+        import("../server/outreach-source-policy").OutreachSourceReceipt
+      >(),
     idempotencyKey: varchar("idempotency_key", { length: 80 }).notNull(),
     externalReference: varchar("external_reference", { length: 500 }),
     reviewNotes: text("review_notes"),
@@ -302,6 +487,14 @@ export const outreachRecords = mysqlTable(
   },
   table => ({
     uniqueUserIdempotency: unique().on(table.userId, table.idempotencyKey),
+    uniqueRevisionParent: unique("outreach_unique_revision_parent").on(
+      table.revisesId
+    ),
+    ownerReminderIndex: index("outreach_owner_reminder_idx").on(
+      table.userId,
+      table.followUpAt,
+      table.id
+    ),
     ownerStateUpdatedIndex: index("outreach_owner_state_updated_idx").on(
       table.userId,
       table.state,
@@ -313,21 +506,27 @@ export const outreachRecords = mysqlTable(
 export type OutreachRecord = typeof outreachRecords.$inferSelect;
 export type InsertOutreachRecord = typeof outreachRecords.$inferInsert;
 
-export const auditEvents = mysqlTable("audit_events", {
-  id: int("id").autoincrement().primaryKey(),
-  userId: int("user_id").references(() => users.id),
-  requestId: varchar("request_id", { length: 64 }).notNull(),
-  action: varchar("action", { length: 100 }).notNull(),
-  entityType: varchar("entity_type", { length: 64 }),
-  entityId: varchar("entity_id", { length: 64 }),
-  outcome: mysqlEnum("outcome", ["success", "rejected", "failed"])
-    .notNull(),
-  metadata: json("metadata").$type<Record<string, unknown>>(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-}, table => ({
-  ownerIdIndex: index("audit_owner_id_idx").on(table.userId, table.id),
-  ownerCreatedIndex: index("audit_owner_created_idx").on(table.userId, table.createdAt),
-}));
+export const auditEvents = mysqlTable(
+  "audit_events",
+  {
+    id: int("id").autoincrement().primaryKey(),
+    userId: int("user_id").references(() => users.id),
+    requestId: varchar("request_id", { length: 64 }).notNull(),
+    action: varchar("action", { length: 100 }).notNull(),
+    entityType: varchar("entity_type", { length: 64 }),
+    entityId: varchar("entity_id", { length: 64 }),
+    outcome: mysqlEnum("outcome", ["success", "rejected", "failed"]).notNull(),
+    metadata: json("metadata").$type<Record<string, unknown>>(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  table => ({
+    ownerIdIndex: index("audit_owner_id_idx").on(table.userId, table.id),
+    ownerCreatedIndex: index("audit_owner_created_idx").on(
+      table.userId,
+      table.createdAt
+    ),
+  })
+);
 
 export type AuditEvent = typeof auditEvents.$inferSelect;
 export type InsertAuditEvent = typeof auditEvents.$inferInsert;

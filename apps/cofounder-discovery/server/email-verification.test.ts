@@ -1,107 +1,89 @@
-import { describe, it, expect, beforeAll } from "vitest";
-import * as db from "../server/db";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { sendVerification } from "./account-mail";
+import { resetConfigForTests } from "./config";
+import * as mailBudget from "./account-mail-budget";
 
-describe("Email Verification System", () => {
-  let testUserId: number;
-  let testToken: string;
-
-  beforeAll(async () => {
-    // Create a test user ID (in real scenario, would create actual user)
-    testUserId = 1;
-    testToken =
-      "test-verification-token-" + Math.random().toString(36).substring(7);
+describe("verification email transport", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+    resetConfigForTests();
   });
 
-  it("should set verification token for user", async () => {
-    const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  function configured() {
+    vi.stubEnv("RESEND_API_KEY", "private-test-key");
+    vi.stubEnv("AUTH_EMAIL_FROM", "accounts@example.invalid");
+    vi.stubEnv("PUBLIC_ORIGIN", "https://cofounder.example.invalid");
+    resetConfigForTests();
+    vi.spyOn(mailBudget, "issueBudgetedVerificationToken").mockResolvedValue(
+      "a".repeat(43)
+    );
+  }
 
-    // This will fail if database is not connected, which is expected in dev
-    try {
-      await db.setVerificationToken(testUserId, testToken, expiry);
-      expect(true).toBe(true); // Token set successfully
-    } catch (error) {
-      // Expected in development without database
-      expect(error).toBeDefined();
-    }
+  it("refuses to simulate delivery when mail is not configured", async () => {
+    vi.stubEnv("RESEND_API_KEY", "");
+    resetConfigForTests();
+    await expect(
+      sendVerification({ id: 1, email: "test@example.invalid" })
+    ).rejects.toMatchObject({ code: "PRECONDITION_FAILED" });
   });
 
-  it("should verify email token", async () => {
-    try {
-      const user = await db.verifyEmailToken(testToken);
-      // If database is connected, user should be returned
-      if (user) {
-        expect(user).toHaveProperty("email");
-        expect(user).toHaveProperty("id");
-      }
-    } catch (error) {
-      // Expected in development without database
-      expect(error).toBeDefined();
-    }
+  it("requires a provider acknowledgement rather than accepting any successful HTTP response", async () => {
+    configured();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("{}", { status: 200 }))
+    );
+    await expect(
+      sendVerification({ id: 1, email: "test@example.invalid" })
+    ).rejects.toMatchObject({ code: "SERVICE_UNAVAILABLE" });
   });
 
-  it("should get user by ID", async () => {
-    try {
-      const user = await db.getUserById(testUserId);
-      // If database is connected, user might be returned
-      if (user) {
-        expect(user).toHaveProperty("id");
-        expect(user.id).toBe(testUserId);
-      }
-    } catch (error) {
-      // Expected in development without database
-      expect(error).toBeDefined();
-    }
+  it("reports a network failure without leaking request details", async () => {
+    configured();
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new Error("private-test-key and private-token");
+      })
+    );
+    await expect(
+      sendVerification({ id: 1, email: "test@example.invalid" })
+    ).rejects.toMatchObject({
+      code: "SERVICE_UNAVAILABLE",
+      message:
+        "Verification email could not be confirmed. Please try sending a new link.",
+    });
   });
 
-  it("should reject expired tokens", async () => {
-    const expiredToken =
-      "expired-token-" + Math.random().toString(36).substring(7);
-    const pastExpiry = new Date(Date.now() - 1000); // 1 second ago
-
-    try {
-      await db.setVerificationToken(testUserId, expiredToken, pastExpiry);
-      const user = await db.verifyEmailToken(expiredToken);
-      // Should return null for expired token
-      expect(user).toBeNull();
-    } catch (error) {
-      // Expected in development without database
-      expect(error).toBeDefined();
-    }
-  });
-
-  it("should return null for invalid tokens", async () => {
-    const invalidToken = "invalid-token-that-does-not-exist";
-
-    try {
-      const user = await db.verifyEmailToken(invalidToken);
-      expect(user).toBeNull();
-    } catch (error) {
-      // Expected in development without database
-      expect(error).toBeDefined();
-    }
-  });
-});
-
-describe("Email Verification API", () => {
-  it("should generate random verification tokens", () => {
-    const token1 =
-      Math.random().toString(36).substring(2, 15) +
-      Math.random().toString(36).substring(2, 15);
-    const token2 =
-      Math.random().toString(36).substring(2, 15) +
-      Math.random().toString(36).substring(2, 15);
-
-    expect(token1).toBeDefined();
-    expect(token2).toBeDefined();
-    expect(token1).not.toBe(token2); // Tokens should be unique
-    expect(token1.length).toBeGreaterThanOrEqual(20); // Should be reasonably long
-  });
-
-  it("should calculate correct expiry time", () => {
-    const now = Date.now();
-    const expiry = new Date(now + 24 * 60 * 60 * 1000);
-    const expectedExpiry = now + 24 * 60 * 60 * 1000;
-
-    expect(expiry.getTime()).toBeCloseTo(expectedExpiry, -2); // Within 100ms
+  it("sends the verification secret only in the email link fragment", async () => {
+    configured();
+    let sent: Record<string, unknown> | undefined;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string, init: RequestInit) => {
+        expect(url).toBe("https://api.resend.com/emails");
+        sent = JSON.parse(String(init.body));
+        return new Response('{"id":"test-acknowledgement"}', { status: 200 });
+      })
+    );
+    const result = await sendVerification({
+      id: 1,
+      email: "test@example.invalid",
+    });
+    expect(result).toEqual({
+      success: true,
+      status: "accepted_by_email_provider",
+    });
+    expect(sent).toMatchObject({
+      from: "accounts@example.invalid",
+      to: ["test@example.invalid"],
+    });
+    const link = String(sent!.text).match(/https:\/\/\S+/)![0];
+    const url = new URL(link);
+    expect(url.origin).toBe("https://cofounder.example.invalid");
+    expect(url.search).toBe("");
+    expect(url.hash).toMatch(/^#token=[A-Za-z0-9_-]{43}$/);
   });
 });

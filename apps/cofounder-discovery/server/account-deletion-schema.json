@@ -1,0 +1,1125 @@
+{
+  "workspacePresets": {
+    "table": "workspace_presets",
+    "columns": ["revision", "settings", "updated_at", "user_id"],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"],
+        "onDelete": "cascade"
+      }
+    ]
+  },
+  "adminMfaState": {
+    "table": "admin_mfa_state",
+    "columns": [
+      "attempt_window_expires_at",
+      "attempts",
+      "bootstrap_digest",
+      "bootstrap_expires_at",
+      "challenge",
+      "challenge_expires_at",
+      "challenge_id",
+      "origin",
+      "purpose",
+      "session_digest",
+      "user_handle",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"],
+        "onDelete": "cascade"
+      }
+    ]
+  },
+  "adminPasskeys": {
+    "table": "admin_passkeys",
+    "columns": [
+      "backed_up",
+      "counter",
+      "created_at",
+      "credential_digest",
+      "credential_id",
+      "device_type",
+      "key_id",
+      "label",
+      "last_used_at",
+      "public_key",
+      "transports",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"],
+        "onDelete": "cascade"
+      }
+    ]
+  },
+  "loginAttemptQuotas": {
+    "table": "login_attempt_quotas",
+    "columns": ["expires_at", "quota_key", "used"],
+    "references": []
+  },
+  "accountDeletionRequests": {
+    "table": "account_deletion_requests",
+    "columns": [
+      "attempt_window_expires_at",
+      "attempts",
+      "request_key",
+      "requested_at",
+      "revision",
+      "status",
+      "user_id",
+      "withdrawn_at"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"],
+        "onDelete": "cascade"
+      }
+    ]
+  },
+  "accountExportQuotas": {
+    "table": "account_export_quotas",
+    "columns": ["attempts", "expires_at", "user_id"],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"],
+        "onDelete": "cascade"
+      }
+    ]
+  },
+  "accountMailJobs": {
+    "table": "account_mail_jobs",
+    "columns": [
+      "attempts",
+      "available_at",
+      "created_at",
+      "expires_at",
+      "id",
+      "kind",
+      "lease_until",
+      "payload",
+      "provider_id",
+      "quota_key",
+      "state",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"],
+        "onDelete": "cascade"
+      }
+    ]
+  },
+  "accountMailQuotas": {
+    "table": "account_mail_quotas",
+    "columns": ["expires_at", "quota_key", "used"],
+    "references": []
+  },
+  "accountSessions": {
+    "table": "account_sessions",
+    "columns": [
+      "admin_verified_until",
+      "created_at",
+      "expires_at",
+      "token_digest",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"],
+        "onDelete": "cascade"
+      }
+    ]
+  },
+  "aiActivityLog": {
+    "table": "ai_activity_log",
+    "columns": [
+      "activity_description",
+      "activity_type",
+      "ai_decision",
+      "campaign_id",
+      "created_at",
+      "id",
+      "match_id",
+      "outcome",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["campaign_id"],
+        "table": "campaigns",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["match_id"],
+        "table": "matches",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "approvalQueue": {
+    "table": "approval_queue",
+    "columns": [
+      "ai_reasoning",
+      "created_at",
+      "id",
+      "match_id",
+      "message_content",
+      "message_type",
+      "platform",
+      "reviewed_at",
+      "sent_at",
+      "status",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["match_id"],
+        "table": "matches",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "auditEvents": {
+    "table": "audit_events",
+    "columns": [
+      "action",
+      "created_at",
+      "entity_id",
+      "entity_type",
+      "id",
+      "metadata",
+      "outcome",
+      "request_id",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "automationJobs": {
+    "table": "automation_jobs",
+    "columns": [
+      "attempts",
+      "campaign_id",
+      "completed_at",
+      "created_at",
+      "error_message",
+      "id",
+      "job_data",
+      "job_type",
+      "match_id",
+      "max_attempts",
+      "platform",
+      "result",
+      "scheduled_at",
+      "started_at",
+      "status",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["campaign_id"],
+        "table": "campaigns",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["match_id"],
+        "table": "matches",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "billingPeriods": {
+    "table": "billing_periods",
+    "columns": [
+      "closed_at",
+      "created_at",
+      "end_date",
+      "id",
+      "start_date",
+      "status",
+      "total_base_cost",
+      "total_marked_up_cost",
+      "total_usage_count",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "campaigns": {
+    "table": "campaigns",
+    "columns": [
+      "auto_message_enabled",
+      "automation_mode",
+      "created_at",
+      "daily_match_limit",
+      "description",
+      "filters",
+      "id",
+      "last_run_at",
+      "message_template",
+      "messages_sent",
+      "min_compatibility_score",
+      "name",
+      "prospects_found",
+      "responses_received",
+      "status",
+      "target_platforms",
+      "updated_at",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "capacityLocks": {
+    "table": "capacity_locks",
+    "columns": ["resource"],
+    "references": []
+  },
+  "conversationAnalytics": {
+    "table": "conversation_analytics",
+    "columns": [
+      "created_at",
+      "focus_area",
+      "has_personalization",
+      "has_question",
+      "id",
+      "message_id",
+      "message_length",
+      "prospect_id",
+      "responded_at",
+      "response_quality",
+      "response_time",
+      "sent_at",
+      "tone",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["message_id"],
+        "table": "messages",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["prospect_id"],
+        "table": "prospects",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "conversationStartersHistory": {
+    "table": "conversation_starters_history",
+    "columns": [
+      "compatibility_score",
+      "copied_at",
+      "enrichment_score",
+      "focus_area",
+      "generated_at",
+      "id",
+      "message",
+      "prospect_id",
+      "reasoning",
+      "tone",
+      "used_at",
+      "user_id",
+      "was_copied",
+      "was_used"
+    ],
+    "references": [
+      {
+        "columns": ["prospect_id"],
+        "table": "prospects",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "conversations": {
+    "table": "conversations",
+    "columns": [
+      "createdAt",
+      "id",
+      "lastMessageAt",
+      "matchId",
+      "prospectId",
+      "unreadCount",
+      "updatedAt",
+      "userId"
+    ],
+    "references": [
+      {
+        "columns": ["matchId"],
+        "table": "matches",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["prospectId"],
+        "table": "prospects",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["userId"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "guardrails": {
+    "table": "guardrails",
+    "columns": [
+      "created_at",
+      "id",
+      "is_active",
+      "last_triggered",
+      "rule_config",
+      "rule_name",
+      "rule_type",
+      "triggered_count",
+      "updated_at",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "idempotencyRecords": {
+    "table": "idempotency_records",
+    "columns": [
+      "created_at",
+      "id",
+      "idempotency_key",
+      "operation",
+      "result",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "invoices": {
+    "table": "invoices",
+    "columns": [
+      "billing_period_id",
+      "created_at",
+      "due_date",
+      "id",
+      "invoice_number",
+      "issue_date",
+      "line_items",
+      "paid_at",
+      "status",
+      "subtotal",
+      "tax",
+      "total",
+      "updated_at",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["billing_period_id"],
+        "table": "billing_periods",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "leadScores": {
+    "table": "lead_scores",
+    "columns": [
+      "actual_response",
+      "created_at",
+      "engagement_score",
+      "factors",
+      "id",
+      "match_id",
+      "predicted",
+      "prediction_accurate",
+      "priority_rank",
+      "response_likelihood",
+      "updated_at"
+    ],
+    "references": [
+      {
+        "columns": ["match_id"],
+        "table": "matches",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "matches": {
+    "table": "matches",
+    "columns": [
+      "approved_at",
+      "campaign_id",
+      "contacted_at",
+      "created_at",
+      "id",
+      "industry_score",
+      "last_scored_at",
+      "location_score",
+      "matched_at",
+      "meeting_scheduled_at",
+      "overall_score",
+      "partnership_formed_at",
+      "prospect_id",
+      "reasoning",
+      "recommendations",
+      "rejected_at",
+      "response_received_at",
+      "skills_score",
+      "status",
+      "success_probability",
+      "updated_at",
+      "user_id",
+      "vision_score",
+      "work_style_score"
+    ],
+    "references": [
+      {
+        "columns": ["campaign_id"],
+        "table": "campaigns",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["prospect_id"],
+        "table": "prospects",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "messages": {
+    "table": "messages",
+    "columns": [
+      "body",
+      "content",
+      "conversation_id",
+      "createdAt",
+      "id",
+      "is_follow_up",
+      "matchId",
+      "parent_message_id",
+      "prospect_id",
+      "readAt",
+      "recipientId",
+      "respondedAt",
+      "senderId",
+      "sentAt",
+      "status",
+      "subject",
+      "updatedAt",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["conversation_id"],
+        "table": "conversations",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["matchId"],
+        "table": "matches",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["prospect_id"],
+        "table": "prospects",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["senderId"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "mlModelVersions": {
+    "table": "ml_model_versions",
+    "columns": [
+      "accuracy",
+      "created_at",
+      "deployed_at",
+      "f1_score",
+      "features",
+      "hyperparameters",
+      "id",
+      "is_active",
+      "model_type",
+      "precision_score",
+      "recall_score",
+      "training_samples",
+      "version"
+    ],
+    "references": []
+  },
+  "outreachRecords": {
+    "table": "outreach_records",
+    "columns": [
+      "approved_at",
+      "body",
+      "closed_at",
+      "confirmed_sent_at",
+      "created_at",
+      "destination_url",
+      "external_reference",
+      "follow_up_at",
+      "generation_mode",
+      "id",
+      "idempotency_key",
+      "match_id",
+      "prospect_id",
+      "response_recorded_at",
+      "review_notes",
+      "revises_id",
+      "source_policy",
+      "state",
+      "subject",
+      "updated_at",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["match_id"],
+        "table": "matches",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["prospect_id"],
+        "table": "prospects",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["revises_id"],
+        "table": "outreach_records",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "partnershipOutcomes": {
+    "table": "partnership_outcomes",
+    "columns": [
+      "created_at",
+      "days_to_outcome",
+      "id",
+      "match_id",
+      "notes",
+      "outcome",
+      "outcome_date",
+      "prospect_id",
+      "total_meetings",
+      "total_messages",
+      "updated_at",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["match_id"],
+        "table": "matches",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["prospect_id"],
+        "table": "prospects",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "pipelineStages": {
+    "table": "pipeline_stages",
+    "columns": [
+      "entered_at",
+      "exited_at",
+      "id",
+      "match_id",
+      "notes",
+      "stage",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["match_id"],
+        "table": "matches",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "platformCredentials": {
+    "table": "platform_credentials",
+    "columns": [
+      "created_at",
+      "daily_message_limit",
+      "encrypted_password",
+      "encrypted_session_data",
+      "encrypted_username",
+      "id",
+      "last_error",
+      "last_reset_at",
+      "last_tested_at",
+      "last_used_at",
+      "messages_sent_today",
+      "platform",
+      "session_expires_at",
+      "status",
+      "updated_at",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "prospectNotes": {
+    "table": "prospect_notes",
+    "columns": [
+      "content",
+      "created_at",
+      "id",
+      "match_id",
+      "updated_at",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["match_id"],
+        "table": "matches",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "prospectTasks": {
+    "table": "prospect_tasks",
+    "columns": [
+      "completed",
+      "completed_at",
+      "created_at",
+      "description",
+      "due_date",
+      "id",
+      "match_id",
+      "title",
+      "updated_at",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["match_id"],
+        "table": "matches",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "prospects": {
+    "table": "prospects",
+    "columns": [
+      "archived_at",
+      "bio",
+      "company_data",
+      "consent_status",
+      "current_company",
+      "enrichment_score",
+      "experience",
+      "github_data",
+      "id",
+      "import_provenance",
+      "imported_at",
+      "industries",
+      "last_enriched",
+      "last_updated",
+      "linkedin_data",
+      "location",
+      "looking_for",
+      "name",
+      "platform",
+      "profile_url",
+      "skills",
+      "source_kind",
+      "startup_stage",
+      "title",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "resourceUsage": {
+    "table": "resource_usage",
+    "columns": [
+      "base_cost",
+      "created_at",
+      "id",
+      "marked_up_cost",
+      "metadata",
+      "quantity",
+      "related_entity_id",
+      "related_entity_type",
+      "resource_type",
+      "token_count",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "responsePatterns": {
+    "table": "response_patterns",
+    "columns": [
+      "avg_response_time",
+      "day_of_week",
+      "hour_of_day",
+      "id",
+      "last_updated",
+      "prospect_id",
+      "response_count",
+      "total_sent"
+    ],
+    "references": [
+      {
+        "columns": ["prospect_id"],
+        "table": "prospects",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "savedSearches": {
+    "table": "saved_searches",
+    "columns": [
+      "commitment",
+      "createdAt",
+      "description",
+      "email_notifications",
+      "equity_split_preference",
+      "experience",
+      "funding_stage",
+      "id",
+      "industries",
+      "is_active",
+      "lastChecked",
+      "location",
+      "match_count",
+      "min_compatibility_score",
+      "name",
+      "notifications_enabled",
+      "remote_preference",
+      "skills",
+      "startup_stage",
+      "team_size_max",
+      "team_size_min",
+      "updatedAt",
+      "userId"
+    ],
+    "references": [
+      {
+        "columns": ["userId"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "stageTransitions": {
+    "table": "stage_transitions",
+    "columns": [
+      "automated",
+      "created_at",
+      "from_stage",
+      "id",
+      "match_id",
+      "reason",
+      "to_stage"
+    ],
+    "references": [
+      {
+        "columns": ["match_id"],
+        "table": "matches",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "successMetrics": {
+    "table": "success_metrics",
+    "columns": [
+      "campaign_id",
+      "id",
+      "metric_type",
+      "notes",
+      "prospect_id",
+      "recorded_at",
+      "user_id",
+      "value"
+    ],
+    "references": [
+      {
+        "columns": ["campaign_id"],
+        "table": "campaigns",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["prospect_id"],
+        "table": "prospects",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "timelineEvents": {
+    "table": "timeline_events",
+    "columns": [
+      "campaign_id",
+      "created_at",
+      "description",
+      "id",
+      "message_id",
+      "metadata",
+      "prospect_id",
+      "title",
+      "type",
+      "user_id"
+    ],
+    "references": [
+      {
+        "columns": ["campaign_id"],
+        "table": "campaigns",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["message_id"],
+        "table": "messages",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["prospect_id"],
+        "table": "prospects",
+        "foreignColumns": ["id"]
+      },
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "usagePricing": {
+    "table": "usage_pricing",
+    "columns": [
+      "base_cost_per_unit",
+      "description",
+      "id",
+      "is_active",
+      "markup",
+      "resource_type",
+      "unit_name",
+      "updated_at"
+    ],
+    "references": []
+  },
+  "userPreferences": {
+    "table": "user_preferences",
+    "columns": [
+      "accept_count",
+      "confidence",
+      "created_at",
+      "id",
+      "preference_key",
+      "preference_type",
+      "reject_count",
+      "updated_at",
+      "user_id",
+      "weight"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "userProfiles": {
+    "table": "user_profiles",
+    "columns": [
+      "availability",
+      "bio",
+      "business_model",
+      "commitment",
+      "communication_style",
+      "completeness",
+      "created_at",
+      "equity_expectation",
+      "experience",
+      "funding_preference",
+      "id",
+      "industries",
+      "is_public",
+      "location",
+      "looking_for",
+      "previous_roles",
+      "remote_preference",
+      "skills",
+      "startup_stage",
+      "target_industries",
+      "timezone",
+      "updated_at",
+      "user_id",
+      "values",
+      "work_style"
+    ],
+    "references": [
+      {
+        "columns": ["user_id"],
+        "table": "users",
+        "foreignColumns": ["id"]
+      }
+    ]
+  },
+  "users": {
+    "table": "users",
+    "columns": [
+      "createdAt",
+      "deletion_fenced_at",
+      "email",
+      "emailVerified",
+      "email_notifications_enabled",
+      "github_access_token",
+      "github_connected_at",
+      "github_id",
+      "github_username",
+      "id",
+      "lastSignedIn",
+      "linkedin_access_token",
+      "linkedin_connected_at",
+      "linkedin_id",
+      "linkedin_refresh_token",
+      "linkedin_token_expiry",
+      "loginMethod",
+      "name",
+      "notify_messages",
+      "notify_new_matches",
+      "openId",
+      "password_hash",
+      "password_reset_token",
+      "password_reset_token_expiry",
+      "role",
+      "updatedAt",
+      "verificationToken",
+      "verificationTokenExpiry",
+      "verification_email_digest",
+      "weekly_summary_enabled"
+    ],
+    "references": []
+  }
+}

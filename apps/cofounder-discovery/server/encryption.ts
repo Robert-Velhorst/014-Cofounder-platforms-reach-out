@@ -4,6 +4,7 @@
  */
 
 import crypto from "crypto";
+import { readRuntimeSecret } from "./runtime-secrets";
 
 const ALGORITHM = "aes-256-gcm";
 const IV_LENGTH = 16;
@@ -21,7 +22,8 @@ const ITERATIONS = 100000;
  */
 function deriveKey(salt: Buffer): Buffer {
   const secret =
-    process.env.CREDENTIAL_ENCRYPTION_SECRET || process.env.JWT_SECRET;
+    readRuntimeSecret("CREDENTIAL_ENCRYPTION_SECRET") ||
+    readRuntimeSecret("JWT_SECRET");
   if (!secret) {
     throw new Error(
       "CREDENTIAL_ENCRYPTION_SECRET (or JWT_SECRET) must be configured before storing platform credentials"

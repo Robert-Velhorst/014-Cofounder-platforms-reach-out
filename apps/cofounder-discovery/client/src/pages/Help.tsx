@@ -1,326 +1,177 @@
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  BookOpen,
-  Search,
-  Rocket,
-  Users,
-  MessageSquare,
-  Target,
-  BarChart3,
-  Settings,
-  HelpCircle,
-  ChevronDown,
-  ChevronUp,
-  Play,
-} from "lucide-react";
-import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Help() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
-
-  const guides = [
+  const { language, text } = useLanguage();
+  const sections = [
     {
-      icon: Rocket,
-      title: "Getting Started",
-      description:
-        "Learn how to set up your profile and find your first co-founder",
-      color: "orange",
-      steps: [
-        "Complete the 5-step onboarding to create your profile",
-        "Add your skills, industries, and what you're looking for",
-        "Click 'Start Discovery' to find compatible matches",
-        "Review your matches and start conversations",
+      id: "access",
+      title: text("Getting access", "Toegang krijgen"),
+      paragraphs: [
+        text(
+          "Sign in with your own account. Registration is available only when the operator enables it. New accounts need genuine email verification before protected workspace work. Starting the service does not create a verified account.",
+          "Log in met je eigen account. Registreren kan alleen als de beheerder dit toestaat. Nieuwe accounts moeten hun e-mailadres echt bevestigen voordat ze de beveiligde werkruimte kunnen gebruiken. De dienst starten maakt geen bevestigd account aan."
+        ),
+        text(
+          "If verification or recovery mail does not arrive, check your inbox and spam folder, then contact the service operator through the channel they provided. Do not assume an account is verified or that mail was delivered because a request was accepted.",
+          "Komt een bevestigings- of herstelmail niet aan? Controleer je inbox en spammap en neem daarna contact op met de beheerder via het opgegeven kanaal. Een ontvangen aanvraag betekent niet dat je account bevestigd is of dat de mail bezorgd is."
+        ),
       ],
     },
     {
-      icon: Users,
-      title: "Understanding Matches",
-      description: "How our AI-powered matching algorithm works",
-      color: "blue",
-      steps: [
-        "We analyze 6 dimensions: skills, experience, goals, personality, location, and availability",
-        "Each match gets a compatibility score (0-100%)",
-        "Higher scores mean better alignment across all dimensions",
-        "Review the detailed breakdown to understand why you matched",
+      id: "workflow",
+      title: text(
+        "Your first candidate and message",
+        "Je eerste kandidaat en bericht"
+      ),
+      paragraphs: [
+        text(
+          "Save your private background and preferences in profile setup. Browse Find platforms for possible discovery routes. The catalogue is a guide, not working integrations or a complete worldwide list; check each source's eligibility, costs and rules yourself.",
+          "Bewaar je achtergrond en voorkeuren privé bij de profielinstellingen. Bekijk de platformgids voor mogelijke vindplaatsen. Dit is een gids, geen verzameling werkende koppelingen of volledige wereldwijde lijst. Controleer zelf de toelatingseisen, kosten en regels van elke bron."
+        ),
+        text(
+          "Add one candidate or import permitted direct-from-person CSV data with a processing-rights declaration and evidence reference. Inspect details and duplicates, then qualify the candidate. A score or import declaration is not permission to contact someone.",
+          "Voeg één kandidaat toe of importeer toegestane CSV-gegevens die rechtstreeks van de persoon komen, met een verklaring over verwerkingsrechten en een bewijsreferentie. Bekijk details en mogelijke dubbelen en beoordeel daarna de kandidaat. Een score of importverklaring geeft geen toestemming om iemand te benaderen."
+        ),
+        text(
+          "Write an original individual draft, review the exact text and source rules, submit it for review and explicitly approve it. Applying a saved template is not approval. Prepare a manual action only when contact is allowed.",
+          "Schrijf een oorspronkelijk, persoonlijk concept. Beoordeel de precieze tekst en bronregels, dien het concept ter beoordeling in en keur het expliciet goed. Een opgeslagen sjabloon toepassen is geen goedkeuring. Bereid alleen een handmatige actie voor als het contact is toegestaan."
+        ),
+        text(
+          "Copy the approved message and perform any authorized contact outside this app yourself. Record what actually happened, replies and outcomes. Internal reminders do not send follow-ups. A user-confirmed send is not provider-confirmed delivery.",
+          "Kopieer het goedgekeurde bericht en voer toegestaan contact zelf buiten deze app uit. Leg vast wat er echt gebeurde, inclusief reacties en resultaten. Interne herinneringen versturen geen vervolgberichten. Jouw verzendbevestiging is geen bezorgbewijs van het platform."
+        ),
       ],
     },
     {
-      icon: MessageSquare,
-      title: "Messaging Co-Founders",
-      description: "Best practices for reaching out to potential partners",
-      color: "purple",
-      steps: [
-        "Use our AI message generator for personalized introductions",
-        "Be specific about what you're building and why you're reaching out",
-        "Highlight complementary skills and shared interests",
-        "Suggest a specific next step (call, coffee, etc.)",
+      id: "rights",
+      title: text("Permissions and opt-outs", "Toestemming en afmelden"),
+      paragraphs: [
+        text(
+          "The app does not automatically scrape, contact people or click Send. A public profile, private-group membership or saved source card is not consent. Unknown or blocked sources cannot be relabeled as manual data to bypass restrictions.",
+          "De app verzamelt niet automatisch gegevens, benadert geen mensen en klikt niet op Verzenden. Een openbaar profiel, lidmaatschap van een privégroep of opgeslagen bronkaart is geen toestemming. Je mag onbekende of geblokkeerde bronnen niet als handmatige gegevens hernoemen om beperkingen te omzeilen."
+        ),
+        text(
+          "Record an opt-out when someone asks not to be contacted. Do not create another candidate to evade it. Archiving hides a record from the active list; restoring it does not remove an opt-out or grant contact rights.",
+          "Leg een afmelding vast wanneer iemand niet meer benaderd wil worden. Maak geen nieuwe kandidaat aan om dit te omzeilen. Archiveren verbergt een record in de actieve lijst. Herstellen verwijdert geen afmelding en geeft geen contactrechten."
+        ),
       ],
     },
     {
-      icon: Target,
-      title: "Campaign Automation",
-      description: "Set up automated outreach sequences",
-      color: "green",
-      steps: [
-        "Create a campaign with your target criteria",
-        "Design a multi-step sequence with follow-ups",
-        "Set timing delays between messages",
-        "Track performance and optimize based on response rates",
+      id: "recovery",
+      title: text("When something fails", "Als iets mislukt"),
+      paragraphs: [
+        text(
+          "A busy or unavailable service is not a successful save. Keep your unsent text and retry only when the service is ready. For an uncertain CSV import, keep the exact file, evidence, declaration and retry key; use the interface's unchanged retry rather than creating a different import. Check the stored result before adding duplicates.",
+          "Een drukke of onbereikbare dienst betekent niet dat opslaan is gelukt. Bewaar je onverstuurde tekst en probeer het pas opnieuw als de dienst beschikbaar is. Bewaar bij een onzekere CSV-import precies hetzelfde bestand, bewijs, dezelfde verklaring en pogingssleutel. Gebruik de ongewijzigde herhaalpoging in de interface in plaats van een andere import. Controleer het opgeslagen resultaat voordat je dubbelen toevoegt."
+        ),
+        text(
+          "If a candidate changed after your review, reload the latest details and review again before editing. Do not replace someone else's saved change with a stale version. If the signed-in account changed in another tab, sign back into the original account before retrying its unsaved work.",
+          "Is een kandidaat na jouw beoordeling gewijzigd? Laad de nieuwste details en beoordeel die opnieuw voordat je bewerkt. Overschrijf geen opgeslagen wijziging met een oude versie. Is in een ander tabblad een ander account ingelogd? Log dan opnieuw in op het oorspronkelijke account voordat je het onverwerkte werk opnieuw probeert."
+        ),
+        text(
+          "If an external send is uncertain, check the destination yourself before sending again. The app cannot establish delivery. Reloading, signing out or closing an editor can lose unsaved work; copy your own draft somewhere private first when needed.",
+          "Is een externe verzending onzeker? Controleer zelf de bestemming voordat je opnieuw verstuurt. De app kan bezorging niet vaststellen. Herladen, uitloggen of een editor sluiten kan niet-opgeslagen werk verliezen. Bewaar zo nodig eerst je eigen concept op een privéplek."
+        ),
       ],
     },
     {
-      icon: BarChart3,
-      title: "Analytics Dashboard",
-      description: "Track your progress and optimize your approach",
-      color: "pink",
-      steps: [
-        "Monitor match quality trends over time",
-        "Track message response rates",
-        "Analyze which approaches work best",
-        "Export data for deeper analysis",
+      id: "data",
+      title: text(
+        "Exports, deletion and privacy",
+        "Exporteren, verwijderen en privacy"
+      ),
+      paragraphs: [
+        text(
+          "Active-candidate CSV export includes stored records from your own account, not unsaved previews or other accounts. Formula-risk values receive visible protective prefixes. Account JSON export needs current-password confirmation and has size limits; it is not a complete service backup.",
+          "CSV-export van actieve kandidaten bevat opgeslagen records van je eigen account, geen onverwerkte voorbeelden of andere accounts. Waarden met formulerisico krijgen een zichtbare beschermende prefix. JSON-accountexport vereist je huidige wachtwoord en kent groottelimieten. Dit is geen volledige back-up van de dienst."
+        ),
+        text(
+          "A deletion request, when enabled, is review-held intake—not instant erasure. Ask the operator about the actual retention and deletion policy; do not assume archived records, backups or receiver copies were erased. Never remove a database volume to troubleshoot your account.",
+          "Een verwijderverzoek, als dit beschikbaar is, wordt aangehouden voor beoordeling en wist niet direct alle gegevens. Vraag de beheerder naar het werkelijke bewaar- en verwijderbeleid. Ga er niet van uit dat gearchiveerde records, back-ups of kopieën bij ontvangers gewist zijn. Verwijder nooit een databasevolume om je account te repareren."
+        ),
+        text(
+          "When asking for support, share the action, time, safe error message and request identifier if shown. Do not send passwords, session cookies, secret files, candidate lists or full exports through an unapproved support channel. No support inbox or response-time promise is configured by this guide.",
+          "Deel bij een hulpvraag de handeling, het tijdstip, de veilige foutmelding en de aanvraagcode als die getoond wordt. Stuur geen wachtwoorden, sessiecookies, geheime bestanden, kandidatenlijsten of volledige exports via een niet-goedgekeurd hulpkanaal. Deze gids stelt geen helpdeskadres of beloofde reactietijd in."
+        ),
       ],
     },
   ];
-
-  const faqs = [
-    {
-      question: "How does the AI matching work?",
-      answer:
-        "Our AI analyzes your profile across 6 key dimensions: technical skills, experience level, startup goals, personality traits, location preferences, and availability. It then compares these against thousands of potential co-founders to find the best matches. The algorithm learns from successful partnerships to improve recommendations over time.",
-    },
-    {
-      question: "What platforms do you search?",
-      answer:
-        "We integrate with CoFoundersLab, FounderCloud (formerly StartHawk), and Y Combinator's co-founder matching. This gives you access to the largest pool of potential co-founders across multiple platforms without needing separate accounts.",
-    },
-    {
-      question: "How long does it take to find matches?",
-      answer:
-        "Initial matches appear within 30 seconds of completing your profile. The AI continues to find new matches as more people join the platform and as you refine your preferences. Most users find 5-10 high-quality matches in their first week.",
-    },
-    {
-      question: "Is my data private and secure?",
-      answer:
-        "Yes. We use industry-standard encryption for all data. Your profile is only visible to potential matches, and you control who can message you. We never sell your data to third parties. You can delete your account and all data at any time from Settings.",
-    },
-    {
-      question: "What if I don't like my matches?",
-      answer:
-        "You can update your profile preferences at any time to get better matches. The AI learns from your interactions - when you message certain matches or skip others, it refines future recommendations. You can also provide direct feedback on match quality.",
-    },
-    {
-      question: "Can I search for co-founders manually?",
-      answer:
-        "The platform is designed for AI-powered matching rather than manual searching. This ensures you see the most compatible matches based on deep compatibility analysis, not just keywords. However, you can refine your preferences in Settings to guide the AI toward specific types of co-founders.",
-    },
-    {
-      question: "How much does it cost?",
-      answer:
-        "We offer a free tier with basic matching and messaging. Premium plans include unlimited matches, advanced analytics, campaign automation, and priority support. Check our pricing page for current rates and features.",
-    },
-    {
-      question: "What makes a good co-founder match?",
-      answer:
-        "The best matches have complementary skills (not identical), aligned vision and values, compatible work styles, and mutual respect. Our AI looks for these factors, but ultimately you need to have conversations to assess chemistry and commitment level.",
-    },
-  ];
-
-  const videos = [
-    { title: "Platform Overview (3:24)", thumbnail: "🎬", duration: "3:24" },
-    {
-      title: "Creating Your Profile (2:15)",
-      thumbnail: "👤",
-      duration: "2:15",
-    },
-    {
-      title: "Understanding Match Scores (4:10)",
-      thumbnail: "📊",
-      duration: "4:10",
-    },
-    {
-      title: "Messaging Best Practices (5:30)",
-      thumbnail: "💬",
-      duration: "5:30",
-    },
-    { title: "Setting Up Campaigns (6:45)", thumbnail: "🎯", duration: "6:45" },
-  ];
-
-  const filteredFaqs = faqs.filter(
-    faq =>
-      searchQuery === "" ||
-      faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
-    <div className="p-8">
-      {/* Header */}
-      <div className="mb-8 text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-orange-500/20 to-purple-500/20 border border-orange-500/30 mb-4">
-          <HelpCircle className="w-8 h-8 text-orange-500" />
-        </div>
-        <h1 className="text-4xl font-bold text-white mb-2">Help Center</h1>
-        <p className="text-gray-400 text-lg">
-          Everything you need to find your perfect co-founder
-        </p>
-      </div>
-
-      {/* Search */}
-      <Card className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-white/10 backdrop-blur-sm mb-8 max-w-2xl mx-auto">
-        <div className="p-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <Input
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              placeholder="Search for help..."
-              className="pl-10 bg-gray-800/50 border-white/10 text-white"
-            />
-          </div>
-        </div>
-      </Card>
-
-      {/* Getting Started Guides */}
-      <div className="mb-12">
-        <div className="flex items-center gap-2 mb-6">
-          <BookOpen className="w-6 h-6 text-orange-500" />
-          <h2 className="text-2xl font-bold text-white">
-            Getting Started Guides
-          </h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {guides.map((guide, index) => {
-            const Icon = guide.icon;
-            return (
-              <Card
-                key={index}
-                className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-white/10 backdrop-blur-sm hover:border-orange-500/30 transition-all"
-              >
-                <div className="p-6">
-                  <div
-                    className={`w-12 h-12 rounded-lg bg-gradient-to-br from-${guide.color}-500/20 to-${guide.color}-600/20 border border-${guide.color}-500/30 flex items-center justify-center mb-4`}
-                  >
-                    <Icon className={`w-6 h-6 text-${guide.color}-400`} />
-                  </div>
-                  <h3 className="text-lg font-bold text-white mb-2">
-                    {guide.title}
-                  </h3>
-                  <p className="text-gray-400 text-sm mb-4">
-                    {guide.description}
-                  </p>
-                  <ol className="space-y-2">
-                    {guide.steps.map((step, stepIndex) => (
-                      <li
-                        key={stepIndex}
-                        className="text-sm text-gray-300 flex gap-2"
-                      >
-                        <span className="text-orange-500 font-bold">
-                          {stepIndex + 1}.
-                        </span>
-                        <span>{step}</span>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Video Tutorials */}
-      <div className="mb-12">
-        <div className="flex items-center gap-2 mb-6">
-          <Play className="w-6 h-6 text-purple-500" />
-          <h2 className="text-2xl font-bold text-white">Video Tutorials</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {videos.map((video, index) => (
-            <Card
-              key={index}
-              className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-white/10 backdrop-blur-sm hover:border-purple-500/30 transition-all cursor-pointer group"
-            >
-              <div className="p-6">
-                <div className="w-full aspect-video rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center mb-4 group-hover:border-purple-500/50 transition-all">
-                  <div className="text-6xl">{video.thumbnail}</div>
-                  <div className="absolute">
-                    <div className="w-16 h-16 rounded-full bg-white/10 backdrop-blur flex items-center justify-center group-hover:bg-white/20 transition-all">
-                      <Play className="w-8 h-8 text-white ml-1" />
-                    </div>
-                  </div>
-                </div>
-                <h3 className="text-lg font-bold text-white mb-1">
-                  {video.title}
-                </h3>
-                <p className="text-sm text-gray-400">{video.duration}</p>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* FAQs */}
-      <div>
-        <div className="flex items-center gap-2 mb-6">
-          <HelpCircle className="w-6 h-6 text-blue-500" />
-          <h2 className="text-2xl font-bold text-white">
-            Frequently Asked Questions
-          </h2>
-        </div>
-        <div className="max-w-4xl mx-auto space-y-4">
-          {filteredFaqs.map((faq, index) => {
-            const isExpanded = expandedFaq === index;
-            return (
-              <Card
-                key={index}
-                className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-white/10 backdrop-blur-sm hover:border-blue-500/30 transition-all"
-              >
-                <button
-                  onClick={() => setExpandedFaq(isExpanded ? null : index)}
-                  className="w-full p-6 text-left flex items-center justify-between"
-                >
-                  <h3 className="text-lg font-semibold text-white pr-4">
-                    {faq.question}
-                  </h3>
-                  {isExpanded ? (
-                    <ChevronUp className="w-5 h-5 text-gray-400 flex-shrink-0" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
-                  )}
-                </button>
-                {isExpanded && (
-                  <div className="px-6 pb-6">
-                    <p className="text-gray-300 leading-relaxed">
-                      {faq.answer}
-                    </p>
-                  </div>
-                )}
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Contact Support */}
-      <Card className="bg-gradient-to-br from-orange-500/10 to-purple-500/10 border-orange-500/30 backdrop-blur-sm mt-12 max-w-2xl mx-auto">
-        <div className="p-8 text-center">
-          <h3 className="text-xl font-bold text-white mb-2">
-            Still need help?
-          </h3>
-          <p className="text-gray-300 mb-4">
-            Our support team is here to assist you
-          </p>
-          <a
-            href="mailto:support@cofounderdiscovery.com"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-orange-500 to-purple-600 text-white font-medium hover:from-orange-600 hover:to-purple-700 transition-all"
-          >
-            <MessageSquare className="w-5 h-5" />
-            Contact Support
+    <main
+      id="help-top"
+      lang={language}
+      className="min-h-screen bg-neutral-950 px-5 py-8 text-neutral-100"
+    >
+      <div className="mx-auto max-w-3xl space-y-8">
+        <nav
+          aria-label={text("Help navigation", "Hulpnavigatie")}
+          className="flex flex-wrap gap-5 text-sm"
+        >
+          <a href="/" className="underline underline-offset-4">
+            {text("Home", "Startpagina")}
           </a>
-        </div>
-      </Card>
-    </div>
+          <a href="/outreach" className="underline underline-offset-4">
+            {text("Open workspace", "Werkruimte openen")}
+          </a>
+        </nav>
+        <header className="space-y-4">
+          <h1 className="text-3xl font-semibold tracking-tight">
+            {text("Using CoFounder Outreach", "CoFounder Outreach gebruiken")}
+          </h1>
+          <p className="text-base leading-relaxed text-neutral-300">
+            {text(
+              "Private research and human-reviewed, manual outreach. The free public beta is still in development, not an approved production service.",
+              "Privéonderzoek en handmatig contact na menselijke beoordeling. De gratis openbare bèta is nog in ontwikkeling, geen goedgekeurde productiedienst."
+            )}
+          </p>
+          <p className="text-sm leading-relaxed text-neutral-400">
+            {text(
+              "Help opens in a new tab so you can read it without leaving an unsaved editor. English and Dutch are available here; other detailed workspace and server text may remain English.",
+              "Hulp opent in een nieuw tabblad zodat je een niet-opgeslagen editor niet hoeft te verlaten. Deze gids is beschikbaar in het Engels en Nederlands. Andere gedetailleerde werkruimte- en serverteksten kunnen Engels blijven."
+            )}
+          </p>
+        </header>
+        <nav aria-label={text("Guide topics", "Onderwerpen in de gids")}>
+          <ul className="space-y-2">
+            {sections.map(section => (
+              <li key={section.id}>
+                <a
+                  href={`#${section.id}`}
+                  className="underline underline-offset-4"
+                >
+                  {section.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        {sections.map(section => (
+          <section
+            key={section.id}
+            id={section.id}
+            aria-labelledby={`${section.id}-title`}
+            className="scroll-mt-5 space-y-4 border-t border-white/10 pt-7"
+          >
+            <h2 id={`${section.id}-title`} className="text-xl font-semibold">
+              {section.title}
+            </h2>
+            {section.paragraphs.map((paragraph, index) => (
+              <p
+                key={index}
+                className="text-base leading-relaxed text-neutral-300"
+              >
+                {paragraph}
+              </p>
+            ))}
+            <a
+              href="#help-top"
+              className="inline-block text-sm underline underline-offset-4"
+            >
+              {text("Back to top", "Terug naar boven")}
+            </a>
+          </section>
+        ))}
+      </div>
+    </main>
   );
 }

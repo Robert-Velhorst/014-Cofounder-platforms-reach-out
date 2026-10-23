@@ -2,8 +2,20 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { SESSION_DURATION_MS, sdk } from "./_core/sdk";
 import { systemRouter } from "./_core/systemRouter";
-import { adminProcedure, publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import {
+  adminProcedure,
+  publicProcedure,
+  protectedProcedure,
+  verifiedProcedure,
+  router,
+} from "./_core/trpc";
+import { admitLoginAttempt } from "./login-admission";
+import { admitRegistrationAttempt } from "./registration-admission";
+import { admitPasswordResetAttempt } from "./password-reset-admission";
+import { admitVerificationRedemptionAttempt } from "./verification-redemption-admission";
+import { profileInputSchema } from "../shared/profile-input";
 import { TRPCError } from "@trpc/server";
+import { SESSION_CAPACITY_MESSAGE } from "./account-sessions";
 import { z } from "zod";
 import * as db from "./db";
 import {
@@ -53,9 +65,28 @@ import { platformCredentialsRouter } from "./platform-credentials-router";
 import { outreachRouter } from "./outreach-router";
 import { randomUUID } from "node:crypto";
 import { getConfig } from "./config";
-import { hashPassword, validatePassword, verifyPassword } from "./auth-password";
-import { consumeRateLimit } from "./rate-limit";
+import {
+  hashPassword,
+  validatePassword,
+  verifyPassword,
+} from "./auth-password";
 import { criticalPathRouter } from "./critical-path-router";
+import { publicAccount } from "./public-account";
+import { sendVerification } from "./account-mail";
+import { requestPasswordReset } from "./account-mail-queue";
+import { completePasswordReset } from "./password-recovery";
+import { accountExportSchema } from "../shared/account-export";
+import { exportAccountData } from "./account-export";
+import {
+  deletionStatusSchema,
+  deletionRequestSchema,
+  deletionWithdrawalSchema,
+} from "../shared/account-deletion-request";
+import {
+  getDeletionRequestStatus,
+  changeDeletionRequest,
+} from "./account-deletion-request";
+import { adminMfaRouter } from "./admin-mfa-router";
 
 // Legacy compatibility wrapper
 function calculateCompatibility(userProfile: any, prospect: any) {
@@ -98,9 +129,49 @@ function calculateCompatibility(userProfile: any, prospect: any) {
 export const appRouter = router({
   system: systemRouter,
   criticalPath: criticalPathRouter,
+  accountData: router({
+    deletionStatus: verifiedProcedure
+      .input(deletionStatusSchema)
+      .query(({ ctx, input }) =>
+        getDeletionRequestStatus(input, {
+          userId: ctx.user.id,
+          credentialHash: ctx.user.passwordHash,
+          requestId: ctx.requestId,
+        })
+      ),
+    requestDeletion: verifiedProcedure
+      .input(deletionRequestSchema)
+      .mutation(({ ctx, input }) =>
+        changeDeletionRequest("request", input, {
+          userId: ctx.user.id,
+          credentialHash: ctx.user.passwordHash,
+          requestId: ctx.requestId,
+        })
+      ),
+    withdrawDeletion: verifiedProcedure
+      .input(deletionWithdrawalSchema)
+      .mutation(({ ctx, input }) =>
+        changeDeletionRequest("withdraw", input, {
+          userId: ctx.user.id,
+          credentialHash: ctx.user.passwordHash,
+          requestId: ctx.requestId,
+        })
+      ),
+    export: verifiedProcedure
+      .input(accountExportSchema)
+      .mutation(({ ctx, input }) =>
+        exportAccountData({
+          ...input,
+          userId: ctx.user.id,
+          credentialHash: ctx.user.passwordHash,
+          requestId: ctx.requestId,
+        })
+      ),
+  }),
 
   auth: router({
-    me: publicProcedure.query(opts => opts.ctx.user),
+    adminMfa: adminMfaRouter,
+    me: publicProcedure.query(opts => publicAccount(opts.ctx.user)),
     register: publicProcedure
       .input(
         z.object({
@@ -111,14 +182,25 @@ export const appRouter = router({
       )
       .mutation(async ({ ctx, input }) => {
         if (!getConfig().ENABLE_REGISTRATION) {
-          throw new TRPCError({ code: "FORBIDDEN", message: "Registration is disabled by the operator" });
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Registration is disabled by the operator",
+          });
         }
-        const rate = consumeRateLimit(`register:${ctx.req.ip}`, { limit: 5, windowMs: 60 * 60 * 1000 });
-        if (!rate.allowed) throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "Try again later" });
+        if (getConfig().CAPACITY_SESSIONS_PER_ACCOUNT === 0)
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: SESSION_CAPACITY_MESSAGE,
+          });
+        await admitRegistrationAttempt(input.email, ctx.req.ip);
         const passwordError = validatePassword(input.password);
-        if (passwordError) throw new TRPCError({ code: "BAD_REQUEST", message: passwordError });
+        if (passwordError)
+          throw new TRPCError({ code: "BAD_REQUEST", message: passwordError });
         if (await db.getUserByEmail(input.email)) {
-          throw new TRPCError({ code: "CONFLICT", message: "An account already exists for this email" });
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "An account already exists for this email",
+          });
         }
         const openId = `local:${randomUUID()}`;
         const user = await db.createLocalUser({
@@ -127,50 +209,70 @@ export const appRouter = router({
           email: input.email,
           passwordHash: await hashPassword(input.password),
           loginMethod: "local",
-          emailVerified: 1,
+          emailVerified: 0,
         });
-        if (!user) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Account creation failed" });
-        const token = await sdk.createSessionToken(openId, { name: user.name, expiresInMs: SESSION_DURATION_MS });
-        ctx.res.cookie(COOKIE_NAME, token, { ...getSessionCookieOptions(ctx.req), maxAge: SESSION_DURATION_MS });
+        if (!user)
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Account creation failed",
+          });
+        const token = await sdk.createSessionToken(openId, {
+          credentialHash: user.passwordHash!,
+          name: user.name,
+          expiresInMs: SESSION_DURATION_MS,
+        });
+        ctx.res.cookie(COOKIE_NAME, token, {
+          ...getSessionCookieOptions(ctx.req),
+          maxAge: SESSION_DURATION_MS,
+        });
         return { id: user.id, name: user.name, email: user.email };
       }),
     login: publicProcedure
-      .input(z.object({ email: z.string().trim().toLowerCase().email(), password: z.string().min(1).max(128) }))
+      .input(
+        z.object({
+          email: z.string().trim().toLowerCase().email(),
+          password: z.string().min(1).max(128),
+        })
+      )
       .mutation(async ({ ctx, input }) => {
-        const rate = consumeRateLimit(`login:${ctx.req.ip}`, { limit: 10, windowMs: 15 * 60 * 1000 });
-        if (!rate.allowed) throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "Too many attempts. Try again later." });
+        await admitLoginAttempt(input.email, ctx.req.ip);
         const user = await db.getUserByEmail(input.email);
-        if (!user?.passwordHash || !(await verifyPassword(input.password, user.passwordHash))) {
-          throw new TRPCError({ code: "UNAUTHORIZED", message: "Email or password is incorrect" });
+        if (
+          !user?.passwordHash ||
+          !(await verifyPassword(input.password, user.passwordHash))
+        ) {
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "Email or password is incorrect",
+          });
         }
-        const token = await sdk.createSessionToken(user.openId, { name: user.name, expiresInMs: SESSION_DURATION_MS });
-        ctx.res.cookie(COOKIE_NAME, token, { ...getSessionCookieOptions(ctx.req), maxAge: SESSION_DURATION_MS });
+        const token = await sdk.createSessionToken(user.openId, {
+          credentialHash: user.passwordHash,
+          name: user.name,
+          expiresInMs: SESSION_DURATION_MS,
+        });
+        ctx.res.cookie(COOKIE_NAME, token, {
+          ...getSessionCookieOptions(ctx.req),
+          maxAge: SESSION_DURATION_MS,
+        });
         return { id: user.id, name: user.name, email: user.email };
       }),
-    logout: publicProcedure.mutation(({ ctx }) => {
+    logout: publicProcedure.mutation(async ({ ctx }) => {
+      await sdk.revokeRequestSession(ctx.req);
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
     sendVerificationEmail: protectedProcedure.mutation(async ({ ctx }) => {
-      const token =
-        Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15);
-      const expiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-
-      await db.setVerificationToken(ctx.user.id, token, expiry);
-
-      // In production, send actual email here
-      // For demo, just return the token
-      console.log(`Verification email sent to ${ctx.user.email}`);
-      console.log(`Verification link: /verify-email?token=${token}`);
-
-      return { success: true, token };
+      return sendVerification(ctx.user);
     }),
     verifyEmail: publicProcedure
-      .input(z.object({ token: z.string() }))
-      .mutation(async ({ input }) => {
-        const user = await db.verifyEmailToken(input.token);
+      .input(
+        z.object({ token: z.string().regex(/^[A-Za-z0-9_-]{43}$/) }).strict()
+      )
+      .mutation(async ({ ctx, input }) => {
+        await admitVerificationRedemptionAttempt(input.token, ctx.req.ip);
+        const user = await db.verifyEmailToken(input.token, ctx.requestId);
         if (!user) {
           throw new TRPCError({
             code: "BAD_REQUEST",
@@ -179,6 +281,27 @@ export const appRouter = router({
         }
         return { success: true, email: user.email };
       }),
+    requestPasswordReset: publicProcedure
+      .input(
+        z.object({ email: z.string().trim().toLowerCase().email().max(320) })
+      )
+      .mutation(({ ctx, input }) =>
+        requestPasswordReset(input.email, ctx.req.ip || "unknown")
+      ),
+    resetPassword: publicProcedure
+      .input(
+        z.object({
+          token: z.string().regex(/^[A-Za-z0-9_-]{43}$/),
+          password: z.string().min(1).max(128),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        await admitPasswordResetAttempt(input.token, ctx.req.ip);
+        const passwordError = validatePassword(input.password);
+        if (passwordError)
+          throw new TRPCError({ code: "BAD_REQUEST", message: passwordError });
+        return completePasswordReset(input.token, input.password);
+      }),
     checkVerificationStatus: protectedProcedure.query(async ({ ctx }) => {
       const user = await db.getUserById(ctx.user.id);
       return { verified: user?.emailVerified === 1 };
@@ -186,66 +309,42 @@ export const appRouter = router({
   }),
 
   profile: router({
-    get: protectedProcedure.query(async ({ ctx }) => {
-      return await db.getUserProfile(ctx.user.id);
-    }),
-
-    create: protectedProcedure
+    get: verifiedProcedure
       .input(
-        z.object({
-          location: z.string().optional(),
-          timezone: z.string().optional(),
-          availability: z.string().optional(),
-          skills: z.array(z.string()).optional(),
-          experience: z.string().optional(),
-          industries: z.array(z.string()).optional(),
-          previousRoles: z.array(z.string()).optional(),
-          lookingFor: z.array(z.string()).optional(),
-          startupStage: z.string().optional(),
-          commitment: z.string().optional(),
-          targetIndustries: z.array(z.string()).optional(),
-          businessModel: z.array(z.string()).optional(),
-          workStyle: z.array(z.string()).optional(),
-          values: z.array(z.string()).optional(),
-          communicationStyle: z.string().optional(),
-          equityExpectation: z.string().optional(),
-          fundingPreference: z.array(z.string()).optional(),
-          remotePreference: z.string().optional(),
-          completeness: z.number().optional(),
-          isPublic: z.boolean().optional(),
-        })
+        z.object({ accountId: z.number().int().positive() }).strict().optional()
       )
-      .mutation(async ({ ctx, input }) => {
-        return await db.createOrUpdateProfile(ctx.user.id, input);
+      .query(({ ctx, input }) => {
+        if (input && input.accountId !== ctx.user.id)
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message:
+              "Profile account does not match your signed-in account. Refresh your account before continuing.",
+          });
+        return db.getUserProfile(ctx.user.id);
       }),
-
-    update: protectedProcedure
-      .input(
-        z.object({
-          location: z.string().optional(),
-          timezone: z.string().optional(),
-          availability: z.string().optional(),
-          skills: z.array(z.string()).optional(),
-          experience: z.string().optional(),
-          industries: z.array(z.string()).optional(),
-          previousRoles: z.array(z.string()).optional(),
-          lookingFor: z.array(z.string()).optional(),
-          startupStage: z.string().optional(),
-          commitment: z.string().optional(),
-          targetIndustries: z.array(z.string()).optional(),
-          businessModel: z.array(z.string()).optional(),
-          workStyle: z.array(z.string()).optional(),
-          values: z.array(z.string()).optional(),
-          communicationStyle: z.string().optional(),
-          equityExpectation: z.string().optional(),
-          fundingPreference: z.array(z.string()).optional(),
-          remotePreference: z.string().optional(),
-          completeness: z.number().optional(),
-          isPublic: z.boolean().optional(),
-        })
-      )
-      .mutation(async ({ ctx, input }) => {
-        return await db.createOrUpdateProfile(ctx.user.id, input);
+    create: verifiedProcedure
+      .input(profileInputSchema)
+      .mutation(({ ctx, input }) => {
+        if (input.accountId !== undefined && input.accountId !== ctx.user.id)
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message:
+              "Your signed-in account changed. Return to the account that owns this editor before saving.",
+          });
+        const { accountId, ...patch } = input;
+        return db.createOrUpdateProfile(ctx.user.id, patch, ctx.requestId);
+      }),
+    update: verifiedProcedure
+      .input(profileInputSchema)
+      .mutation(({ ctx, input }) => {
+        if (input.accountId !== undefined && input.accountId !== ctx.user.id)
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message:
+              "Your signed-in account changed. Return to the account that owns this editor before saving.",
+          });
+        const { accountId, ...patch } = input;
+        return db.createOrUpdateProfile(ctx.user.id, patch, ctx.requestId);
       }),
   }),
 
@@ -271,7 +370,11 @@ export const appRouter = router({
         })
       )
       .mutation(async ({ input, ctx }) => {
-        return await db.createProspect({ ...input, userId: ctx.user.id, sourceKind: "manual" });
+        return await db.createProspect({
+          ...input,
+          userId: ctx.user.id,
+          sourceKind: "manual",
+        });
       }),
   }),
 
@@ -431,7 +534,10 @@ export const appRouter = router({
             message: "Profile not found",
           });
 
-        const prospect = await db.getProspectById(input.prospectId, ctx.user.id);
+        const prospect = await db.getProspectById(
+          input.prospectId,
+          ctx.user.id
+        );
         if (!prospect)
           throw new TRPCError({
             code: "NOT_FOUND",
@@ -505,7 +611,10 @@ Write a compelling outreach message that highlights our complementary skills and
     messages: protectedProcedure
       .input(z.object({ conversationId: z.number() }))
       .query(async ({ input, ctx }) => {
-        return await db.getConversationMessages(input.conversationId, ctx.user.id);
+        return await db.getConversationMessages(
+          input.conversationId,
+          ctx.user.id
+        );
       }),
 
     send: protectedProcedure
@@ -518,10 +627,20 @@ Write a compelling outreach message that highlights our complementary skills and
         })
       )
       .mutation(async ({ ctx, input }) => {
-        const prospect = await db.getProspectById(input.prospectId, ctx.user.id);
-        if (!prospect) throw new TRPCError({ code: "NOT_FOUND", message: "Prospect not found" });
+        const prospect = await db.getProspectById(
+          input.prospectId,
+          ctx.user.id
+        );
+        if (!prospect)
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Prospect not found",
+          });
         if (prospect.consentStatus === "opted_out") {
-          throw new TRPCError({ code: "FORBIDDEN", message: "This prospect opted out" });
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "This prospect opted out",
+          });
         }
         // Get or create conversation
         const conversation = await db.getOrCreateConversation(
@@ -543,11 +662,19 @@ Write a compelling outreach message that highlights our complementary skills and
         });
 
         // Update conversation
-        await db.updateConversation(conversation.id, {
-          lastMessageAt: new Date(),
-        }, ctx.user.id);
+        await db.updateConversation(
+          conversation.id,
+          {
+            lastMessageAt: new Date(),
+          },
+          ctx.user.id
+        );
 
-        return { ...message, deliveryState: "manual_action_required" as const, providerConfirmed: false };
+        return {
+          ...message,
+          deliveryState: "manual_action_required" as const,
+          providerConfirmed: false,
+        };
       }),
 
     markAsRead: protectedProcedure
@@ -570,7 +697,8 @@ Write a compelling outreach message that highlights our complementary skills and
       .mutation(async () => {
         throw new TRPCError({
           code: "PRECONDITION_FAILED",
-          message: "Unapproved platform scraping is disabled. Use the owned CSV/manual import in the Outreach Console.",
+          message:
+            "Unapproved platform scraping is disabled. Use the owned CSV/manual import in the Outreach Console.",
         });
       }),
   }),
@@ -720,7 +848,10 @@ Write a compelling outreach message that highlights our complementary skills and
         })
       )
       .mutation(async ({ input, ctx }) => {
-        const prospect = await db.getProspectById(input.prospectId, ctx.user.id);
+        const prospect = await db.getProspectById(
+          input.prospectId,
+          ctx.user.id
+        );
         if (!prospect) {
           throw new TRPCError({
             code: "NOT_FOUND",
@@ -1059,16 +1190,16 @@ Write a compelling outreach message that highlights our complementary skills and
     // Mark starter as copied
     markCopied: protectedProcedure
       .input(z.object({ starterId: z.number() }))
-      .mutation(async ({ input }) => {
-        await markStarterAsCopied(input.starterId);
+      .mutation(async ({ input, ctx }) => {
+        await markStarterAsCopied(input.starterId, ctx.user.id);
         return { success: true };
       }),
 
     // Mark starter as used
     markUsed: protectedProcedure
       .input(z.object({ starterId: z.number() }))
-      .mutation(async ({ input }) => {
-        await markStarterAsUsed(input.starterId);
+      .mutation(async ({ input, ctx }) => {
+        await markStarterAsUsed(input.starterId, ctx.user.id);
         return { success: true };
       }),
 
@@ -1102,7 +1233,10 @@ Write a compelling outreach message that highlights our complementary skills and
         }
 
         // Get prospect
-        const prospect = await db.getProspectById(input.prospectId, ctx.user.id);
+        const prospect = await db.getProspectById(
+          input.prospectId,
+          ctx.user.id
+        );
         if (!prospect) {
           throw new TRPCError({
             code: "NOT_FOUND",
@@ -1207,7 +1341,10 @@ Write a compelling outreach message that highlights our complementary skills and
           });
         }
 
-        const prospect = await db.getProspectById(input.prospectId, ctx.user.id);
+        const prospect = await db.getProspectById(
+          input.prospectId,
+          ctx.user.id
+        );
         if (!prospect) {
           throw new TRPCError({
             code: "NOT_FOUND",
@@ -1424,9 +1561,8 @@ Write a compelling outreach message that highlights our complementary skills and
         })
       )
       .query(async ({ input }) => {
-        const { predictOptimalFollowUpTime } = await import(
-          "./predictive-timing"
-        );
+        const { predictOptimalFollowUpTime } =
+          await import("./predictive-timing");
         return predictOptimalFollowUpTime(input.prospectId, input.timezone);
       }),
 
@@ -1439,9 +1575,8 @@ Write a compelling outreach message that highlights our complementary skills and
         })
       )
       .query(async ({ input }) => {
-        const { getNextOptimalFollowUpTime } = await import(
-          "./predictive-timing"
-        );
+        const { getNextOptimalFollowUpTime } =
+          await import("./predictive-timing");
         return getNextOptimalFollowUpTime(
           input.prospectId,
           input.timezone,
@@ -1482,9 +1617,8 @@ Write a compelling outreach message that highlights our complementary skills and
         })
       )
       .query(async ({ ctx, input }) => {
-        const { predictPartnershipSuccess } = await import(
-          "./ml-match-scoring"
-        );
+        const { predictPartnershipSuccess } =
+          await import("./ml-match-scoring");
         return predictPartnershipSuccess(
           ctx.user.id,
           input.prospectId,
@@ -1575,18 +1709,16 @@ Write a compelling outreach message that highlights our complementary skills and
     parse: protectedProcedure
       .input(z.object({ query: z.string() }))
       .mutation(async ({ input }) => {
-        const { parseNaturalLanguageQuery } = await import(
-          "./natural-language-search"
-        );
+        const { parseNaturalLanguageQuery } =
+          await import("./natural-language-search");
         return await parseNaturalLanguageQuery(input.query);
       }),
 
     suggest: protectedProcedure
       .input(z.object({ partialQuery: z.string() }))
       .query(async ({ input }) => {
-        const { generateSearchSuggestions } = await import(
-          "./natural-language-search"
-        );
+        const { generateSearchSuggestions } =
+          await import("./natural-language-search");
         return await generateSearchSuggestions(input.partialQuery);
       }),
   }),

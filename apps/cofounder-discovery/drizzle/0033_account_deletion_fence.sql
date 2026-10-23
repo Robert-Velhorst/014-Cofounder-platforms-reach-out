@@ -1,0 +1,1 @@
+ALTER TABLE `users` ADD `deletion_fenced_at` timestamp;

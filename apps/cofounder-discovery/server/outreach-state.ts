@@ -19,7 +19,7 @@ const transitions: Record<OutreachState, readonly OutreachState[]> = {
   manual_action_required: ["confirmed_sent", "cancelled"],
   confirmed_sent: ["responded", "follow_up_due", "closed"],
   responded: ["closed"],
-  follow_up_due: ["pending_review", "responded", "closed"],
+  follow_up_due: ["responded", "closed"],
   closed: [],
   cancelled: [],
 };
