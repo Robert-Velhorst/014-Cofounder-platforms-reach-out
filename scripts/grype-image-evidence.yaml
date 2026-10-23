@@ -1,0 +1,12 @@
+# Retain scanner-internal classifications for independent review as well as matches.
+check-for-app-update: false
+only-fixed: false
+only-notfixed: false
+ignore-states: ""
+ignore: []
+exclude: []
+show-suppressed: true
+include-matcher-suppressions: true
+match-upstream-kernel-headers: true
+vex-documents: []
+vex-add: []

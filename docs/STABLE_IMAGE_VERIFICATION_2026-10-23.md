@@ -59,6 +59,23 @@ database metadata; it retains every finding and always reports
 `securityAcceptance: false`. The existing strict Trivy gate remains in place
 until these actual reports are independently inspected. No finding is hidden.
 
+The first downloaded application capture at head `65f6c80` contains 593
+packages: 204 Debian-format Ubuntu packages, 388 npm entries and one native
+binary. Grype reports zero matches. The summary correctly failed on its initial
+use of the human-readable Syft `version` rather than machine `versionID`;
+the corrected summary verifies both distribution ID and version ID. It also
+handles the pinned presenter's omitted empty `ignoredMatches` field.
+
+Inspection revealed default Grype kernel-header ignore rules and omitted
+matcher-suppressed classifications. None of the named kernel-header packages
+is present in that captured SBOM, but the default policy is still insufficient
+for the intended evidence record. An explicit read-only scanner configuration
+now enables upstream kernel-header matching and retains internal suppressions,
+with no user ignore rules, exclusions, fix-state filtering or VEX additions.
+The summary verifies that effective configuration. Vendor-fixed/not-affected
+classifications remain evidence to review; they are not all vulnerabilities.
+The next capture must qualify this configuration before security acceptance.
+
 The local bounded Grype probe exited 137; Docker events confirmed an OOM.
 A larger attempt did not launch because the host memory guard failed. Hosted
 CI provides the next capability probe; local OOM is not a coverage result.

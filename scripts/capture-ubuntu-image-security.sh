@@ -22,9 +22,10 @@ docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges \
   --user "$(id -u):$(id -g)" --cpus 1 --memory 2560m --memory-swap 2560m --pids-limit 128 \
   --tmpfs /tmp:rw,size=512m,mode=1777 -e HOME=/tmp -e GRYPE_DB_CACHE_DIR=/cache -e GOMEMLIMIT=512MiB \
   --mount "type=bind,source=$RUNNER_TEMP/cofounder-app-grype-cache,target=/cache" \
+  --mount "type=bind,source=$GITHUB_WORKSPACE/scripts/grype-image-evidence.yaml,target=/scan/config.yaml,readonly" \
   --mount "type=bind,source=$GITHUB_WORKSPACE/output/ubuntu-app-sbom.json,target=/scan/sbom.json,readonly" \
   anchore/grype:v0.121.0@sha256:621d56d1d68106b787022c81546f7e0a36202a25d1239f0c20195fab8c16f7ea \
-  sbom:/scan/sbom.json --output json > output/ubuntu-app-grype.json
+  --config /scan/config.yaml sbom:/scan/sbom.json --output json > output/ubuntu-app-grype.json
 docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges \
   --user "$(id -u):$(id -g)" --cpus 1 --memory 2560m --memory-swap 2560m --pids-limit 128 \
   --tmpfs /tmp:rw,size=512m,mode=1777 -e HOME=/tmp -e GRYPE_DB_CACHE_DIR=/cache -e GOMEMLIMIT=512MiB \

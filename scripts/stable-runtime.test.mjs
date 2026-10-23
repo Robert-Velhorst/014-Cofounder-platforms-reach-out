@@ -83,8 +83,9 @@ test('candidate Ubuntu coverage requires real release records and does not asser
 
 test('full Ubuntu evidence requires inventories, all direct dependencies, current DB and retained findings', () => {
   const now=Date.parse('2026-10-23T12:00:00Z');
-  const sbom={descriptor:{name:'syft',version:'1.55.0'},distro:{name:'ubuntu',version:'26.10'},artifacts:[{id:'os1',name:'libc6',version:'2.44',type:'deb'},{id:'node1',name:'example',version:'1.0.0',type:'npm'}]};
-  const scan={distro:{name:'ubuntu',version:'26.10'},matches:[{artifact:{id:'node1'}}],ignoredMatches:[],descriptor:{db:{status:{valid:true,built:'2026-10-23T06:30:00Z'},providers:{ubuntu:{captured:'2026-10-23T06:00:00Z'}}}}};
+  const sbom={descriptor:{name:'syft',version:'1.55.0'},distro:{name:'Ubuntu',id:'ubuntu',version:'26.10 (Stonking Stingray)',versionID:'26.10'},artifacts:[{id:'os1',name:'libc6',version:'2.44',type:'deb'},{id:'node1',name:'example',version:'1.0.0',type:'npm'}]};
+  const config={'show-suppressed':true,'include-matcher-suppressions':true,'match-upstream-kernel-headers':true,'only-fixed':false,'only-notfixed':false,'ignore-wontfix':'',ignore:[],exclude:[],'vex-documents':[],'vex-add':[]};
+  const scan={distro:{name:'ubuntu',version:'26.10'},matches:[{artifact:{id:'node1'}}],descriptor:{configuration:config,db:{status:{valid:true,built:'2026-10-23T06:30:00Z'},providers:{ubuntu:{captured:'2026-10-23T06:00:00Z'}}}}};
   const feed=[{vulnerability:{provider:'ubuntu',status:'active',id:'fixture'},packages:[{os:{name:'ubuntu',version:'26.10'},package:{name:'openssl'}}]}];
   const result=summarizeUbuntuImageEvidence(sbom,scan,feed,{example:'1.0.0'},now);
   assert.equal(result.evidenceComplete,true); assert.equal(result.securityAcceptance,false); assert.equal(result.findings,1);
@@ -93,6 +94,13 @@ test('full Ubuntu evidence requires inventories, all direct dependencies, curren
   assert.throws(()=>summarizeUbuntuImageEvidence(sbom,scan,[],{},now),/MISSING_UBUNTU_FEED_ROWS/);
   assert.throws(()=>summarizeUbuntuImageEvidence(sbom,{...scan,matches:[{artifact:{id:'unknown'}}]},feed,{},now),/FINDING_OUTSIDE_SBOM/);
   assert.throws(()=>summarizeUbuntuImageEvidence(sbom,scan,feed,{},now+6*86400000),/STALE_VULNERABILITY_DATABASE/);
+  assert.throws(()=>summarizeUbuntuImageEvidence({...sbom,distro:{...sbom.distro,versionID:'26.04'}},scan,feed,{},now),/WRONG_SBOM_RELEASE/);
+  assert.throws(()=>summarizeUbuntuImageEvidence(sbom,{...scan,ignoredMatches:null},feed,{},now),/INVALID_IGNORED_FINDINGS/);
+  for (const [key,value] of [['include-matcher-suppressions',false],['only-fixed',true],['exclude',['/app/**']]]) assert.throws(()=>summarizeUbuntuImageEvidence(sbom,{...scan,descriptor:{...scan.descriptor,configuration:{...config,[key]:value}}},feed,{},now),/SCANNER_CONFIGURATION/);
+  const collector=readFileSync(new URL('./capture-ubuntu-image-security.sh',import.meta.url),'utf8');
+  assert.ok(collector.includes('--config /scan/config.yaml sbom:/scan/sbom.json'));
+  const policy=readFileSync(new URL('./grype-image-evidence.yaml',import.meta.url),'utf8');
+  for (const field of ['include-matcher-suppressions: true','show-suppressed: true','match-upstream-kernel-headers: true','ignore: []','exclude: []']) assert.ok(policy.includes(field));
 });
 
 test('Caddy uses current stable Alpine while preserving rootless runtime and persistent paths', () => {
