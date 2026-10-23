@@ -12,8 +12,11 @@ and stopped/no-OOM fixture inspection/removal. All 1,036 units and 726 database
 cases, root/operator gates, builds, recovery, startup, admission and container
 smoke passed. The receipt records exact artifacts and boundaries.
 
-The source has been pushed in PR #112; the prior accumulated implementation was
-merged through PR #83. Dated local receipts below retain their original source
+The source was merged through PR #112 at main commit
+`4f0a69653a5e8656e39825de217aecfc12023c08`, whose
+[post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39870898817)
+also passed. The prior accumulated implementation was merged through PR #83.
+Dated local receipts below retain their original source
 and image scope. The historical dirty-worktree/no-publication descriptions do
 not describe the current GitHub state. No public deployment, sustained hosted
 capacity, live inbox/provider acceptance or full-goal completion follows from

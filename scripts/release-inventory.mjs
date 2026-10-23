@@ -23,6 +23,7 @@ const fixed = [
   "pnpm-lock.yaml",
   "pnpm-workspace.yaml",
   ".npmrc",
+  ".gitattributes",
   "Dockerfile",
   ".dockerignore",
   `${app}/package.json`,

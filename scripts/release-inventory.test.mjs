@@ -34,6 +34,7 @@ function fixture(fn) {
     "pnpm-lock.yaml",
     "pnpm-workspace.yaml",
     ".npmrc",
+    ".gitattributes",
     "Dockerfile",
     ".dockerignore",
     `${app}/tsconfig.json`,
@@ -114,6 +115,27 @@ test("does not include environment, logs, dependencies or arbitrary user data", 
     );
   }));
 
+test("checkout byte policy is required, hashed and cannot silently disappear", () =>
+  fixture((root, put) => {
+    put(".gitattributes", "*.ts text eol=lf\n*.tsx text eol=lf\n");
+    const before = inspectRelease(root, git);
+    const row = before.inventory.find((item) => item.path === ".gitattributes");
+    assert.ok(row);
+    assert.equal(
+      row.sha256,
+      createHash("sha256")
+        .update("*.ts text eol=lf\n*.tsx text eol=lf\n")
+        .digest("hex"),
+    );
+    put(".gitattributes", "*.ts text eol=crlf\n");
+    assert.notEqual(
+      inspectRelease(root, git).inventoryDigest,
+      before.inventoryDigest,
+    );
+    rmSync(join(root, ".gitattributes"));
+    assert.throws(() => inspectRelease(root, git));
+  }));
+
 test("package-manager configuration is a required hashed build input, not disclosed content", () =>
   fixture((root, put) => {
     put(".npmrc", "inject-workspace-packages=true\n");
@@ -164,7 +186,7 @@ test("refuses incomplete artifacts", () =>
   fixture((root) => {
     rmSync(join(root, app, "dist/index.js"));
     assert.throws(() => inspectRelease(root, git));
-    }));
+  }));
 
 test("refuses a release missing the signal-aware startup artifact", () =>
   fixture((root) => {

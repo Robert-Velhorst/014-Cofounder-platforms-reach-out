@@ -1,5 +1,10 @@
 # Worldwide discovery coverage: evidence and open work
 
+October 23 research supplement: [Egypt review](PLATFORM_EGYPT_REVIEW_2026-10-23.md)
+records an English/Arabic co-founder listing and a separate community lead, with
+unresolved policy/access and forthcoming-feature warnings. Both remain held;
+this supplement changes neither catalogue counts nor workflow admission.
+
 Snapshot: 2026-10-02. This is an audit of the current repository catalogue, not
 a claim that every operating platform worldwide was found or freshly tested.
 Authoritative source records are in `server/platform-catalogue.ts` and their dated
@@ -31,7 +36,7 @@ Slack and Facebook templates do not represent reviewed individual groups.
 A listed source is not a connected integration, an admission decision, proof of
 availability, geographic eligibility or contact consent. Every record explicitly
 has `implemented`, `permissionVerified` and `liveVerified` set to false.
-The forty-four discovery-only source records remain refused by candidate
+The forty-five discovery-only source records remain refused by candidate
 intake, CSV import and outreach preparation, including label/URL variants.
 Earlier manual-reviewed records allow only the bounded reviewed manual workflow;
 that classification is not provider permission for automation.

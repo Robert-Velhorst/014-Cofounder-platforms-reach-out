@@ -1,5 +1,14 @@
 # Worldwide public beta delivery ledger
 
+## October 23 combined source candidate — qualification pending
+
+[The combined candidate receipt](BETA_CONSOLIDATION_2026-10-23.md) preserves the
+exact histories of PRs 113–115, resolves documentation conflicts without dropping
+either feature, and records the Windows/LF checkout-byte repair. All 182 root
+native operator checks passed together with the original API/UI snapshots intact.
+Whole combined-head application/database/build/load/TLS CI remains required; no
+merge, production readiness, public deployment or phase completion is claimed.
+
 ## October 23 maintained customer-load gate
 
 The [complete original workload is now a maintained mandatory CI/local gate](CUSTOMER_LOAD_ACCEPTANCE.md).
@@ -14,7 +23,10 @@ load fixtures stopped 0/no OOM and were removed. The workload thresholds, stages
 and one-CPU resource limits were retained. See the linked receipt for immutable
 CI artifact identities, overload results, memory observations and source scope.
 
-The implementation is in [PR #112](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/112).
+The implementation was merged through [PR #112](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/112)
+at main commit `4f0a69653a5e8656e39825de217aecfc12023c08`; its
+[post-merge CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39870898817)
+also passed.
 This is bounded CI acceptance, not a diagnosis of the old Windows-host failures,
 sustained hosted capacity, published container release, deployment, live mail,
 provider permission, human/privacy approval or whole-goal completion. All 116
