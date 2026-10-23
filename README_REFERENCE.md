@@ -3,10 +3,14 @@
 The previous README is preserved below, including its complete operating contracts
 and dated evidence. Start with the [current overview](README.md). Older checkpoint
 counts, image identities and statements of what was then unverified are historical,
-not instructions to deploy an older artifact. Current release evidence is in the
-[67-source package checkpoint](docs/FRANCE_67_SOURCE_PACKAGE_QUALIFICATION_2026-10-02.md),
-with the preceding [development dependency review](docs/DEPENDENCY_TOOLCHAIN_QUALIFICATION_2026-10-02.md)
-retained as historical evidence.
+not instructions to deploy an older artifact. Current status and evidence
+navigation are in the [current overview](README.md) and
+[goal matrix](docs/GOAL_COMPLETION_MATRIX.md). The
+[67-source package checkpoint](docs/FRANCE_67_SOURCE_PACKAGE_QUALIFICATION_2026-10-02.md)
+and [development dependency review](docs/DEPENDENCY_TOOLCHAIN_QUALIFICATION_2026-10-02.md)
+are dated historical evidence, not current release qualification. Historical MIT/
+missing-license statements below predate the current [LICENSE](LICENSE) and
+`AGPL-3.0-only` package declarations; see the current README's license section.
 
 # CoFounder Outreach
 
@@ -3171,19 +3175,19 @@ covers 43 tables/505 fields, not live records or complete nested-content review.
 Neither document is an approved DPIA, public privacy notice or permission to
 collect, contact or erase people. No retention or registration setting was changed.
 
-| File                                 | Use                                                 |
-| ------------------------------------ | --------------------------------------------------- |
-| `apps/cofounder-discovery/README.md` | App-specific developer notes                        |
-| `docs/OPERATOR_RUNBOOK.md`           | Windows, backup, HAI, and incident operation         |
-| `docs/SECURITY.md`                   | Hosting, secrets, and safety boundary               |
-| `docs/CRITICAL_PATH.md`              | Supported end-to-end product workflow               |
-| `docs/FINAL_VERIFICATION_REPORT.md`  | Final verification results                          |
-| `docs/GOAL_COMPLETION_MATRIX.md`     | Requirement coverage matrix                         |
-| `docs/ACCEPTANCE_TESTS.md`           | Manual/browser/provider acceptance evidence         |
-| `docs/API_USAGE_AUDIT.md`            | API surface and usage audit                         |
-| `docs/UI_ACTION_AUDIT.md`            | UI action and workflow audit                        |
-| `docs/TASK_GRAPH.md`                 | Implementation task graph                           |
-| `docs/CODEX_WORKLOG.md`              | Implementation worklog                              |
+| File                                 | Use                                          |
+| ------------------------------------ | -------------------------------------------- |
+| `apps/cofounder-discovery/README.md` | App-specific developer notes                 |
+| `docs/OPERATOR_RUNBOOK.md`           | Windows, backup, HAI, and incident operation |
+| `docs/SECURITY.md`                   | Hosting, secrets, and safety boundary        |
+| `docs/CRITICAL_PATH.md`              | Supported end-to-end product workflow        |
+| `docs/FINAL_VERIFICATION_REPORT.md`  | Final verification results                   |
+| `docs/GOAL_COMPLETION_MATRIX.md`     | Requirement coverage matrix                  |
+| `docs/ACCEPTANCE_TESTS.md`           | Manual/browser/provider acceptance evidence  |
+| `docs/API_USAGE_AUDIT.md`            | API surface and usage audit                  |
+| `docs/UI_ACTION_AUDIT.md`            | UI action and workflow audit                 |
+| `docs/TASK_GRAPH.md`                 | Implementation task graph                    |
+| `docs/CODEX_WORKLOG.md`              | Implementation worklog                       |
 
 ## License
 
@@ -3199,3 +3203,65 @@ It distinguishes declarations from actual notice files, records the khroma MIT
 text despite missing metadata, and flags incomplete notice/service/imported-rights
 review. This is not legal approval or a complete SBOM; no repository licence was
 chosen or third-party permission granted by the inventory.
+
+## Historical README introduction: October 23 preservation
+
+The former introduction from main checkpoint
+`4f0a69653a5e8656e39825de217aecfc12023c08` is retained verbatim below, apart from
+this explanatory heading. Its references to current/latest/pending describe its
+historical checkpoints, not the updated main overview or a new execution. The
+October 2–3 local failures remain evidence; later passing CI does not diagnose
+their Windows-host cause. No original result or failure count was erased.
+
+**Status: in development for a free public beta, not approved for public production.**
+GitHub `main` contains the accumulated implementation from merged PR #83. The
+[October 20 baseline CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39467835793)
+passed build, database, recovery, startup, admission and container checks. Live
+hosting, email, privacy/operator decisions and complete release acceptance remain
+unfinished. The [complete customer-load gate](docs/CUSTOMER_LOAD_ACCEPTANCE.md)
+now retains the original workload in CI; a successful run is required before
+claiming normal 150-request/second capacity. Initial budget planning is
+**EUR 100/month**; no purchase or deployment is authorized by that plan.
+The [October 2 GitHub snapshot](docs/GITHUB_REPOSITORY_STATE_2026-10-02.md) records the historical repository state; current branch and PR status must be checked live.
+Historical October 2–3 local qualification follows; these receipts retain their
+own image and source scope and do not describe a fresh run of the current branch.
+The October 3 increment uses [one live joined account/session read](docs/AUTH_JOINED_READ_2026-10-03.md)
+per authentication instead of two, preserving owner, revocation, expiry and
+deletion-fence checks. Actual SDK regression proves 40 reads instead of 80 for
+40 authentications; typecheck, all 1,036 units and a fresh 11-case MySQL session
+suite passed. Full current-candidate runtime/database/admission/load qualification
+remains pending, so no capacity fix is claimed.
+The preceding increment [reuses authentication query construction](docs/AUTH_QUERY_REUSE_2026-10-02.md)
+without caching account/session results. Its [fresh packaged qualification](docs/AUTH_QUERY_REUSE_PACKAGE_2026-10-03.md)
+passed typecheck/build, 1,030 unit cases, all 725 database cases and compiled
+package parity. The original full workload still failed at 150 requests/s:
+95 busy refusals and three actor-start drops. Read/write/race/isolation checks
+passed their retained rules; fresh browser/recovery checks on that image remain
+pending. This is not a capacity fix or public-release approval.
+The previous packaged increment adds [bounded session-key reuse](docs/SESSION_KEY_REUSE_2026-10-02.md):
+one import instead of 41 for signing plus 40 concurrent authentications, without
+caching account/session decisions. Fresh candidate typecheck/build and 1,025 unit
+cases passed. The unchanged full workload still failed at 150 requests/s (125
+busy refusals); retained write/race/isolation checks passed. This is not a capacity
+fix or full release qualification; earlier package receipts retain their own scope.
+Fresh mandatory database acceptance also passed 724 cases across 43 files without
+skips, with matching compiled application/migration files in the runtime and test
+packages. A fresh 24-stage connected browser workflow passed, including private
+export and lost-response CSV retry. This is not all UI/accessibility acceptance;
+isolated encrypted recovery also passed, including restored-owner isolation and
+revoked-link/session refusal. Off-host recovery, post-backup reconciliation,
+hosted acceptance and the capacity failure remain unfinished.
+Capacity diagnosis remains open. Increasing only the app or database to two CPUs
+did not clear the full workload. Identity-only failures also persist without
+warmup; one two-CPU identity pass failed on unchanged repeat. The latest
+[database boundary measurement and diagnostic history](docs/IDENTITY_DATABASE_BOUNDARY_2026-10-02.md)
+reproduced failure despite no new database-quota throttling and short measured
+server SELECT times. Application/protocol/scheduling delays remain to distinguish;
+no reliable fix or production sizing is approved. The maintained
+[authentication-admission regression](docs/SESSION_KEY_REUSE_2026-10-02.md)
+detects removal of its guard, but does not certify capacity. Diagnostic images
+and shortened tests do not replace complete release acceptance.
+The latest [sampled application profile](docs/IDENTITY_CPU_PROFILE_2026-10-02.md)
+reproduced failure without new app/DB/driver quota throttling. No single dominant
+function or reliable fix has been established; the first mistimed profile was
+rejected, then rerun with explicit readiness acknowledgements.

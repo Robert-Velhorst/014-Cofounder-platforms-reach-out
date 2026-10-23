@@ -1,5 +1,11 @@
 # Worldwide discovery coverage: evidence and open work
 
+October 23 Spanish-language supplement: [WeFoundy/cofound.lat/cofound.space review](PLATFORM_SPANISH_LATAM_REVIEW_2026-10-23.md)
+records new held leads and a rendered recheck of cofound.lat. This updates research
+evidence only; the catalogue count, geographic acceptance and workflow admission
+are unchanged. Historical unreadable-page observations below remain dated facts,
+not current claims that the rendered page cannot be read.
+
 October 23 research supplement: [Egypt review](PLATFORM_EGYPT_REVIEW_2026-10-23.md)
 records an English/Arabic co-founder listing and a separate community lead, with
 unresolved policy/access and forthcoming-feature warnings. Both remain held;

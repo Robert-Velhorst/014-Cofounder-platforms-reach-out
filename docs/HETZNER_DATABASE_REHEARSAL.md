@@ -7,6 +7,55 @@ the shipped MySQL CLI against an exclusively owned synthetic `cofounder_test`
 schema. It is not a substitute for the full application migration engine,
 compiled-app startup, customer workload or TLS rehearsal.
 
+## October 23 CI qualification and main publication
+
+The fresh-role rehearsal passed in
+[CI run 39883752403](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39883752403)
+at exact PR #118 head `774191131cb172550dc225d74c049e834b5a6a24`, on Node
+26.12.0. Its `hetzner_database_authority_verified` receipt proves successful
+runtime DML, denied runtime DDL, foreign-schema/account/delegation refusal,
+successful migrator DDL, rejection of the migrator as a runtime identity,
+remote-root refusal and image-wrapper refusal. The owned database fixture exited
+zero, without OOM, and was removed. This standalone receipt deliberately does not
+claim full application or TLS acceptance by itself.
+
+The same full CI run separately passed TypeScript/build, 1,036 application unit
+cases across 102 files, 736 database cases across 43 files (including 44 migration
+startup cases), readiness, encrypted recovery, startup/admission, the complete
+100-account/10,000-candidate customer workload, actual TLS/session boundaries,
+production container smoke and both dependency-advisory checks. Its four-service
+TLS graph proved DDL/foreign-schema/account-administration refusal, no migration
+secret in the application, local-only root, verified certificate/redirect/cookie/
+logout behavior, hostile forwarding and cross-origin refusal, revoked-session
+refusal, source admission, and four clean zero-exit/no-OOM fixture removals.
+The synthetic account bypassed actual inbox delivery; provider actions were zero.
+
+Exact local image IDs from that run:
+
+| Artifact        | Immutable image ID                                                        |
+| --------------- | ------------------------------------------------------------------------- |
+| Runtime         | `sha256:336c49245fb91d004db4f83579fa9a9e9acd9f06d478298d8314230048a75dd3` |
+| Test tools      | `sha256:a5aa95caf25b17368c171fe06e621e1d29e6f2b8e20f9a01b47749082a840a66` |
+| Custom database | `sha256:4bef45b52a707de4dea92e6b3f7cdb3663a15cc1acc41e860036644ea4c83d12` |
+| TLS edge        | `sha256:563359e547a29dffaa6ef77141618be13dc25d862c1dc0230dbccc204726a06a` |
+
+These are CI-local artifacts, not published registry artifacts or deployed hosts.
+PR #117 independently passed
+[full CI 39883674484](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39883674484)
+at `fa4501550cd6b3648e9ab1d67751f70c9af8211a` before merging as `1510ef3`.
+PR #118 merged as `cb8944afced4b3510a20d5f14a3211579d58defd`; the resulting main
+tree was checked identical to qualified head `7741911`. Its separate
+[post-merge CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887723059)
+and [CodeQL](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887723057)
+were queued at this publication checkpoint and are not credited as passing.
+
+This closes the failed test-transport qualification gap for the fresh synthetic
+CI artifact. It does not resolve the earlier retained Windows fixture, diagnose
+that host's Docker timeouts, approve existing-database migration or account/grant
+changes, verify hosted restore/mail/provider behavior, authorize deployment or
+spending, or complete the worldwide public-beta goal. The historical local
+failure and read-only observations below remain valid within their dated scope.
+
 ## Scope and isolation
 
 The implementation requires real fresh initialization, exact DML-only app grants,

@@ -1,6 +1,14 @@
 # Combined beta candidate — October 23, 2026
 
-Status: source consolidated for qualification, **not merged into main or released**.
+Publication update, 02:06 UTC: PR #116 merged into main as `68d46fc` after
+[full exact-head CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39883590317)
+passed at `2da786b`, including actual TLS/session acceptance. The merged tree was
+checked identical to that qualified head, and all three source heads below were
+verified as ancestors. PRs #117–118 subsequently merged the isolated database
+identities and fresh-role rehearsal; see the
+[later qualification receipt](HETZNER_DATABASE_REHEARSAL.md#october-23-ci-qualification-and-main-publication).
+The earlier observations below retain their original source and failure scope;
+they do not describe the final merge status. This is **not a public release**.
 The full worldwide beta goal and all 116 original phase requirements remain open.
 No public deployment, registry publication, provider action, spending or privacy/
 operator approval is established by this source consolidation.

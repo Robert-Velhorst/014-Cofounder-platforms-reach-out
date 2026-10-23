@@ -350,6 +350,37 @@ test("CI database readiness requires an authenticated application-user TCP query
   );
   assert.doesNotMatch(workflow, /mysqladmin ping/);
 });
+test("README command and license descriptions match current source contracts", () => {
+  const overview = readFileSync(new URL("README.md", root), "utf8");
+  const application = JSON.parse(
+    readFileSync(
+      new URL("apps/cofounder-discovery/package.json", root),
+      "utf8",
+    ),
+  );
+  assert.equal(application.license, manifest.license);
+  const licenseSection = overview.split("## License")[1]?.split("\n## ")[0];
+  assert.ok(licenseSection, "README license section missing");
+  assert.ok(
+    licenseSection.includes("`" + manifest.license + "`"),
+    "README SPDX declaration differs from package metadata",
+  );
+  assert.equal(manifest.license, "AGPL-3.0-only");
+  assert.match(
+    readFileSync(new URL("LICENSE", root), "utf8"),
+    /GNU AFFERO GENERAL PUBLIC LICENSE/,
+  );
+  const commands = [
+    ...overview.matchAll(/`pnpm ([a-z][a-z0-9:-]*)(?: [^`]+)?`/g),
+  ].map((match) => match[1]);
+  assert.ok(commands.length > 5, "README command inventory unexpectedly empty");
+  for (const command of new Set(commands))
+    assert.ok(
+      Object.hasOwn(manifest.scripts, command),
+      `README advertises missing root command: ${command}`,
+    );
+});
+
 test("workflow command detection ignores conditional or commented-out steps", () => {
   const fixture =
     "\n  verify:\n    steps:\n      # - run: pnpm test:budget\n      - run: pnpm test:monitor\n        if: false\n      - run: pnpm test:production-config\n        continue-on-error: true\n      - run: pnpm test:recovery\n  other:\n    steps:\n      - run: pnpm test:budget\n";
