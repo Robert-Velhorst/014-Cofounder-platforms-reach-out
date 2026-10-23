@@ -92,6 +92,8 @@ jobs:
         run: |
           mkdir -p output
           docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint caddy cofounder-hetzner-edge:local version > output/caddy-version.txt
+          docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint cat cofounder-hetzner-edge:local /etc/alpine-release > output/caddy-os-release.txt
+          test "$(cat output/caddy-os-release.txt)" = '3.24.3'
           docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint mysqld cofounder-hetzner-database:local --version > output/mysql-version.txt
           grep -Eq '^v2[.]11[.]7-cofounder[.]20261023[.]2( |$)' output/caddy-version.txt
           docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint cat cofounder-hetzner-edge:local /usr/share/caddy/build-info.txt > output/caddy-build-info.txt

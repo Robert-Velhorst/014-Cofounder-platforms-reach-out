@@ -78,6 +78,15 @@ schema. Runtime, build and scanner reports must stay tied to their commit.
 
 ## Local verification of the follow-up
 
-All 210 operator/configuration tests pass with Node 26.12.1. Workflow YAML
+The inspected official Caddy image retains Alpine 3.23.7, while Alpine's
+[current stable release](https://alpinelinux.org/downloads/) is 3.24.3, released
+21 October 2026. The follow-up rebuilds the runtime on digest-pinned Alpine
+3.24.3 and explicitly targets the builder's Alpine 3.24 line. It preserves
+certificate installation, the curl health probe, XDG persistence paths, the
+explicit Caddy command, internal high ports and UID/GID 1000. No file capability
+or libcap helper is required. CI must verify the actual OS version, TLS/session,
+recovery, workload and all-severity scan results on this new image.
+
+All 211 operator/configuration tests pass with Node 26.12.1. Workflow YAML
 parses. This does not replace hosted browser, image or application checks.
 The TypeScript vendor compiler's bundled Go/libraries remain separate work.

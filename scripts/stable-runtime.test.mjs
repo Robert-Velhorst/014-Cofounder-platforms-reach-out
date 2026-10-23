@@ -94,3 +94,13 @@ test('full Ubuntu evidence requires inventories, all direct dependencies, curren
   assert.throws(()=>summarizeUbuntuImageEvidence(sbom,{...scan,matches:[{artifact:{id:'unknown'}}]},feed,{},now),/FINDING_OUTSIDE_SBOM/);
   assert.throws(()=>summarizeUbuntuImageEvidence(sbom,scan,feed,{},now+6*86400000),/STALE_VULNERABILITY_DATABASE/);
 });
+
+test('Caddy uses current stable Alpine while preserving rootless runtime and persistent paths', () => {
+  const dockerfile=readFileSync(new URL('../Dockerfile.hetzner-edge',import.meta.url),'utf8');
+  assert.match(dockerfile,/FROM golang:1\.27\.3-alpine3\.24@sha256:[a-f0-9]{64} AS edge-build/);
+  assert.match(dockerfile,/FROM alpine:3\.24\.3@sha256:[a-f0-9]{64}/);
+  assert.doesNotMatch(dockerfile,/^FROM caddy:/m);
+  for (const fragment of ['ca-certificates curl mailcap','XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data','chown 1000:1000 /config /config/caddy /data /data/caddy','USER 1000:1000','EXPOSE 8080 8443','CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]']) assert.ok(dockerfile.includes(fragment));
+  const workflow=readFileSync(new URL('../.github/workflows/ci.yml',import.meta.url),'utf8');
+  assert.ok(workflow.includes('test "$(cat output/caddy-os-release.txt)" = \'3.24.3\''));
+});
