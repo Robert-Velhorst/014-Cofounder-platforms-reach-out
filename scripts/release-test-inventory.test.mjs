@@ -128,6 +128,33 @@ test("recovery acceptance builds both test and production targets before rehears
   }
 });
 
+test("actual build-context acceptance is mandatory before image builds and in full local acceptance", () => {
+  const commands = activeVerifyCommands(workflow);
+  const acceptance = commands.indexOf("pnpm test:build-context:integration");
+  const build = commands.indexOf(
+    "docker build --target integration-test --tag cofounder-recovery-test:local .",
+  );
+  assert.ok(acceptance >= 0 && build > acceptance);
+  assert.equal(
+    commands.filter(
+      (command) => command === "pnpm test:build-context:integration",
+    ).length,
+    1,
+  );
+  assert.equal(
+    manifest.scripts["test:build-context:integration"],
+    "node --test scripts/build-context.integration.test.mjs",
+  );
+  assert.equal(
+    manifest.scripts["test:all"]
+      .split("&&")
+      .map((value) => value.trim())
+      .filter((value) => value === "pnpm test:build-context:integration")
+      .length,
+    1,
+  );
+});
+
 test("fresh-role database acceptance follows its custom image build and remains mandatory", () => {
   const commands = activeVerifyCommands(workflow);
   const build = commands.indexOf(
@@ -240,6 +267,7 @@ test("operator suite inventory cannot silently omit a new root test file", () =>
 test("all-tests command runs local gates before mandatory database/recovery acceptance", () => {
   assert.deepEqual(commands(manifest.scripts["test:all"]), [
     "pnpm test",
+    "pnpm test:build-context:integration",
     "pnpm test:integration",
     "pnpm test:readiness:integration",
     "pnpm test:recovery:integration",

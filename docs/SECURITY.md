@@ -1,5 +1,16 @@
 # Security
 
+## October 23 build-context exclusions — actual export acceptance pending
+
+The [build-context review](BUILD_CONTEXT_SAFETY.md) found missing backup/data/key/
+recovery exclusions before broad build-stage `COPY . .`, not evidence of an
+existing leak. Rules now apply at root and nested depths, without removing local
+files or required source/migrations. The new mandatory scratch-only BuildKit gate
+uses 14 required and 62 forbidden synthetic paths, no actual secrets/source data,
+registry base image, running container or database. Native checks are not actual
+Docker matching/image acceptance. No cache, image, credential or alert is removed
+or rotated; existing build caches are not sanitized by this source correction.
+
 ## October 23 source identity ambiguity guard — bounded source evidence
 
 The current 70-source catalogue was enumerated with no normalized label/alias or

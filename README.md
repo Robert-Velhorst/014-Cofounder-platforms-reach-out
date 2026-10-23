@@ -490,36 +490,45 @@ UI/HTTP/persistence, English/Dutch, responsive, export and CSV retry coverage;
 native checks are not a substitute for its full browser run or screenshot review.
 It retains all original 24 stages and adds six required private-profile onboarding
 stages for language/responsive editing, actual private persistence, fresh-cookie
-login, account isolation and publication refusal. This extension is also unexecuted;
+login, account isolation and publication refusal, plus four required account-request/
+withdrawal/ownership stages. These extensions are also unexecuted;
 no current onboarding/browser acceptance is claimed from its native tests.
 `pnpm test:browser-journey` checks safety/receipt/source contracts without Docker;
 `pnpm test:browser-journey:integration` runs the isolated synthetic browser workflow
 after its reviewed local images are built. It is mandatory in `pnpm test:all` and
 this candidate's CI; no passing browser result is claimed yet.
 
+The [build-context privacy correction](docs/BUILD_CONTEXT_SAFETY.md) excludes
+recognized backup, data, key and recovery artifacts before build transfer. Its
+new mandatory scratch-only BuildKit export uses synthetic files, not real
+credentials or a running database/container. Native checks pass; actual export
+semantics and full image acceptance remain pending. Ignore rules do not sanitize
+existing builder caches or replace secret scanning.
+
 Run from the repo root using the pinned package manager:
 The table abbreviates the invocation as `pnpm`; on Windows with blocked shims,
 replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
 
-| Command                                  | Scope                                                                                                           |
-| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `pnpm check`                             | Application TypeScript                                                                                          |
-| `pnpm test`                              | Root operator/inventory gates and app units; Compose needed for configuration checks                            |
-| `pnpm build`                             | Client and bundled server/operator artifacts                                                                    |
-| `pnpm test:integration`                  | Mandatory dedicated-database suites; build first                                                                |
-| `pnpm test:all`                          | Root/unit/database checks plus readiness, recovery, startup, admission and the complete customer workload       |
-| `pnpm test:customer-load:integration`    | Full packaged synthetic read/write/race/isolation and scheduled-arrival acceptance; local images required       |
-| `pnpm test:hetzner-config`               | Read-only private-stack model and preflight checks                                                              |
-| `pnpm test:hetzner-database`             | Synthetic shell/secret-validation and fresh-role SQL checks; not live MySQL execution                           |
-| `pnpm test:hetzner-database:integration` | Real disposable fresh-database role/permission rehearsal; no production data or account changes                 |
-| `pnpm hetzner:preflight`                 | Validate reviewed Hetzner inputs and the Compose model without starting services                                |
-| `pnpm test:tls-ingress:integration`      | Real TLS/session/forwarding rehearsal using the isolated Hetzner stack and synthetic data                       |
-| `pnpm db:verify`                         | Read-only exact migration-history check against the configured database; not schema repair or role provisioning |
-| `pnpm db:verify:runtime`                 | Read-only history and exact-schema DML-authority check; rejects broader grants/roles without altering them      |
-| `pnpm requirements:check`                | Phase/title/evidence-path integrity, not completion                                                             |
-| `pnpm audit:api`, `pnpm audit:ui`        | Source inventories, not behavioral acceptance                                                                   |
-| `pnpm doctor`                            | Runtime configuration diagnostics                                                                               |
-| `pnpm verify`                            | App check/units/build/diagnostic pass, not the full root release gate                                           |
+| Command                                  | Scope                                                                                                             |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `pnpm check`                             | Application TypeScript                                                                                            |
+| `pnpm test`                              | Root operator/inventory gates and app units; Compose needed for configuration checks                              |
+| `pnpm build`                             | Client and bundled server/operator artifacts                                                                      |
+| `pnpm test:integration`                  | Mandatory dedicated-database suites; build first                                                                  |
+| `pnpm test:all`                          | Root/unit, context, DB, recovery/startup/admission/load, fresh roles/TLS and complete browser/cold gates          |
+| `pnpm test:build-context:integration`    | Actual BuildKit scratch export: synthetic privacy exclusions and required source; no real data or running service |
+| `pnpm test:customer-load:integration`    | Full packaged synthetic read/write/race/isolation and scheduled-arrival acceptance; local images required         |
+| `pnpm test:hetzner-config`               | Read-only private-stack model and preflight checks                                                                |
+| `pnpm test:hetzner-database`             | Synthetic shell/secret-validation and fresh-role SQL checks; not live MySQL execution                             |
+| `pnpm test:hetzner-database:integration` | Real disposable fresh-database role/permission rehearsal; no production data or account changes                   |
+| `pnpm hetzner:preflight`                 | Validate reviewed Hetzner inputs and the Compose model without starting services                                  |
+| `pnpm test:tls-ingress:integration`      | Real TLS/session/forwarding rehearsal using the isolated Hetzner stack and synthetic data                         |
+| `pnpm db:verify`                         | Read-only exact migration-history check against the configured database; not schema repair or role provisioning   |
+| `pnpm db:verify:runtime`                 | Read-only history and exact-schema DML-authority check; rejects broader grants/roles without altering them        |
+| `pnpm requirements:check`                | Phase/title/evidence-path integrity, not completion                                                               |
+| `pnpm audit:api`, `pnpm audit:ui`        | Source inventories, not behavioral acceptance                                                                     |
+| `pnpm doctor`                            | Runtime configuration diagnostics                                                                                 |
+| `pnpm verify`                            | App check/units/build/diagnostic pass, not the full root release gate                                             |
 
 Isolated disposable integration workflow:
 

@@ -58,6 +58,8 @@ jobs:
       - run: pnpm test:recovery
       - run: pnpm test:monitor
       - run: pnpm test:production-config
+      - name: Verify actual Docker context excludes synthetic private artifacts
+        run: pnpm test:build-context:integration
       - run: pnpm test:hetzner-config
       - run: pnpm test:hetzner-database
       - run: pnpm test:browser-journey

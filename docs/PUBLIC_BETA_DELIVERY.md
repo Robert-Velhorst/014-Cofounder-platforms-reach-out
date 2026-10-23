@@ -1,5 +1,27 @@
 # Worldwide public beta delivery ledger
 
+## October 23 build-context privacy correction — actual export unqualified
+
+Read-only release review found that backup/data/debug-bundle directories and
+key/recovery artifact extensions were not excluded from the broad Docker build
+context. The local backups directory was empty; no actual leak is established.
+The [correction](BUILD_CONTEXT_SAFETY.md) adds depth-independent exclusions and
+preserves required source/migrations/public examples. It deletes no local data.
+
+An added mandatory CI/full-test gate exports a tiny synthetic scratch context
+through actual BuildKit and requires 14 source paths while refusing 62 private
+artifact paths. It copies only the real ignore rules, not actual source/data or
+secrets. No base image, running container, database or published port is involved;
+uncertain timeout retains scratch rather than assuming the builder stopped.
+The actual export integration has not run locally and remains unqualified.
+Forty focused native configuration/release cases pass after the old command
+sequence assertion was correctly extended without dropping any existing gate.
+All 236 native checks pass, zero failures/skips (9,780.2783 ms). The actual prior
+ignore file is refused by the source contract, not by a locally executed Docker
+export. The API/UI inventories remain unchanged and current.
+Full exact-head image/database/browser/security acceptance and all original
+phases remain incomplete.
+
 ## October 23 source identity guard and Oceania recheck — unqualified candidate
 
 The [source identity guard](SECURITY.md#october-23-source-identity-ambiguity-guard--bounded-source-evidence)
