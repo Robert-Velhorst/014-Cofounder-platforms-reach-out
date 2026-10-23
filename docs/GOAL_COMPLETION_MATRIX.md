@@ -2,6 +2,11 @@
 
 Updated: 2026-10-23. Overall goal: **not complete**.
 
+The [maintained browser-journey candidate](MAINTAINED_BROWSER_JOURNEY.md) restores
+the archived 24-stage workflow as a mandatory source-defined gate. Its native
+checks passed, but its image/browser execution and screenshot review remain
+unverified. No phase is promoted by this implementation or its wiring.
+
 Publication checkpoint: the accumulated implementation was merged through
 [PR #83](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/83)
 on October 20. The maintained full customer-load gate was subsequently merged

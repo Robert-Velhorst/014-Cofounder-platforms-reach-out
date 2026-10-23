@@ -1,5 +1,17 @@
 # Worldwide public beta delivery ledger
 
+## October 23 maintained browser workflow candidate — not yet executed
+
+The [24-stage browser journey](MAINTAINED_BROWSER_JOURNEY.md) is now maintained
+as source with a mandatory CI/root-all gate, isolated test-only browser image,
+strict synthetic configuration, ordered receipt checks, bounded owner-verified
+fixtures and separate PNG-only screenshot retention. The original real actions,
+persistence, responsive/language and committed-import/lost-response retry checks
+were retained; fixed credentials and proprietary font assumptions were removed.
+All 207 native checks passed locally. Browser image/build/runtime/screenshot
+acceptance has not run, no new local fixture was created, and no phase, provider
+permission or public-production status is promoted by this source candidate.
+
 ## October 23 read-only grant observation and rehearsal transport fix
 
 Read-only queries against the exact retained synthetic database found that raw

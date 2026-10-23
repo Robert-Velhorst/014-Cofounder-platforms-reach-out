@@ -26,6 +26,8 @@ const fixed = [
   ".gitattributes",
   "Dockerfile",
   ".dockerignore",
+  "scripts/browser-journey.integration.test.mjs",
+  "scripts/browser-journey.test.mjs",
   `${app}/package.json`,
   `${app}/tsconfig.json`,
   `${app}/vite.config.ts`,

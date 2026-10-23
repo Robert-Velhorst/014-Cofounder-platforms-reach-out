@@ -441,6 +441,15 @@ revoke permissions on an existing database. Use the
 
 ## CI and verification
 
+The [maintained 24-stage browser journey](docs/MAINTAINED_BROWSER_JOURNEY.md)
+is a new candidate gate, not yet executed or qualified. Its source keeps real
+UI/HTTP/persistence, English/Dutch, responsive, export and CSV retry coverage;
+native checks are not a substitute for its full browser run or screenshot review.
+`pnpm test:browser-journey` checks safety/receipt/source contracts without Docker;
+`pnpm test:browser-journey:integration` runs the isolated synthetic browser workflow
+after its reviewed local images are built. It is mandatory in `pnpm test:all` and
+this candidate's CI; no passing browser result is claimed yet.
+
 Run from the repo root using the pinned package manager:
 The table abbreviates the invocation as `pnpm`; on Windows with blocked shims,
 replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
