@@ -1,5 +1,14 @@
 # Worldwide public beta delivery ledger
 
+## October 23 combined source candidate — qualification pending
+
+[The combined candidate receipt](BETA_CONSOLIDATION_2026-10-23.md) preserves the
+exact histories of PRs 113–115, resolves documentation conflicts without dropping
+either feature, and records the Windows/LF checkout-byte repair. All 182 root
+native operator checks passed together with the original API/UI snapshots intact.
+Whole combined-head application/database/build/load/TLS CI remains required; no
+merge, production readiness, public deployment or phase completion is claimed.
+
 ## October 23 maintained customer-load gate
 
 The [complete original workload is now a maintained mandatory CI/local gate](CUSTOMER_LOAD_ACCEPTANCE.md).
