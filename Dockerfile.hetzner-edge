@@ -15,7 +15,13 @@ RUN wget -q https://codeload.github.com/caddyserver/caddy/tar.gz/87c43dc4f54861e
  && sort /out/linked-packages.unsorted > /out/linked-packages.txt \
  && rm /out/linked-packages.unsorted \
  && go env -json GOOS GOARCH CGO_ENABLED GOVERSION > /out/build-environment.json \
- && sha256sum /out/caddy > /out/binary-sha256.txt
+ && sha256sum /out/caddy > /out/binary-sha256.txt \
+ && sha256sum /out/caddy /out/linked-packages.txt /out/build-info.txt /out/build-environment.json > /out/evidence-hashes.txt \
+ && printf '{"binarySha256":"%s","linkedPackagesSha256":"%s","buildInfoSha256":"%s","buildEnvironmentSha256":"%s","sourceSha256":"bb250cdef3e4baad82af6c048ac9754b4d1350d50a55af7c34e8d1aa574a6211","package":"./cmd/caddy","trimpath":true}\n' \
+      "$(sed -n '1s/ .*//p' /out/evidence-hashes.txt)" \
+      "$(sed -n '2s/ .*//p' /out/evidence-hashes.txt)" \
+      "$(sed -n '3s/ .*//p' /out/evidence-hashes.txt)" \
+      "$(sed -n '4s/ .*//p' /out/evidence-hashes.txt)" > /out/build-evidence.json
 
 # The official Caddy image still uses Alpine 3.23. Reproduce its required
 # filesystem/command contract on the current stable Alpine runtime instead.
@@ -32,6 +38,7 @@ COPY --from=edge-build /out/build-info.txt /usr/share/caddy/build-info.txt
 COPY --from=edge-build /out/linked-packages.txt /usr/share/caddy/linked-packages.txt
 COPY --from=edge-build /out/build-environment.json /usr/share/caddy/build-environment.json
 COPY --from=edge-build /out/binary-sha256.txt /usr/share/caddy/binary-sha256.txt
+COPY --from=edge-build /out/build-evidence.json /usr/share/caddy/build-evidence.json
 COPY deploy/hetzner/Caddyfile /etc/caddy/Caddyfile
 WORKDIR /srv
 EXPOSE 8080 8443

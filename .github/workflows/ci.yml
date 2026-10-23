@@ -89,6 +89,7 @@ jobs:
         run: pnpm test:tls-ingress:integration
       - run: pnpm audit --prod --audit-level low
       - name: Verify actual edge and database executable versions
+        id: native_versions
         run: |
           mkdir -p output
           docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint caddy cofounder-hetzner-edge:local version > output/caddy-version.txt
@@ -98,7 +99,7 @@ jobs:
           grep -Eq '^v2[.]11[.]7-cofounder[.]20261023[.]2( |$)' output/caddy-version.txt
           docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint cat cofounder-hetzner-edge:local /usr/share/caddy/build-info.txt > output/caddy-build-info.txt
           grep -q 'go1.27.3' output/caddy-build-info.txt
-          for item in linked-packages.txt build-environment.json binary-sha256.txt; do
+          for item in linked-packages.txt build-environment.json binary-sha256.txt build-evidence.json; do
             docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint cat cofounder-hetzner-edge:local "/usr/share/caddy/$item" > "output/caddy-$item"
           done
           docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint sha256sum cofounder-hetzner-edge:local /usr/bin/caddy > output/caddy-runtime-sha256.txt
@@ -119,6 +120,11 @@ jobs:
               --exit-code 1 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL --format json --input /scan/image.tar > "output/image-security-$target.json" || status=1
           done
           exit "$status"
+      - name: Assess Caddy OpenPGP package applicability while retaining raw scan failure
+        if: ${{ always() && steps.native_versions.outcome == 'success' }}
+        run: |
+          curl --fail --silent --show-error --max-time 30 --retry 2 https://vuln.go.dev/ID/GO-2026-5932.json > output/caddy-go-advisory.json
+          node scripts/assess-caddy-advisory.mjs > output/caddy-advisory-applicability.json
       - name: Retain runtime and native image evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -130,6 +136,9 @@ jobs:
             output/*-version.txt
             output/caddy-*.txt
             output/caddy-build-environment.json
+            output/caddy-build-evidence.json
+            output/caddy-go-advisory.json
+            output/caddy-advisory-applicability.json
 
 
   container-smoke:
@@ -196,7 +205,10 @@ jobs:
           esac
       - name: Save built production image for independent scanners
         run: |
-          docker image save "$(docker compose images --quiet app | head -n1)" --output output/app-image.tar
+          app_image="$(docker compose images --quiet app | head -n1)"
+          test -n "$app_image"
+          docker image inspect --format '{{.Id}}' "$app_image" > output/app-image-id.txt
+          docker image save "$app_image" --output output/app-image.tar
           chmod 0444 output/app-image.tar
       - name: Capture covered Ubuntu application inventory and vulnerability evidence
         run: bash scripts/capture-ubuntu-image-security.sh
@@ -207,8 +219,8 @@ jobs:
             aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c \
             image --cache-dir /tmp/trivy-cache --scanners vuln --skip-java-db-update --quiet --list-all-pkgs \
             --exit-code 1 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL --format json --input /scan/image.tar > output/image-security.json
-      - name: Verify complete production app inventory
-        run: node scripts/check-image-security.mjs
+      - name: Verify covered Ubuntu OS and Node package security policy
+        run: node scripts/verify-ubuntu-image-security.mjs > output/ubuntu-app-security-verification.json
       - name: Retain production and browser evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -222,6 +234,7 @@ jobs:
             output/image-security.json
             output/ubuntu-app-*.json
             output/ubuntu-app-archive-sha256.txt
+            output/app-image-id.txt
 
       - name: Show container diagnostics
         if: always()

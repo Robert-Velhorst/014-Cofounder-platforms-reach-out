@@ -76,6 +76,35 @@ The summary verifies that effective configuration. Vendor-fixed/not-affected
 classifications remain evidence to review; they are not all vulnerabilities.
 The next capture must qualify this configuration before security acceptance.
 
+Downloaded head `54981c3` now passes evidence completeness under that explicit
+policy: 593 packages, 69 direct runtime dependencies, zero reported findings
+and zero ignored findings. The independent OS inventories agree on every one
+of their 204 package names and complete Debian versions once Trivy's separate
+epoch/version/release fields are reconstructed. The raw reports are retained.
+
+Two Syft entries have `UNKNOWN` versions: `chart.js-auto` and
+`chart.js-helpers`. These are private subpackage manifests within Chart.js
+4.6.1, not independent releases. Their manifests and the versioned parent
+manifest were matched by SHA-256 against the integrity-verified
+[official npm release archive](https://registry.npmjs.org/chart.js/4.6.1).
+The new verifier requires these exact file hashes, private metadata, locations
+and the scanned parent version; other unresolved components are rejected.
+It does not rewrite the SBOM or remove a scanner finding.
+
+The new OS/Node package policy replaces the incompatible Trivy-only Ubuntu
+metadata check. It binds both scanners to the saved runtime image ID, verifies
+image manifest/config hashes, requires current Canonical feed coverage, all
+direct dependencies, consistent full OS inventories and zero findings or
+ignored findings in either scanner. It also requires the actual trusted-browser
+report. The old Trivy report remains untouched, and every reported finding
+still fails. The new policy passes locally against the downloaded head 54981c3
+reports, with the independent Trivy image ID as the comparison reference.
+Hosted qualification additionally captures the image ID directly from Docker.
+
+This is OS/Node package vulnerability policy only. It does not establish
+browser-binary vulnerability, untrusted-page, provider, deployment or complete
+portfolio security acceptance.
+
 The local bounded Grype probe exited 137; Docker events confirmed an OOM.
 A larger attempt did not launch because the host memory guard failed. Hosted
 CI provides the next capability probe; local OOM is not a coverage result.
@@ -93,6 +122,16 @@ The exact Go advisory is available at
 versioned upstream Trivy analyzer/detector source and Grype's database-search
 schema. Runtime, build and scanner reports must stay tied to their commit.
 
+The follow-up produces a build evidence manifest binding the Caddy binary,
+compiled package list, Go module information and build environment by hash.
+An automated advisory assessment verifies the current official package scope,
+source archive, build profile, full compile graph and matching runtime hash.
+It reports `not_affected` only when every advisory package is absent. Changed
+scope, incomplete/mixed evidence or an included OpenPGP package fail. The
+assessment retains the raw advisory and all other findings; the native scan
+still fails and whole-image acceptance remains false. New-image hosted
+qualification is required before relying on this assessment.
+
 ## Local verification of the follow-up
 
 The inspected official Caddy image retains Alpine 3.23.7, while Alpine's
@@ -104,6 +143,6 @@ explicit Caddy command, internal high ports and UID/GID 1000. No file capability
 or libcap helper is required. CI must verify the actual OS version, TLS/session,
 recovery, workload and all-severity scan results on this new image.
 
-All 211 operator/configuration tests pass with Node 26.12.1. Workflow YAML
+All 213 operator/configuration tests pass with Node 26.12.1. Workflow YAML
 parses. This does not replace hosted browser, image or application checks.
 The TypeScript vendor compiler's bundled Go/libraries remain separate work.
