@@ -1,14 +1,14 @@
 packages:
-  - apps/*
-
+- apps/*
 allowBuilds:
   esbuild: true
-  "@tailwindcss/oxide": true
-
+  '@tailwindcss/oxide': true
 overrides:
-  tailwindcss>nanoid: 3.3.8
-
-  qs: 6.16.0
-  dompurify: 3.4.16
-  "@esbuild-kit/core-utils>esbuild": 0.25.12
-  postcss-selector-parser: 7.1.6
+  tailwindcss>nanoid: 6.0.2
+  qs: 6.16.1
+  dompurify: 3.4.17
+  '@esbuild-kit/core-utils>esbuild': 0.28.2
+  postcss-selector-parser: 7.1.7
+minimumReleaseAgeExclude:
+- dotenv@18.0.9
+- chart.js@4.6.1

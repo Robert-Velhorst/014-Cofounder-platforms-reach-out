@@ -98,6 +98,7 @@ const workflow = readFileSync(
   "utf8",
 );
 const operators = [
+  "test:stable-runtime",
   "test:api-audit",
   "test:ui-audit",
   "test:budget",
@@ -309,9 +310,9 @@ test("runtime startup acceptance follows the production artifact build", () => {
 test("CI checks development advisories without hiding failures or weakening the runtime gate", () => {
   function check(source) {
     const active = activeVerifyCommands(source.replaceAll("\r\n", "\n"));
-    const full = active.indexOf("pnpm audit --audit-level moderate");
+    const full = active.indexOf("pnpm audit --audit-level low");
     assert.equal(
-      active.filter((step) => step === "pnpm audit --audit-level moderate")
+      active.filter((step) => step === "pnpm audit --audit-level low")
         .length,
       1,
     );
@@ -319,24 +320,25 @@ test("CI checks development advisories without hiding failures or weakening the 
     assert.ok(
       full < active.indexOf("pnpm --dir apps/cofounder-discovery test:unit"),
     );
-    assert.ok(active.includes("pnpm audit --prod --audit-level high"));
+    assert.ok(active.includes("pnpm audit --prod --audit-level low"));
   }
   check(workflow);
   for (const replacement of [
-    "pnpm audit --prod --audit-level moderate",
+    "pnpm audit --prod --audit-level low",
+    "pnpm audit --audit-level moderate",
     "pnpm audit --audit-level high",
-    "pnpm audit --audit-level moderate || true",
+    "pnpm audit --audit-level low || true",
   ]) {
     assert.throws(() =>
-      check(workflow.replace("pnpm audit --audit-level moderate", replacement)),
+      check(workflow.replace("pnpm audit --audit-level low", replacement)),
     );
   }
   for (const ignored of ["if: false", "continue-on-error: true"]) {
     assert.throws(() =>
       check(
         workflow.replace(
-          "run: pnpm audit --audit-level moderate",
-          `run: pnpm audit --audit-level moderate\n        ${ignored}`,
+          "run: pnpm audit --audit-level low",
+          `run: pnpm audit --audit-level low\n        ${ignored}`,
         ),
       ),
     );

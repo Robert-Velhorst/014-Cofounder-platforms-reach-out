@@ -14,7 +14,7 @@ jobs:
     timeout-minutes: 35
     services:
       mysql:
-        image: mysql:26.7.0@sha256:625f74ddf93652d9d0f8d4ea7d741b9189554a5e96d27bb770abd0902d89c6e3
+        image: mysql:26.10.0@sha256:f51c9c01c16b0eb5d81bb70ab7e7fcb3b96abc6a54114be3a94e8e569cae7815
         env:
           MYSQL_DATABASE: cofounder_test
           MYSQL_USER: cofounder
@@ -38,17 +38,20 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
         with:
-          version: 12.14.0
+          version: 12.15.0
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 26.12.0
+          node-version: 26.12.1
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
+      - name: Verify actual Node and MySQL versions
+        run: node scripts/stable-runtime.mjs --database
       - name: Check production and development dependency advisories
-        run: pnpm audit --audit-level moderate
+        run: pnpm audit --audit-level low
       - run: pnpm --dir apps/cofounder-discovery check
       - run: pnpm test:release-contract
+      - run: pnpm test:stable-runtime
       - run: pnpm test:requirements
       - name: Check source-derived API surface and current audit snapshot
         run: pnpm test:api-audit
@@ -84,7 +87,37 @@ jobs:
         run: pnpm test:customer-load:integration
       - name: Verify actual HTTPS ingress and session boundaries
         run: pnpm test:tls-ingress:integration
-      - run: pnpm audit --prod --audit-level high
+      - run: pnpm audit --prod --audit-level low
+      - name: Verify actual edge and database executable versions
+        run: |
+          mkdir -p output
+          docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint caddy cofounder-hetzner-edge:local version > output/caddy-version.txt
+          docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint mysqld cofounder-hetzner-database:local --version > output/mysql-version.txt
+          grep -q '^v2.11.7 ' output/caddy-version.txt
+          grep -q '26.10.0' output/mysql-version.txt
+      - name: Scan installed edge and database packages
+        run: |
+          status=0
+          for target in edge database; do
+            docker image save "cofounder-hetzner-$target:local" --output "output/native-$target.tar"
+            chmod 0444 "output/native-$target.tar"
+            docker run --rm --read-only --tmpfs /tmp:rw,size=2048m --cap-drop ALL \
+              --mount "type=bind,source=$GITHUB_WORKSPACE/output/native-$target.tar,target=/scan/image.tar,readonly" \
+              aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c \
+              image --cache-dir /tmp/trivy-cache --scanners vuln --skip-java-db-update --quiet --list-all-pkgs \
+              --exit-code 1 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL --format json --input /scan/image.tar > "output/image-security-$target.json" || status=1
+          done
+          exit "$status"
+      - name: Retain runtime and native image evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: stable-runtime-and-native-images
+          path: |
+            output/stable-runtime-verification.json
+            output/image-security-*.json
+            output/*-version.txt
+
 
   container-smoke:
     runs-on: ubuntu-latest
@@ -99,7 +132,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 26.12.0
+          node-version: 26.12.1
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          version: 12.15.0
+      - run: pnpm install --frozen-lockfile
+      - name: Install bounded browser fixture
+        run: pnpm --dir apps/cofounder-discovery exec playwright install --with-deps --only-shell chromium
       - name: Build and start the production stack
         run: docker compose up --build --detach --wait --wait-timeout 300
       - name: Probe production liveness and database readiness
@@ -115,7 +154,11 @@ jobs:
             and .legacyRoutes == "disabled"'
           test "$(curl --silent --output /dev/null --write-out '%{http_code}' http://127.0.0.1:3014/api/integrations/hai/feed)" = "503"
       - name: Verify pruned non-root production runtime
-        run: docker compose exec -T app node --input-type=module < scripts/production-smoke.mjs
+        run: |
+          mkdir -p output
+          docker compose exec -T app node --input-type=module < scripts/production-smoke.mjs > output/stable-container-verification.json
+      - name: Verify compiled frontend at desktop and mobile sizes
+        run: node scripts/check-stable-browser.mjs
       - name: Verify graceful application shutdown
         run: |
           docker compose stop app
@@ -127,9 +170,58 @@ jobs:
             *'"event":"shutdown_completed"'*) ;;
             *) echo "Missing graceful shutdown acknowledgement"; exit 1 ;;
           esac
+      - name: Scan installed production app packages
+        run: |
+          docker image save "$(docker compose images --quiet app | head -n1)" --output output/app-image.tar
+          chmod 0444 output/app-image.tar
+          docker run --rm --read-only --tmpfs /tmp:rw,size=2048m --cap-drop ALL \
+            --mount "type=bind,source=$GITHUB_WORKSPACE/output/app-image.tar,target=/scan/image.tar,readonly" \
+            aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c \
+            image --cache-dir /tmp/trivy-cache --scanners vuln --skip-java-db-update --quiet --list-all-pkgs \
+            --exit-code 1 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL --format json --input /scan/image.tar > output/image-security.json
+      - name: Verify complete production app inventory
+        run: node scripts/check-image-security.mjs
+      - name: Retain production and browser evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: stable-production-and-browser
+          path: |
+            output/stable-container-verification.json
+            output/stable-browser-verification.json
+            output/stable-browser-*.png
+            output/image-security.json
+
       - name: Show container diagnostics
         if: always()
         run: docker compose ps && docker compose logs --no-color --tail 200
       - name: Stop the CI stack
         if: always()
         run: docker compose down --volumes --remove-orphans
+
+  windows-source:
+    runs-on: windows-2025
+    timeout-minutes: 20
+    env:
+      NODE_ENV: test
+      APP_MODE: test
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+        with:
+          version: 12.15.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26.12.1
+      - run: pnpm install --frozen-lockfile
+      - run: node scripts/stable-runtime.mjs
+      - run: pnpm test:stable-runtime
+      - run: pnpm --dir apps/cofounder-discovery check
+      - run: pnpm --dir apps/cofounder-discovery test:unit
+      - run: pnpm --dir apps/cofounder-discovery build
+      - name: Retain Windows runtime evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: stable-windows-source-runtime
+          path: output/stable-runtime-verification.json
