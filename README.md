@@ -7,9 +7,19 @@ organizes that work; it does not automatically contact people.
 
 **Status: in development for a free public beta, not approved for public production.**
 
-Reviewed October 23, 2026: main checkpoint
-[`9e15816`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/9e15816b2f34b06e69635ea475f2aa55f03c02d2)
-includes the accumulated implementation from PR #83, the maintained full
+Reviewed October 24, 2026: [PR #127](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/127)
+checkpoint `3c69446` passed its complete GitHub CI and CodeQL workflows, including
+the compiled synthetic browser journey, cold-asset probe, customer workload,
+database-role, recovery and HTTPS/session checks. See the
+[publication and evidence audit](docs/LOCAL_PUBLICATION_AUDIT_2026-10-24.md)
+for exact run links, preserved historical work and remaining cleanup boundaries.
+This is automated candidate evidence, not a merge, deployment, screenshot review
+or approval for public production. No Docker images were rebuilt locally for
+this follow-up.
+
+The separately verified main checkpoint remains
+[`9e15816`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/9e15816b2f34b06e69635ea475f2aa55f03c02d2).
+It includes the accumulated implementation from PR #83, the maintained full
 customer-workload gate from PR #112 and the private deployment/read-only migration
 work from PRs #116–118, including separate runtime and migration credentials,
 plus the restricted WASL/MENA discovery increment from PR #120.
@@ -21,23 +31,28 @@ HTTPS/session checks. The separate
 [post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39893556582)
 also passed; its CodeQL workflow completed with the two open findings described
 below. Browser candidate PRs #121–122 are
-not included in that qualification. CI means automated checks on
+not included in that main qualification; their later consolidated candidate is
+covered by the separate PR #127 run above. CI means automated checks on
 GitHub—not approval of a public service.
 
 Two open high-severity CodeQL frontend-rate-limit findings were subsequently
 inspected. [The source fix and evidence](docs/SECURITY.md#october-23-frontend-admission-candidate--full-cicodeql-pending)
-are candidates pending full CI and a fresh scan; the alerts were not suppressed.
+are included in the now-passing PR #127 candidate. The older main findings were
+not suppressed; a passing candidate workflow alone does not close main alerts.
 The first maintained browser run also failed a font-family assertion; its
 [actual failure and correction](docs/MAINTAINED_BROWSER_JOURNEY.md#first-maintained-execution--failed-not-qualified)
-do not qualify the full browser journey. Passing scan jobs are not zero findings.
+were not acceptance at that earlier checkpoint. The corrected synthetic journey
+now passes in the PR #127 run; human screenshot review remains separate.
+Passing scan jobs are not zero findings.
 
 The latest source also adds a required [cold static-asset compatibility probe](docs/MAINTAINED_BROWSER_JOURNEY.md#cold-static-asset-compatibility-candidate--not-yet-qualified)
 after the original 24 browser stages, six onboarding stages and four new
 account-request stages. It measures
 100 cold asset sets at each of two viewport sizes from one client address,
 without changing the frontend admission limits. Its native transport tests are
-not evidence of 100 rendered browser users; full CI, compiled-asset results and
-screenshot review remain pending. This work is published for review, not release.
+not evidence of 100 rendered browser users. The compiled probe and full CI now
+pass for PR #127; human screenshot review remains pending. This work is published
+for review, not release.
 The [capture-accounting repair](docs/MAINTAINED_BROWSER_JOURNEY.md#capture-accounting-correction--unqualified-source-repair)
 also refuses failed or unfinished static requests rather than silently omitting
 them from a successful response list. Its native regressions are not browser acceptance.
@@ -47,8 +62,9 @@ including review/withdrawal states and warnings. It records a request for operat
 review, not completed erasure. Focused server-rendered markup tests cover its
 initial safeguards. A new [connected account-request candidate](docs/MAINTAINED_BROWSER_JOURNEY.md#account-request-extension--source-defined-not-executed)
 requires actual UI transitions, reload, canonical wire tokens, audit/quota checks
-and ownership refusals in CI. Its browser/database/screenshots are not yet
-qualified; actual erasure remains a separate, disabled path.
+and ownership refusals in CI. Its automated browser/database checks now pass for
+PR #127; screenshot review and real operator acceptance remain separate. Actual
+erasure remains a separate, disabled path.
 
 The [workload evidence and limits](docs/CUSTOMER_LOAD_ACCEPTANCE.md) describe the
 100-account/10,000-candidate rehearsal, including successful 150-request/second
