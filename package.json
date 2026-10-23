@@ -46,6 +46,6 @@
     "test:tls-ingress:integration": "node --test scripts/tls-ingress.integration.test.mjs"
   },
   "engines": {
-    "node": ">=26.12.0 <27"
+    "node": ">=26.12.1 <27"
   }
 }
