@@ -42,7 +42,7 @@ export function ownedTlsFixture(model, owner, project) {
   // for the final ownership check and all subsequent destructive operations.
   assert.match(model.Id, /^[a-f0-9]{64}$/);
   const role = model.Config.Labels["com.docker.compose.service"];
-  assert.ok(["app", "database", "edge"].includes(role));
+  assert.ok(["app", "database", "edge", "migrate"].includes(role));
   assert.equal(model.Config.Labels["cofounder.synthetic-owner"], owner);
   assert.equal(model.Config.Labels["com.docker.compose.project"], project);
   return { id: model.Id, role };
@@ -58,6 +58,8 @@ export function tlsIngressOverride(owner, caddyFile) {
   app:
     labels: {cofounder.synthetic-owner: "${owner}"}
     environment: {ENABLE_ACCOUNT_DELETION_WORKER: "false"}
+  migrate:
+    labels: {cofounder.synthetic-owner: "${owner}"}
   database:
     labels: {cofounder.synthetic-owner: "${owner}"}
     volumes: !reset []

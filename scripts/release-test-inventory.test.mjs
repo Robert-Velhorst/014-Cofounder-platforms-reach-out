@@ -105,6 +105,7 @@ const operators = [
   "test:recovery",
   "test:production-config",
   "test:hetzner-config",
+  "test:hetzner-database",
   "test:release-contract",
   "test:requirements",
   "test:support",
@@ -147,6 +148,20 @@ test("authentication admission uses the built production runtime and remains a m
   assert.match(fixture, /AUTH_ADMISSION_RUNTIME_IMAGE/);
   assert.match(fixture, /--pull=never/);
   assert.doesNotMatch(fixture, /\.skip\(/);
+});
+
+test("TLS acceptance builds the custom database and edge before the mandatory four-service rehearsal", () => {
+  const commands = activeVerifyCommands(workflow);
+  const acceptance = commands.indexOf("pnpm test:tls-ingress:integration");
+  assert.ok(acceptance >= 0);
+  for (const command of [
+    "docker build --file Dockerfile.hetzner-database --tag cofounder-hetzner-database:local .",
+    "docker build --file Dockerfile.hetzner-edge --tag cofounder-hetzner-edge:local .",
+    "docker build --target runtime --tag cofounder-recovery-runtime:local .",
+  ])
+    assert.ok(
+      commands.indexOf(command) >= 0 && commands.indexOf(command) < acceptance,
+    );
 });
 
 // Deliberately checks this workflow's existing scalar-run step convention.

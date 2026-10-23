@@ -1,11 +1,12 @@
 # Read-only migration verification and credential separation
 
-Status: implemented verification/startup paths. All 42 focused native production
-configuration/release/requirements checks passed on the local Node 25.2.1 host,
-and both changed entry points bundled successfully with esbuild 0.28.2. The
-supported release runtime remains Node 26.12.0. These are not full TypeScript,
-application-build or database results; nine new real-MySQL/compiled-app cases
-await CI qualification. No real database user,
+Status: implemented verification/startup paths and a fresh-initialization
+privilege-separated Hetzner candidate. The latest local follow-up passed all
+193 native operator/source tests on Node 25.2.1, including actual Bash validation,
+initializer SQL capture with a stubbed executor, and the four-service Compose
+model. The supported release runtime remains Node 26.12.0. These are not full
+application TypeScript/build, real MySQL or TLS results; the new database cases
+and four-service rehearsal await CI qualification. No real database user,
 grant, password, secret mount or production service was changed by this increment.
 This is a prerequisite for privilege-separated deployment, not a claim that the
 current hosted roles have already been separated or approved.
@@ -73,16 +74,16 @@ The guard is conservative about underscore escaping; unsupported configurations
 fail rather than guessing their authority. This is MySQL-specific, not MariaDB
 compatibility proof.
 
-The separate process/secret provisioning and deployment-profile wiring are still
-unfinished in this follow-up. The ordinary production Compose definition does not
-automatically enable this guard or reduce existing grants. Real MySQL regression
+The standalone `compose.production.yml` definition does not automatically enable
+this guard or reduce existing grants. The separate Hetzner candidate now wires
+the guard and isolated process/secret provisioning described below. Real MySQL regression
 execution remains required, including broad-root/DDL refusal and compiled-app
 readiness/login/logout with the guard enabled. Unit fixtures do not prove those
 outcomes. This startup observation also does not audit definer objects, prevent a
 privileged administrator from changing grants later, or establish full schema/
 tenant/security acceptance.
 
-Local preservation check on 23 October 2026: all 184 native operator/source
+Earlier preservation check at commit `b4ff16e` on 23 October 2026: all 184 native operator/source
 tests passed on Windows with Node 25.2.1, using the lockfile's TypeScript 6.0.3
 parser behind the 6.0.2 compatibility package. The standalone authority helper
 passed strict TypeScript checking, and the changed migration entry bundled with
@@ -110,9 +111,29 @@ Before an approved production cutover:
    application/worker/operator flows, startup races, backup/restore and rollback
    on the approved host before opening launch-sensitive features.
 
-This increment does not automatically provision those identities or turn the
-Hetzner preparation stack into a privilege-separated stack. Existing database
-upgrades and grant/password changes need their own approved, recoverable process.
+The Hetzner candidate implements that process boundary for fresh initialization:
+
+- `Dockerfile.hetzner-database` pins the existing selected base and installs a
+  strict file-only secret validator plus a non-executable sourced init script.
+  Three distinct 64-character lowercase hexadecimal passwords are required. The
+  fixed app identity receives only exact-schema DML; the separate fixed migrator
+  identity receives schema-scoped DML/CREATE/ALTER/DROP/INDEX/REFERENCES only.
+- `compose.hetzner.yml` gives only the migration URL to the bounded one-shot
+  `migrate` service. It never receives the session-signing key or root password.
+  The app waits for successful completion, mounts only its runtime URL and JWT,
+  and hardcodes verify mode plus the authority guard. Database/edge remain
+  separated on their existing private network boundaries.
+- The actual TLS rehearsal now uses the custom database artifact and four
+  uniquely owned services. It must observe migration success, verify-only app
+  startup, exact secret mounts, runtime DDL/foreign-schema/account denial and
+  normal HTTPS sessions before calling this path qualified. Native shell and
+  model tests do not prove these live outcomes.
+
+This fresh-initialization candidate is not an existing-database upgrade tool.
+The official entrypoint skips init scripts for an existing data directory; the
+app refuses overly broad old accounts instead of rewriting their grants.
+Existing database upgrades and grant/password changes need their own approved,
+recoverable process. Image/configuration changes cannot rotate existing accounts.
 See [MySQL's privilege reference](https://dev.mysql.com/doc/refman/8.4/en/grant.html)
 for the distinction between schema privileges and account-level authority; the
 actual selected MySQL version and granted operations still need verification.

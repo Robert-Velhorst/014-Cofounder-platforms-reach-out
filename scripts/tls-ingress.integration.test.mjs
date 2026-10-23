@@ -13,7 +13,6 @@ import {
 import { tmpdir } from "node:os";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
-import { getCiMysqlImage } from "./ci-mysql-image.mjs";
 import {
   tlsIngressOverride,
   ownedTlsFixture,
@@ -64,7 +63,8 @@ test(
       process.env.TLS_INGRESS_EDGE_IMAGE || "cofounder-hetzner-edge:local",
     );
     const database = image(
-      process.env.TLS_INGRESS_DATABASE_IMAGE || getCiMysqlImage(),
+      process.env.TLS_INGRESS_DATABASE_IMAGE ||
+        "cofounder-hetzner-database:local",
     );
     const bounds = [
       "--pull=never",
@@ -90,13 +90,16 @@ test(
     ];
     try {
       directory = mkdtempSync(join(temporaryRoot, "cofounder-tls-"));
-      const password = "synthetic-tls-database-only-password";
+      const password = randomBytes(32).toString("hex"),
+        migratorPassword = randomBytes(32).toString("hex");
       const files = {
         "empty.env": "",
         "database-url": `mysql://cofounder:${password}@database:3306/cofounder_test`,
         "probe-url": `mysql://cofounder:${password}@127.0.0.1:3306/cofounder_test`,
+        "migration-url": `mysql://cofounder_migrator:${migratorPassword}@database:3306/cofounder_test`,
         "mysql-password": password,
-        "root-password": "synthetic-tls-root-only-password",
+        "migrator-password": migratorPassword,
+        "root-password": randomBytes(32).toString("hex"),
         "jwt-secret": "synthetic-tls-session-key-" + randomUUID(),
         password: "Synthetic-TLS-A1-" + randomBytes(24).toString("hex"),
       };
@@ -147,6 +150,11 @@ test(
         JWT_SECRET_FILE: join(directory, "jwt-secret"),
         MYSQL_PASSWORD_SECRET_FILE: join(directory, "mysql-password"),
         MYSQL_ROOT_PASSWORD_SECRET_FILE: join(directory, "root-password"),
+        MYSQL_MIGRATOR_PASSWORD_SECRET_FILE: join(
+          directory,
+          "migrator-password",
+        ),
+        MIGRATION_DATABASE_URL_SECRET_FILE: join(directory, "migration-url"),
       };
       const compose = [
         "compose",
@@ -197,7 +205,7 @@ test(
         .filter(Boolean))
         networks.push(id);
       assert.equal(startup.status, 0, "synthetic_hetzner_stack_not_ready");
-      assert.equal(owned.length, 3);
+      assert.equal(owned.length, 4);
       assert.equal(networks.length, 2);
       for (const network of networks) {
         const model = JSON.parse(docker("network", "inspect", network))[0];
@@ -224,13 +232,26 @@ test(
           ["/run/secrets/database_url", "/run/secrets/jwt_secret"],
         ],
         [
+          "migrate",
+          runtime,
+          536870912,
+          1000000000,
+          "1000:1000",
+          ["database"],
+          ["/run/secrets/migration_database_url"],
+        ],
+        [
           "database",
           database,
           2147483648,
           1000000000,
           "999:999",
           ["database"],
-          ["/run/secrets/mysql_password", "/run/secrets/mysql_root_password"],
+          [
+            "/run/secrets/mysql_password",
+            "/run/secrets/mysql_root_password",
+            "/run/secrets/mysql_migrator_password",
+          ],
         ],
         [
           "edge",
@@ -252,10 +273,28 @@ test(
         assert.ok(model.HostConfig.CapDrop.includes("ALL"));
         assert.equal(tlsNoNewPrivileges(model.HostConfig.SecurityOpt), true);
         assert.deepEqual(model.HostConfig.PortBindings || {}, {});
-        assert.deepEqual(
-          Object.keys(model.NetworkSettings.Networks).sort(),
-          connections.map((n) => `${project}_${n}`).sort(),
-        );
+        // A successfully completed one-shot service has no live network endpoint.
+        if (role !== "migrate")
+          assert.deepEqual(
+            Object.keys(model.NetworkSettings.Networks).sort(),
+            connections.map((n) => `${project}_${n}`).sort(),
+          );
+        else {
+          const endpoints = Object.keys(model.NetworkSettings.Networks);
+          assert.ok(
+            endpoints.length === 0 ||
+              (endpoints.length === 1 &&
+                endpoints[0] === `${project}_database`),
+          );
+          assert.equal(model.State.Running, false);
+          assert.equal(model.State.ExitCode, 0);
+          assert.equal(model.HostConfig.NetworkMode, `${project}_database`);
+          assert.equal(model.HostConfig.RestartPolicy.Name, "no");
+          assert.deepEqual(model.Config.Cmd, ["node", "dist/migrate.js"]);
+          assert.ok(
+            docker("logs", model.Id).includes('"event":"migrations_applied"'),
+          );
+        }
         assert.deepEqual(
           model.Mounts.map((m) => m.Destination).sort(),
           [...destinations].sort(),
@@ -264,6 +303,17 @@ test(
       }
       const dbId = models.get("database").Id,
         edgeId = models.get("edge").Id;
+      assert.ok(
+        models.get("app").Config.Env.includes("STARTUP_MIGRATION_MODE=verify"),
+      );
+      assert.ok(
+        models
+          .get("app")
+          .Config.Env.includes("STARTUP_DATABASE_AUTHORITY=runtime-dml"),
+      );
+      const appLogs = docker("logs", models.get("app").Id);
+      assert.ok(appLogs.includes('"event":"migration_history_verified"'));
+      assert.ok(!appLogs.includes('"event":"migrations_applied"'));
       console.log(
         JSON.stringify({
           event: "tls_ingress_artifacts",
@@ -335,6 +385,44 @@ esac`,
           rootLoginRefused: true,
         }),
       );
+      const runtimeRefusal = docker(
+        "run",
+        "--rm",
+        ...bounds,
+        "--network",
+        `container:${models.get("app").Id}`,
+        ...mount("mysql-password", "/qa/app-password"),
+        "--tmpfs",
+        "/var/lib/mysql:rw,noexec,nosuid,size=1m,uid=1000,gid=1000,mode=0700",
+        "--entrypoint",
+        "bash",
+        database,
+        "-ec",
+        `export MYSQL_PWD="$(cat /qa/app-password)"
+client() { mysql --no-defaults --host=database --protocol=TCP --connect-timeout=3 --user=cofounder cofounder_test --execute="$1"; }
+client 'SELECT 1' >/dev/null 2>&1 || exit 41
+for sql in 'CREATE TABLE runtime_forbidden_probe (id INT)' 'SELECT User FROM mysql.user' "CREATE USER 'runtime_forbidden_probe'@'%'"; do
+  if rejected="$(client "$sql" 2>&1)"; then exit 42; fi
+  case "$rejected" in
+    *"ERROR 1044 (42000)"*|*"ERROR 1142 (42000)"*|*"ERROR 1227 (42000)"*) ;;
+    *) exit 43 ;;
+  esac
+done
+printf '%s' 'runtime_ddl_foreign_schema_and_account_changes_refused'`,
+      );
+      assert.equal(
+        runtimeRefusal,
+        "runtime_ddl_foreign_schema_and_account_changes_refused",
+      );
+      console.log(
+        JSON.stringify({
+          event: "tls_runtime_authority_verified",
+          ddlRefused: true,
+          foreignSchemaRefused: true,
+          accountAdministrationRefused: true,
+          appHasMigrationSecret: false,
+        }),
+      );
       function probe(mode, namespace) {
         const mounts = [
           ...mount("probe.mjs", "/app/synthetic-tls-ingress.mjs"),
@@ -398,7 +486,7 @@ esac`,
       primary = error;
     } finally {
       const failures = [];
-      const shutdownOrder = ["edge", "app", "database"];
+      const shutdownOrder = ["edge", "app", "migrate", "database"];
       for (const fixture of [...owned].sort(
         (a, b) => shutdownOrder.indexOf(a.role) - shutdownOrder.indexOf(b.role),
       )) {

@@ -19,11 +19,16 @@ Internet TCP 80/443 -> Caddy (container 8080/8443) -> app:3000
                                                 database network (internal)
                                                     |
                                                 MySQL:3306
+                                                    ^
+                              one-shot migrator ----+
 ```
 
 Only Caddy publishes host ports. MySQL is attached only to the internal database
 network; Caddy is attached only to ingress; the application joins both. There is
-no Docker socket mount or host networking. The application trusts exactly one
+no Docker socket mount or host networking. The separate migrator joins only the
+database network, completes before app startup and has no session-signing key.
+The app never mounts its migration URL or any raw database password file.
+The application trusts exactly one
 proxy hop. The reviewed Caddyfile replaces incoming forwarding headers and does
 not trust another upstream CDN/proxy. Adding another ingress hop requires a new
 review and acceptance test, not simply forwarding more client headers.
@@ -33,12 +38,14 @@ dropped capabilities, no privilege escalation, bounded processes and rotated
 logs. App/database/edge CPU caps are 1/1/0.5, and memory limits are 512 MiB/2 GiB/
 256 MiB without extra swap. Their sum is not a host-sizing or billing guarantee;
 reserve separate OS, Docker, migration, backup, disk and failure headroom and
-measure on the approved host.
+measure on the approved host. The one-shot migrator additionally has a 1 CPU/
+512 MiB limit; include that transient work in sizing and availability decisions.
 
 Build the application using the repository Dockerfile. Build the TLS edge using:
 
 ```sh
 docker build --file Dockerfile.hetzner-edge --tag cofounder-hetzner-edge:local .
+docker build --file Dockerfile.hetzner-database --tag cofounder-hetzner-database:local .
 ```
 
 The edge Dockerfile pins the official Caddy 2.11.7 Alpine image index
@@ -48,9 +55,15 @@ and checks configuration syntax. Runtime uses high internal ports without adding
 Linux capabilities. The public HTTP/HTTPS ports remain 80/443; Caddy's internal
 port options do not change client URLs. See [Caddy's option reference](https://caddyserver.com/docs/caddyfile/options#http_port).
 
-Before deployment, publish approved application and edge artifacts to the approved
+The database Dockerfile retains the reviewed MySQL 26.7.0 base digest used in CI.
+It adds a file-only secret validator and a fresh-initialization role script. The
+production image must be this separately reviewed **custom database artifact**,
+not the unmodified base MySQL image. A plain base image lacks the migrator and
+leaves the initial app user too broad; the app guard must refuse it.
+
+Before deployment, publish approved application, database and edge artifacts to the approved
 registry, retain their exact digests and test receipts, and separately review the
-MySQL image digest and platform. Source push approval does not publish container
+custom database image digest and platform. Source push approval does not publish container
 images. `latest`, mutable tags and CI-local image IDs are refused by preflight.
 The base image observation is from the [official image metadata](https://raw.githubusercontent.com/docker-library/repo-info/master/repos/caddy/remote/2.11.7-alpine.md);
 it is not a vulnerability scan or approval of every future image update.
@@ -107,21 +120,33 @@ image persistence guidance](https://hub.docker.com/_/caddy).
 
 Prepare separate protected files with strong, independently generated values:
 
-| Variable                          | File content                                                                                               | Service read access   |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------- |
-| `DATABASE_URL_SECRET_FILE`        | App URL: MySQL user `cofounder`, hostname `database`, port 3306, schema `cofounder`, matching app password | App UID 1000          |
-| `JWT_SECRET_FILE`                 | Unique session-signing value, at least 32 characters                                                       | App UID 1000          |
-| `MYSQL_PASSWORD_SECRET_FILE`      | Matching application database password                                                                     | Database UID 999      |
-| `MYSQL_ROOT_PASSWORD_SECRET_FILE` | Different administrator password                                                                           | Database UID 999 only |
+| Variable                              | File content                                                                                               | Service read access             |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| `DATABASE_URL_SECRET_FILE`            | App URL: MySQL user `cofounder`, hostname `database`, port 3306, schema `cofounder`, matching app password | App UID 1000                    |
+| `MIGRATION_DATABASE_URL_SECRET_FILE`  | Migration URL: user `cofounder_migrator`, same host/port/schema, matching separate migration password      | One-shot migrator UID 1000 only |
+| `JWT_SECRET_FILE`                     | Unique session-signing value, at least 32 characters                                                       | App UID 1000                    |
+| `MYSQL_PASSWORD_SECRET_FILE`          | Matching application database password                                                                     | Database UID 999                |
+| `MYSQL_ROOT_PASSWORD_SECRET_FILE`     | Different administrator password                                                                           | Database UID 999 only           |
+| `MYSQL_MIGRATOR_PASSWORD_SECRET_FILE` | Different migration database password                                                                      | Database UID 999 only           |
 
-Use URL encoding for credentials in the database URL; random hexadecimal values
-avoid URL delimiter ambiguity. File values have the runtime's existing UTF-8/
-size/newline constraints. Do not place values in commands, Git, shell history,
+The three MySQL password files must contain distinct, independently generated
+64-character lowercase hexadecimal values, optionally followed by exactly one LF.
+The database wrapper rejects malformed/NUL/CRLF/SQL-delimiter values, duplicate
+passwords, raw password environment variables, remote-root initialization and
+empty/random/expired-root alternatives before calling the official entrypoint.
+The two URL files must match their respective passwords; hexadecimal values avoid
+URL delimiter ambiguity. URL and session files retain the runtime's existing
+UTF-8/size/newline constraints. Do not place values in commands, Git, shell history,
 Compose environment values, logs or screenshots. With file-backed Compose
 secrets, verify real file ownership and permissions; Compose is not an encrypted
 vault and does not remap bind-file ownership. The application receives no MySQL
-administrator credential. Its current schema-scoped user also runs bundled
-migrations; independent migration/runtime roles remain a separate hardening gate.
+administrator or migration credential. On a new empty database the initializer
+replaces its initial schema privileges with SELECT/INSERT/UPDATE/DELETE only.
+The separate migrator has those DML rights plus CREATE/ALTER/DROP/INDEX/REFERENCES
+on the exact schema, with no global/account/delegation rights. Its DROP right
+can destroy that schema: keep its credential offline from the app and retain the
+approved backup and migration review gates. These are separate SQL identities,
+not MySQL role assignments. See [the credential separation design](DATABASE_MIGRATION_ROLES.md).
 
 For existing MySQL data, changing an initialization password file does not rotate
 the existing database account. Perform a reviewed credential rotation with its
@@ -148,7 +173,7 @@ Provide these non-secret environment values through the approved host mechanism:
   reviewed `repository@sha256:<64 lowercase hex>` references.
 - `PUBLIC_HOSTNAME`: the approved lowercase DNS hostname, without scheme/port.
 - `PUBLIC_ORIGIN`: exactly `https://` followed by that hostname.
-- `HETZNER_DATA_ROOT` and the four protected file paths above.
+- `HETZNER_DATA_ROOT` and the six protected file paths above.
 
 Then, from the reviewed checkout on that host:
 
@@ -175,10 +200,18 @@ docker compose -p cofounder-hetzner -f compose.hetzner.yml pull
 docker compose -p cofounder-hetzner -f compose.hetzner.yml up --detach --wait --wait-timeout 180
 ```
 
-Startup creates the configured schema on an empty data directory and the app
-applies bundled migrations before serving. The edge starts after application
+Startup creates the configured schema and separate identities on an empty data
+directory. The one-shot `migrate` service applies bundled migrations; its failure
+blocks app startup. The app then independently checks its restricted authority
+and complete migration history, without applying SQL. The edge starts after application
 readiness. The edge health check only proves its HTTP listener/redirect process;
 external TLS, backend health and user behavior require separate checks.
+
+For every reviewed upgrade, recreate the one-shot job with the selected new
+application artifact before accepting the app. Do not rely on a previously
+successful exited job as evidence that a later artifact was migrated. App history
+verification remains fail-closed if the selected migrations are missing. Do not
+set the app back to `apply` or mount the migration secret to bypass that refusal.
 
 Keep launch-sensitive features closed. On a reviewed staging domain, verify
 trusted public HTTPS without insecure-certificate flags, HTTP-to-HTTPS redirect,
@@ -208,7 +241,9 @@ as container cleanup.
 ## Maintained TLS rehearsal and its limits
 
 `pnpm test:hetzner-config` checks the production Compose model and preflight
-behavior without starting containers. `pnpm test:tls-ingress:integration` uses the
+behavior without starting containers. `pnpm test:hetzner-database` checks actual
+shell validation and emitted initialization SQL with synthetic files and a stubbed
+SQL executor; it is not real database execution. `pnpm test:tls-ingress:integration` uses the
 actual Hetzner Compose graph with uniquely owned synthetic fixtures. It substitutes
 tmpfs for persistent stores, removes every public port, makes both networks
 internal and changes only the certificate issuer to Caddy's internal test CA.
@@ -221,6 +256,10 @@ source IP and absence of a spoofed source quota. The client has no database netw
 or database credentials. All helpers refuse non-synthetic databases. The harness
 checks actual images, users, mounts, private networks, resources and stopped/no-OOM
 states before removing its exact containers/networks and scratch files.
+It also requires the real migrator's successful exit and the app's verify-only
+startup event, inspects credential mount separation, and attempts denied DDL,
+foreign-schema reads and account administration as the runtime database user.
+The new four-service rehearsal remains unqualified until a passing run is recorded.
 
 These local/CI checks are not real Hetzner provisioning, public DNS/ACME renewal,
 browser/device acceptance, operating-cost enforcement, real mailbox delivery,

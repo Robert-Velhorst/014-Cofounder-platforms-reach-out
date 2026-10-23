@@ -1,5 +1,19 @@
 # Worldwide public beta delivery ledger
 
+## October 23 isolated database identities — candidate, qualification pending
+
+[PR #117](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/117)
+continues the combined candidate without changing PR #116's pinned head. The
+Hetzner profile now supplies a separate one-shot migration URL, gates the app on
+that job, and gives the app only its restricted runtime URL and session key.
+A pinned custom database artifact initializes exact-schema identities only on
+fresh storage; the app refuses broad existing grants rather than changing them.
+See [database roles](DATABASE_MIGRATION_ROLES.md) for the implementation, evidence
+and remaining limits. All 193 native operator/source checks passed on the local
+Node 25.2.1 host. Shell/model/native checks are not live database/TLS proof;
+the expanded four-service rehearsal and full CI remain required. No phase is
+completed and no provider, real database, deployment or budget was changed.
+
 ## October 23 combined source candidate — qualification pending
 
 [The combined candidate receipt](BETA_CONSOLIDATION_2026-10-23.md) preserves the
