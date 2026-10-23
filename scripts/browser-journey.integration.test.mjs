@@ -13,7 +13,10 @@ import { tmpdir } from "node:os";
 import { join, dirname, basename } from "node:path";
 import { setTimeout as pause } from "node:timers/promises";
 import { getCiMysqlImage } from "./ci-mysql-image.mjs";
-import { validateBrowserJourneyReceipt } from "../apps/cofounder-discovery/scripts/browser-journey-policy.mjs";
+import {
+  browserJourneyFailureDiagnostics,
+  validateBrowserJourneyReceipt,
+} from "../apps/cofounder-discovery/scripts/browser-journey-policy.mjs";
 
 test(
   "packaged runtime completes the maintained 24-stage synthetic browser journey",
@@ -21,6 +24,7 @@ test(
   async () => {
     const owner = randomUUID(),
       owned = [],
+      fixtureSecrets = [],
       removed = new Set();
     let primary, directory, artifacts, pendingCreation;
     const temporaryRoot = realpathSync(tmpdir());
@@ -217,8 +221,10 @@ test(
           `mysql://cofounder:${appPassword}@127.0.0.1:3306/cofounder_test`,
         ],
         ["jwt-secret", randomBytes(32).toString("hex")],
-      ])
+      ]) {
+        fixtureSecrets.push(value);
         writeFileSync(join(directory, name), value, { mode: 0o444 });
+      }
       const db = await create(
         "database",
         database,
@@ -363,9 +369,15 @@ test(
         }),
       );
       const result = invoke(["start", "--attach", driver], 600000);
-      // The driver emits redacted synthetic JSON only; Docker stderr/secret files
-      // and arbitrary application/database logs are deliberately never printed.
+      // The driver emits redacted synthetic JSON only. Preserve its known failure
+      // envelopes, with parent-side redaction, but never arbitrary Docker stderr,
+      // secret files or application/database logs.
       if (result.stdout) process.stdout.write(result.stdout);
+      for (const diagnostic of browserJourneyFailureDiagnostics(
+        result.stderr,
+        fixtureSecrets,
+      ))
+        console.error(JSON.stringify(diagnostic));
       assert.equal(result.status, 0, "maintained_browser_journey_failed");
       const receipts = result.stdout
         .split(/\r?\n/)

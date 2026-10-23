@@ -1,5 +1,25 @@
 # Worldwide public beta delivery ledger
 
+## October 23 browser failure diagnostics and current publication checkpoint
+
+The browser fixture now retains bounded, allowlisted driver failure envelopes
+instead of hiding all stderr. It drops raw Docker output, unknown fields and
+stacks, and redacts generated fixture credentials again in the parent. All 208
+native operator/source tests passed locally, zero failures/skips (9,473.2035 ms).
+No new browser/image/database run or local fixture was created by this change.
+The actual maintained browser gate remains pending in PR #121; this follow-up
+does not replace or restart that candidate's exact-head run.
+
+Current main is `a2cead7075da557f64a81ab32f5101e4d514b894`, merged through
+[PR #119](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/119).
+Its tree was rechecked identical to `61b353cb16fbb384f1303b31019c4c6d4ba16c46`,
+which passed [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887876731)
+and [CodeQL](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887872452).
+Main's separate post-merge runs and the WASL/browser candidate PRs remain pending
+at this checkpoint. Historical pending/local-failure sections below are dated
+receipts, not a claim that the later CI never passed. The retained Windows
+fixture is still unresolved, and every original phase remains Partial.
+
 ## October 23 maintained browser workflow candidate — not yet executed
 
 The [24-stage browser journey](MAINTAINED_BROWSER_JOURNEY.md) is now maintained

@@ -123,6 +123,14 @@ an existing artifact parent with `BROWSER_JOURNEY_ARTIFACT_ROOT`; the runner
 still creates its own unique child, never overwriting or deleting that parent.
 Passing assertions/screenshots need inspection before a qualification claim.
 
+The fixture relays only four known driver failure envelopes from stderr, at most
+eight records with 2,048-character redacted errors. Stage names and diagnostic
+fields are allowlisted; raw Docker messages, stack traces and arbitrary extra
+fields are dropped. Parent-side redaction also covers all generated fixture
+secrets. This preserves actionable failure context without uploading raw logs.
+Native tests exercise malformed, oversized and injected diagnostics, redaction
+and the record limit; this is not proof that the browser journey has run.
+
 ## Port provenance and actual local checks
 
 The reviewed source is the prior synthetic 68-source, 24-stage driver from the
