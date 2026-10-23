@@ -69,6 +69,50 @@ export function redactBrowserFailure(value, secrets) {
   return text.slice(0, 2048);
 }
 
+// Docker stderr is not a trusted diagnostic stream. Publish only the driver's
+// known failure envelopes, never arbitrary CLI output, stack traces or fields.
+export function browserJourneyFailureDiagnostics(stderr, secrets = []) {
+  if (typeof stderr !== "string") return [];
+  const diagnostics = [];
+  const events = new Set([
+    "browser_journey_failed",
+    "browser_journey_rejected",
+    "browser_journey_process_failure",
+    "browser_journey_timeout",
+  ]);
+  for (const line of stderr.split(/\r?\n/)) {
+    if (line.length > 16384) continue;
+    let value;
+    try {
+      value = JSON.parse(line);
+    } catch {
+      continue;
+    }
+    if (!value || typeof value !== "object" || !events.has(value.event))
+      continue;
+    if (
+      value.stage !== "startup" &&
+      !BROWSER_JOURNEY_STAGES.includes(value.stage)
+    )
+      continue;
+    const diagnostic = { event: value.event, stage: value.stage };
+    if (typeof value.error === "string")
+      diagnostic.error = redactBrowserFailure(value.error, secrets);
+    if (["unhandledRejection", "uncaughtException"].includes(value.kind))
+      diagnostic.kind = value.kind;
+    for (const field of ["consoleErrorCount", "externalRequestCount"])
+      if (
+        Number.isSafeInteger(value[field]) &&
+        value[field] >= 0 &&
+        value[field] <= 1000000
+      )
+        diagnostic[field] = value[field];
+    diagnostics.push(diagnostic);
+    if (diagnostics.length === 8) break;
+  }
+  return diagnostics;
+}
+
 export function validateBrowserJourneyReceipt(value) {
   const refuse = () => {
     throw new Error("complete_browser_journey_receipt_refused");

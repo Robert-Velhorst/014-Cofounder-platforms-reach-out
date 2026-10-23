@@ -7,6 +7,7 @@ import {
   BROWSER_JOURNEY_STAGES,
   validateBrowserFixtureDatabase,
   redactBrowserFailure,
+  browserJourneyFailureDiagnostics,
   validateBrowserJourneyReceipt,
 } from "../apps/cofounder-discovery/scripts/browser-journey-policy.mjs";
 
@@ -81,6 +82,70 @@ test("browser failure diagnostics redact registered credentials before limiting 
   assert.ok(!redacted.includes(url) && !redacted.includes(secret));
   assert.equal(redacted.length, 2048);
   assert.equal(redactBrowserFailure(undefined, []), "unknown_failure");
+});
+
+test("browser stderr retains bounded known failures without raw Docker output or extra fields", () => {
+  const failure = {
+    event: "browser_journey_failed",
+    stage: BROWSER_JOURNEY_STAGES[3],
+    error: `operation ${url} ${secret} ${"x".repeat(3000)}`,
+    consoleErrorCount: 2,
+    externalRequestCount: 0,
+    password: secret,
+    stack: "private stack must not escape",
+    completedStages: [secret],
+  };
+  const stderr = [
+    `Docker raw error contains ${secret}`,
+    "not JSON",
+    JSON.stringify({ event: "unknown_event", error: secret }),
+    JSON.stringify({ ...failure, stage: secret }),
+    JSON.stringify({ ...failure, error: "x".repeat(17000) }),
+    JSON.stringify(failure),
+    JSON.stringify({
+      event: "browser_journey_process_failure",
+      stage: "startup",
+      kind: "uncaughtException",
+      consoleErrorCount: -1,
+      externalRequestCount: 1e12,
+      extra: secret,
+    }),
+    JSON.stringify({ event: "browser_journey_timeout", stage: "startup" }),
+    JSON.stringify({ event: "browser_journey_rejected", stage: "startup" }),
+  ].join("\n");
+  const diagnostics = browserJourneyFailureDiagnostics(stderr, [url, secret]);
+  assert.deepEqual(diagnostics, [
+    {
+      event: failure.event,
+      stage: failure.stage,
+      error: redactBrowserFailure(failure.error, [url, secret]),
+      consoleErrorCount: 2,
+      externalRequestCount: 0,
+    },
+    {
+      event: "browser_journey_process_failure",
+      stage: "startup",
+      kind: "uncaughtException",
+    },
+    { event: "browser_journey_timeout", stage: "startup" },
+    { event: "browser_journey_rejected", stage: "startup" },
+  ]);
+  const serialized = JSON.stringify(diagnostics);
+  assert.ok(!serialized.includes(secret) && !serialized.includes(url));
+  assert.ok(!serialized.includes("private stack"));
+  assert.equal(diagnostics[0].error.length, 2048);
+  assert.equal(
+    browserJourneyFailureDiagnostics(
+      Array(20).fill(JSON.stringify(failure)).join("\n"),
+      [url, secret],
+    ).length,
+    8,
+  );
+  assert.deepEqual(browserJourneyFailureDiagnostics(undefined), []);
+  assert.deepEqual(browserJourneyFailureDiagnostics("null\n42\n[]"), []);
+  assert.match(fixture, /browserJourneyFailureDiagnostics\(\s*result.stderr/);
+  assert.match(fixture, /fixtureSecrets.push\(value\)/);
+  assert.doesNotMatch(fixture, /(?:write|error)\(result.stderr\)/);
 });
 
 function receipt() {
