@@ -174,11 +174,13 @@ jobs:
         run: |
           app_image="$(docker compose images --quiet app | head -n1)"
           test -n "$app_image"
-          docker run --rm --init --read-only --network none --cap-drop ALL --security-opt no-new-privileges \
+          docker run --rm --init --interactive --read-only --network none --cap-drop ALL --security-opt no-new-privileges \
             --cpus 1 --memory 512m --memory-swap 512m --pids-limit 256 \
             --tmpfs /tmp:rw,noexec,nosuid,size=64m,mode=1777 \
             --entrypoint node "$app_image" --input-type=module - \
             < scripts/check-installed-browser.mjs > output/installed-browser-verification.json
+          test -s output/installed-browser-verification.json
+          node scripts/check-installed-browser-report.mjs
       - name: Verify graceful application shutdown
         run: |
           docker compose stop app
@@ -219,6 +221,44 @@ jobs:
       - name: Stop the CI stack
         if: always()
         run: docker compose down --volumes --remove-orphans
+
+  ubuntu-coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26.12.1
+      - name: Probe candidate Ubuntu scanner and release-feed coverage
+        run: |
+          mkdir -p output "$RUNNER_TEMP/cofounder-grype-cache"
+          docker pull ubuntu:26.10@sha256:93e29beff5257b2cdf1c024d831f6d2997e53655a653ff76a811fc9e6564a719
+          docker image save ubuntu:26.10@sha256:93e29beff5257b2cdf1c024d831f6d2997e53655a653ff76a811fc9e6564a719 --output output/ubuntu-probe.tar
+          chmod 0444 output/ubuntu-probe.tar
+          docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges --user "$(id -u):$(id -g)" \
+            --cpus 1 --memory 2560m --memory-swap 2560m --pids-limit 128 --tmpfs /tmp:rw,size=128m \
+            -e HOME=/tmp -e GRYPE_DB_CACHE_DIR=/cache -e GOMEMLIMIT=512MiB \
+            --mount "type=bind,source=$RUNNER_TEMP/cofounder-grype-cache,target=/cache" \
+            --mount "type=bind,source=$GITHUB_WORKSPACE/output/ubuntu-probe.tar,target=/scan/image.tar,readonly" \
+            anchore/grype:v0.121.0@sha256:621d56d1d68106b787022c81546f7e0a36202a25d1239f0c20195fab8c16f7ea \
+            docker-archive:/scan/image.tar --output json > output/ubuntu-grype-coverage.json
+          docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges --user "$(id -u):$(id -g)" \
+            --cpus 1 --memory 2560m --memory-swap 2560m --pids-limit 128 --tmpfs /tmp:rw,size=128m \
+            -e HOME=/tmp -e GRYPE_DB_CACHE_DIR=/cache -e GOMEMLIMIT=512MiB \
+            --mount "type=bind,source=$RUNNER_TEMP/cofounder-grype-cache,target=/cache" \
+            anchore/grype:v0.121.0@sha256:621d56d1d68106b787022c81546f7e0a36202a25d1239f0c20195fab8c16f7ea \
+            db search --distro ubuntu:26.10 --provider ubuntu --limit 10 --output json > output/ubuntu-grype-feed.json
+          node scripts/check-ubuntu-coverage.mjs > output/ubuntu-coverage-verification.json
+      - name: Retain candidate scanner coverage evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ubuntu-scanner-coverage
+          path: |
+            output/ubuntu-grype-coverage.json
+            output/ubuntu-grype-feed.json
+            output/ubuntu-coverage-verification.json
 
   windows-source:
     runs-on: windows-2025

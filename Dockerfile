@@ -57,6 +57,9 @@ WORKDIR /app
 COPY --from=node-runtime /usr/local /usr/local
 RUN rm -rf /usr/local/lib/node_modules/npm \
  && rm -f /usr/local/bin/npm /usr/local/bin/npx
+# The Ubuntu base includes an optional Pebble supervisor. This image directly
+# executes Node and uses Docker's init option; no application path calls Pebble.
+RUN rm -f /usr/bin/pebble && test ! -e /usr/bin/pebble
 COPY --from=build /prod/app/package.json ./package.json
 COPY --from=build /prod/app/node_modules ./node_modules
 # Keep GNU/Linux and qualify the actual current Playwright browser artifact.

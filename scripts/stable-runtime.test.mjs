@@ -7,6 +7,8 @@ import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { hooks } from '../.pnpmfile.mjs';
 import { validateImageReport } from './check-image-security.mjs';
+import { validateInstalledBrowserReport, assertBrowserProbeInvocation } from './check-installed-browser-report.mjs';
+import { validateUbuntuCoverage } from './check-ubuntu-coverage.mjs';
 const script = fileURLToPath(new URL('./stable-runtime.mjs', import.meta.url));
 test('records actual interpreter without connecting to a database', () => {
   const fixture = mkdtempSync(join(tmpdir(), 'cofounder-runtime-'));
@@ -49,4 +51,26 @@ test('image evidence requires both inventories and rejects findings or build com
 if (process.platform === 'win32') test('installed browser evidence refuses a host run before importing application code', () => {
   const child=spawnSync(process.execPath,[fileURLToPath(new URL('./check-installed-browser.mjs',import.meta.url))],{encoding:'utf8',timeout:10_000});
   assert.equal(child.status,1); assert.match(child.stderr,/Linux production image required/); assert.equal(child.stdout,'');
+});
+
+test('native browser evidence cannot pass with missing stdin, an empty report or incomplete interaction', () => {
+  const workflow=readFileSync(new URL('../.github/workflows/ci.yml',import.meta.url),'utf8');
+  assertBrowserProbeInvocation(workflow);
+  assert.throws(()=>assertBrowserProbeInvocation(workflow.replace('--init --interactive','--init')),/INCOMPLETE_BROWSER_INVOCATION/);
+  assert.throws(()=>assertBrowserProbeInvocation(workflow.replace('test -s output/installed-browser-verification.json','true')),/INCOMPLETE_BROWSER_INVOCATION/);
+  const report={node:'26.12.1',os:'ubuntu',osVersion:'26.10',uid:1000,gid:1000,playwright:'1.64.1',requests:0,browserErrors:0,trustedInlineFixtureOnly:true,chromiumSandbox:false,liveProvidersVerified:false,untrustedProviderSafetyVerified:false,glibc:'2.44',browserVersion:'150.0.1.2',browserRevision:'1234',adapterSha256:'a'.repeat(64),results:[{viewport:{width:1440,height:960},javascriptAndDom:true},{viewport:{width:390,height:844},javascriptAndDom:true}]};
+  assert.equal(validateInstalledBrowserReport(report).passed,true);
+  for (const mutation of [null,{}, {...report,requests:1},{...report,results:[]},{...report,adapterSha256:''},{...report,browserVersion:''},{...report,uid:0}]) assert.throws(()=>validateInstalledBrowserReport(mutation));
+  assert.throws(()=>JSON.parse(''));
+});
+
+test('candidate Ubuntu coverage requires real release records and does not assert security acceptance', () => {
+  const scan={distro:{name:'ubuntu',version:'26.10'},matches:[{fixture:true}],descriptor:{db:{built:'synthetic'}}};
+  const feed=[{vulnerability:{provider:'ubuntu',status:'active',id:'synthetic-vulnerability'},packages:[{os:{name:'ubuntu',version:'26.10'},package:{name:'synthetic-package'}}]}];
+  const result=validateUbuntuCoverage(scan,feed);
+  assert.equal(result.ubuntuFeedCoverage,true); assert.equal(result.securityAcceptance,false); assert.equal(result.baseImageMatches,1);
+  assert.throws(()=>validateUbuntuCoverage(scan,[]),/MISSING_UBUNTU_FEED_ROWS/);
+  assert.throws(()=>validateUbuntuCoverage({...scan,distro:{name:'debian',version:'forky'}},feed),/WRONG_SCANNER_DISTRO/);
+  assert.throws(()=>validateUbuntuCoverage(scan,[{...feed[0],packages:[]}]),/NO_ACTIVE_UBUNTU_2610_FEED_ROWS/);
+  assert.throws(()=>validateUbuntuCoverage({...scan,matches:null},feed),/MISSING_CANDIDATE_REPORT/);
 });
