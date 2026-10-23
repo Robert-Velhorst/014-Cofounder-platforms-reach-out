@@ -51,6 +51,14 @@ initialization, restoration, role and TLS tests must pass again on this image.
 This does not resolve the separate Debian application or Caddy findings, and
 does not establish image acceptance until new installed inventories are scanned.
 
+The edge rebuild uses the exact Caddy 2.11.7 release commit and a verified
+source archive, Go 1.27.3, and explicit current stable x/crypto, x/net, x/sys,
+x/text, x/term and x/sync releases. Its version carries a downstream build
+suffix, and the actual Go build inventory is retained inside the image. All
+standard Caddy modules remain enabled. The installed-binary scan and actual
+HTTPS/session tests remain required; rebuilding alone does not prove the
+unmaintained OpenPGP package advisory is absent or inapplicable.
+
 ## Deployment and data
 
 Hetzner remains the deployment target. Retain the existing secret-file, TLS,
