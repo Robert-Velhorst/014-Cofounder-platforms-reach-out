@@ -66,9 +66,34 @@ review; this six-copy comparison does not cover all local artifacts.
 
 ## Historical Git recovery
 
-The inspected older source checkpoint contains 736 manifest entries. This audit
-has not yet proved that every snapshot entry or uncommitted patch is represented
-remotely; its local copy must not be deleted on the strength of this section alone.
+The inspected older source checkpoint contains 736 manifest entries. Every
+original file's size and SHA-256 was verified against that checkpoint manifest.
+Its complete, byte-exact source tree is now preserved at
+[`9b0b21c59c3ed93124597da8a31f512825b0ab0d`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/tree/9b0b21c59c3ed93124597da8a31f512825b0ab0d),
+under tag `archive/local-preservation-20261024/source-checkpoint-20261003`.
+The archive contains the 736 original source files plus a
+[public-safe checksum manifest](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/blob/9b0b21c59c3ed93124597da8a31f512825b0ab0d/PRESERVATION_MANIFEST.json).
+The tag and commit tree were read back independently from GitHub. The recursive
+remote tree was not truncated: all 737 blob entries were present, and each original
+path, Git mode and raw blob ID matched the locally verified snapshot tree.
+
+The initial history comparison used Git clean filters. Nine legacy dashboard
+files appeared absent under that transformation, but their raw bytes already
+matched published blobs exactly. Conversely, 16 other files were present only
+in line-ending-normalized form in the inspected history. Their content after
+CRLF-to-LF conversion matched existing public blobs; the archive preserves their
+original bytes as well. No unrelated source content was added through that step.
+
+One initial archive attempt produced an empty tree because Windows native-pipe
+CRLF input made Git ignore the index paths. Its remote verification failed, so
+it was not accepted as preservation. Only that newly created empty tag was
+removed after checking its exact target and empty tree. The corrected import
+uses explicit UTF-8/LF input and verifies every local tree entry before pushing,
+then repeats the path/blob/mode checks against GitHub. No local source was deleted.
+
+This source-tree proof does not cover every separate patch file, archive,
+database, credential, screenshot or embedded record elsewhere on the device.
+The broader local-removal goal therefore remains open.
 
 Of its four distinct bundled Git heads, these are ancestors of the inspected
 PR #127 head:
@@ -83,6 +108,26 @@ verified annotated tag
 `archive/consolidation-20261018/feature/project-based-messaging`, whose peeled
 target is exactly that commit. Remote tag preservation is not a claim that the
 legacy implementation was integrated into the current application.
+
+### Other discovered checkouts
+
+At inventory time, 17 co-founder Git checkouts reported no tracked or ordinary
+untracked changes. This does not classify ignored files as disposable or establish
+that the checkouts contain no credentials, database data or test artifacts.
+
+Three divergent historical heads were reachable by GitHub commit comparison but
+did not yet have demonstrated durable ref coverage. Explicit archival tags were
+created and their exact targets read back from the remote:
+
+| Archive tag under `archive/local-preservation-20261024/` | Exact target |
+| --- | --- |
+| `pr-consolidation-6eb2715` | `6eb271559ba0fe02022f5a36309a7cc1fce2d31e` |
+| `vercel-removal-7e5a34f` | `7e5a34fcc97f06ba9db71fa5940a917c67b62f37` |
+| `ngrok-removal-9b30258` | `9b302588000d49849a647967756f89477c64b118` |
+
+These tags preserve the earlier launcher tests, deployment-documentation merge
+and hosting-reference removals without merging obsolete code or documentation
+back into the active application. They are not production releases.
 
 ## Local search and cleanup boundaries
 
@@ -106,6 +151,12 @@ Source repositories, backups, private data, database volumes, secrets, recovery
 checkpoints and protected cleanup targets were not removed by this audit.
 Other local dependency folders disappeared during concurrent activity and are
 not counted as removals by this audit. No Docker mutations occurred in this cleanup.
+
+The private local test archive was inspected by entry names, not uploaded. It
+contains entries explicitly stored as database and JWT secret files. Their values
+were not printed or published, and the archive cannot be copied wholesale into
+this public repository. Separate database/runtime data and secret files also
+remain local. Their destination or erasure authority still needs resolution.
 
 ## Still required before claiming complete local removal
 
