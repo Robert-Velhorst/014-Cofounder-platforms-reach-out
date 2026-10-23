@@ -806,7 +806,7 @@
     },
     {
       "path": "apps/cofounder-discovery/server/platform-catalogue.ts",
-      "sha256": "4d1736a46e192209943e5034f80dbad8bf1a7a5d6e461581c32eff0658243442"
+      "sha256": "cdfe68bd6828fe0efa398f5c46ffcc8de1f78059f74b767c049de18aa039571e"
     },
     {
       "path": "apps/cofounder-discovery/server/platform-connections.ts",
@@ -941,7 +941,7 @@
       "sha256": "8fc8134b60025ffa401508f9ea0030e12b595c09200da78db8c1d307e6e8147c"
     }
   ],
-  "inputDigest": "4158d6f4f248bcb366c6fca6d2eb898ccba2fc24909d2a18618cfe14ff2dd080",
+  "inputDigest": "68b0258e70c0f308a4bf8783251a3aa0a1deb6ed54d2960319a56af182fff104",
   "actions": [
     {
       "source": "apps/cofounder-discovery/client/src/App.tsx",

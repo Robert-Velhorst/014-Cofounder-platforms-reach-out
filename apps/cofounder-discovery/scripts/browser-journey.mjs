@@ -45,7 +45,7 @@ const req = createRequire("/app/apps/cofounder-discovery/package.json"),
 const catalogue = req(
   "./dist/synthetic-browser-catalogue.cjs"
 ).publicPlatformCatalogue();
-assert.equal(catalogue.length, 69, "review_browser_catalogue_increment");
+assert.equal(catalogue.length, 70, "review_browser_catalogue_increment");
 assert.equal(
   catalogue.filter(row => row.workflowReview === "manual-reviewed").length,
   23
@@ -351,6 +351,16 @@ async function stage(name, run) {
           catalogue.length
         );
         for (const [query, name, href] of [
+          [
+            "CoFounder Match España",
+            "CoFounder Match (Spain)",
+            "https://cofounder-match.com/",
+          ],
+          [
+            "cofounder-match.com",
+            "CoFounder Match (Spain)",
+            "https://cofounder-match.com/",
+          ],
           ["WASL Network", "WASL Network (MENA)", "https://wasl-network.com/"],
           [
             "wasl-network.com",

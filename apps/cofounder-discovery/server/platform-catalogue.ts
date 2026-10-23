@@ -30,6 +30,34 @@ type ReviewedSource = Pick<
 
 const sources: ReviewedSource[] = [
   {
+    id: "cofounder-match-spain",
+    name: "CoFounder Match (Spain)",
+    url: "https://cofounder-match.com/",
+    aliases: [
+      "CoFounder Match España",
+      "CoFounder Match Espana",
+      "cofounder-match.com",
+    ],
+    category: "dedicated",
+    audience:
+      "Spain / España; Spanish-language / español co-founder discovery for founders, aspiring entrepreneurs and early teams. Eligibility outside Spain is unverified.",
+    access:
+      "18+ under the terms. Public registration form reviewed; account admission, verification inbox and Spanish member workflows untested. No account created or individual profile opened.",
+    pricingStatus: "free-core",
+    pricing:
+      "Provider advertises free profiles, browsing and messaging; actual entitlements, limits and future prices untested. Advertised availability is not account acceptance.",
+    restrictions:
+      "Discovery only; import/outreach not reviewed. Terms prohibit collecting other users' information without consent and unsolicited spam. User-content license is for the provider's platform, not external reuse. Discreet-mode, privacy and compatibility claims unverified; legal operator identity and external contact/API rights not established. No relationship to cofound.biz, cofound.lat, cofound.space or WeFoundy established.",
+    evidence: [
+      "https://cofounder-match.com/",
+      "https://cofounder-match.com/how-it-works",
+      "https://cofounder-match.com/terms",
+      "https://cofounder-match.com/privacy",
+      "https://cofounder-match.com/register",
+    ],
+    reviewedAt: "2026-10-23",
+  },
+  {
     id: "wasl-network-mena",
     name: "WASL Network (MENA)",
     url: "https://wasl-network.com/",

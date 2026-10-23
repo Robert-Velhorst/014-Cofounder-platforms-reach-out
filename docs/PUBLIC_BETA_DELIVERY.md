@@ -1,5 +1,30 @@
 # Worldwide public beta delivery ledger
 
+## October 23 Spain discovery increment — source candidate, not release acceptance
+
+The [CoFounder Match Spain review](PLATFORM_SPAIN_REVIEW_2026-10-23.md) adds one
+dedicated discovery-only record after direct rendered reads of five public pages
+and the free-use FAQ. Source totals become 70: 23 dedicated, 24 community/channel,
+23 programme routes; 47 discovery-only and the unchanged 23 manual-reviewed.
+No signup, private profile, purchase, provider permission or contact occurred.
+The previously held Spanish-language leads remain held. Pricing/privacy/matching
+statements remain provider declarations, not independently accepted capabilities.
+
+All 12 new actual-module source/policy cases passed on Node 26.12.0. An in-memory
+admission negative control failed seven of them, and the unchanged checked-in
+source passed again. Scoped strict TypeScript 6.0.3 returned zero diagnostics.
+All 219 native checks passed with zero failures/skips (9,628.1081 ms), after the
+stale UI inventory correctly required review of the changed catalogue hash.
+Only its source hash and aggregate digest changed; all 230 UI actions remain
+structurally unchanged. This is not actual browser or provider acceptance.
+
+New focused source/policy tests, the existing SSR and regional-admission suites
+and the maintained browser gate cover the new record's provenance, exact search
+aliases and refused import/outreach boundary. Actual compiled desktop/mobile,
+database and full exact-head CI acceptance are still required. PR #126's prior
+publication head is preserved unchanged; its queued runs are not restarted by
+this separate source branch. All original phases remain Partial.
+
 ## October 23 combined candidate: frontend admission and actual browser failure
 
 The combined source preserves all four PR #121–124 heads as ancestors, including

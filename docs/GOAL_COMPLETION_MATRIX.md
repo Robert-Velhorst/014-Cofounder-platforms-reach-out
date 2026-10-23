@@ -9,6 +9,11 @@ unextended browser run failed on a font-family assertion; the corrected full
 candidate's image/browser execution and all-stage screenshot review remain
 unverified. No phase is promoted by this implementation or its wiring.
 
+The subsequent [Spain source increment](PLATFORM_SPAIN_REVIEW_2026-10-23.md)
+adds one discovery-only record, bringing the source catalogue to 70. Its scoped
+source/policy checks are not exact-package, rendered or provider acceptance;
+all original phase and worldwide-coverage requirements remain open.
+
 Publication checkpoint: the accumulated implementation was merged through
 [PR #83](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/83)
 on October 20. The maintained full customer-load gate was subsequently merged

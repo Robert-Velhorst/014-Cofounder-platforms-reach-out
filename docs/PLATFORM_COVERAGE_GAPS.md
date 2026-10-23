@@ -1,9 +1,15 @@
 # Worldwide discovery coverage: evidence and open work
 
+October 23 Spain increment: [CoFounder Match review](PLATFORM_SPAIN_REVIEW_2026-10-23.md)
+adds a separate Spanish-language discovery-only service. Free core features are
+advertised, not account-tested. It does not resolve held Spanish/LatAm brands,
+external data/contact rights or worldwide/native-member coverage.
+
 October 23 MENA increment: [WASL Network review](PLATFORM_WASL_MENA_REVIEW_2026-10-23.md)
 adds a dedicated discovery listing, not account acceptance, profile/contact rights,
 Arabic-interface acceptance or country-wide coverage. Exact-package qualification
-of the added record remains pending.
+of the 69-source head passed the documented bounded CI gate; actual member,
+matching and provider-permission acceptance remain unverified.
 
 October 23 Spanish-language supplement: [WeFoundy/cofound.lat/cofound.space review](PLATFORM_SPANISH_LATAM_REVIEW_2026-10-23.md)
 records new held leads and a rendered recheck of cofound.lat. This updates research
@@ -16,7 +22,7 @@ records an English/Arabic co-founder listing and a separate community lead, with
 unresolved policy/access and forthcoming-feature warnings. Both remain held;
 this supplement changes neither catalogue counts nor workflow admission.
 
-Base regional audit: 2026-10-02; WASL source increment: 2026-10-23. Unchanged source
+Base regional audit: 2026-10-02; Spain/WASL source increments: 2026-10-23. Unchanged source
 observations retain their earlier dates. This is an audit of the repository catalogue, not
 a claim that every operating platform worldwide was found or freshly tested.
 Authoritative source records are in `server/platform-catalogue.ts` and their dated
@@ -25,12 +31,14 @@ silently refresh their dates here.
 
 ## Current boundary
 
-The current catalogue source contains 69 records: 22 dedicated matching listings,
+The current catalogue source contains 70 records: 23 dedicated matching listings,
 24 communities/channel templates and 23 programs/events/ecosystems. Latest
-increment: [WASL Network review](PLATFORM_WASL_MENA_REVIEW_2026-10-23.md), with
-46 discovery-only and 23 manual-reviewed records. The new record's full package,
+increment: [Spain review](PLATFORM_SPAIN_REVIEW_2026-10-23.md), with
+47 discovery-only and 23 manual-reviewed records. The new record's full package,
 database and connected browser acceptance remain unverified. Preceding
-increment: [Indonesia directory review](PLATFORM_INDONESIA_REVIEW_2026-10-02.md);
+increment: [WASL Network review](PLATFORM_WASL_MENA_REVIEW_2026-10-23.md), whose
+69-source head passed its documented bounded CI qualification, not provider
+acceptance. Earlier increment: [Indonesia directory review](PLATFORM_INDONESIA_REVIEW_2026-10-02.md);
 one restricted community discovery route, not matching or permission. Its
 [exact-package qualification](INDONESIA_68_SOURCE_PACKAGE_QUALIFICATION_2026-10-02.md)
 passed catalogue/database/compiled-startup checks, then the 24-stage journey and
@@ -51,7 +59,7 @@ Slack and Facebook templates do not represent reviewed individual groups.
 A listed source is not a connected integration, an admission decision, proof of
 availability, geographic eligibility or contact consent. Every record explicitly
 has `implemented`, `permissionVerified` and `liveVerified` set to false.
-The forty-six discovery-only source records remain refused by candidate
+The forty-seven discovery-only source records remain refused by candidate
 intake, CSV import and outreach preparation, including label/URL variants.
 Earlier manual-reviewed records allow only the bounded reviewed manual workflow;
 that classification is not provider permission for automation.

@@ -170,14 +170,20 @@ checkpoint approves a production release.
 
 ## Platforms and worldwide coverage
 
-The catalogue source currently contains **69 public discovery records**: 22 dedicated
+The catalogue source currently contains **70 public discovery records**: 23 dedicated
 services, 24 community/channel routes and 23 programme/event/ecosystem routes.
-These are not 69 working integrations or a complete worldwide list. Regional
+These are not 70 working integrations or a complete worldwide list. Regional
 supplements cover multiple ecosystems; geographic, native-language and
 membership-only gaps remain.
 
-Latest source increment: [WASL Network / MENA review](docs/PLATFORM_WASL_MENA_REVIEW_2026-10-23.md).
-The new dedicated listing is discovery-only: free registration is not verified
+Latest source increment: [CoFounder Match / Spain review](docs/PLATFORM_SPAIN_REVIEW_2026-10-23.md).
+It adds a separate Spanish-language discovery-only route. Advertised free core
+features are not verified account access; collection/contact consent and all
+integrations remain unestablished. The new source's exact-package/browser
+qualification is pending; the earlier 69-source main result does not qualify it.
+
+Preceding increment: [WASL Network / MENA review](docs/PLATFORM_WASL_MENA_REVIEW_2026-10-23.md).
+The WASL listing is discovery-only: free registration is not verified
 matching access, mutual contact disclosure is not external-contact consent, and
 automated harvesting is prohibited. Its source/card/admission and exact-package
 qualification are tracked separately; preceding 68-source results do not qualify
@@ -273,7 +279,7 @@ not 100-user successful capacity. Fresh packaging now passed
 Wider script/device, new-image connected acceptance, whole-product load, remote recovery and post-snapshot
 reconciliation remain open; preceding 63-source receipts are historical.
 
-There are 23 manual-reviewed records and 46 discovery-only records. Manual review
+There are 23 manual-reviewed records and 47 discovery-only records. Manual review
 is not a blanket permission to scrape, reuse member data or contact people.
 Platform admission and each person's rights are checked separately. Private
 groups, directories and Slack membership do not imply consent.
