@@ -1,5 +1,34 @@
 # Worldwide public beta delivery ledger
 
+## October 23 connected account-request candidate — not yet executed
+
+Four mandatory stages now extend the original 24 workflow and six onboarding
+stages, before the unchanged cold-asset probes. They use the same two synthetic
+accounts and owned CI fixtures. The only fixture configuration addition enables
+review-held request intake there; production defaults and all erasure/mail/provider
+workers remain off. No new database, account, secret, dependency manifest,
+resource limit, timeout, admission threshold or retry is introduced.
+
+The [connected candidate](MAINTAINED_BROWSER_JOURNEY.md#account-request-extension--source-defined-not-executed)
+requires English request, refresh/reload, Dutch withdrawal, a new Dutch request
+and English withdrawal. It observes actual tRPC payloads for canonical intent,
+all four SQL revisions/quota attempts, corresponding audit metadata, retained
+accounts/candidate/profile counts and no mail-job increase. The final stage
+requires owner-scoped status plus anonymous/wrong-owner refusals and rejection
+of translated wire intent without further row/attempt/audit changes. Both
+desktop/mobile captures require cleared password/confirmation controls.
+
+Native tests execute the real row/wire assertion helpers against explicit
+fixtures and refuse incomplete/reordered account-rights receipts. Two focused
+tests use the actual locked tRPC client with a fetch double to check its
+serialization. All 30 focused browser-policy cases, all 232 native checks
+(zero failures/skips; 9,122.5797 ms) and all 21 focused application cases
+(the existing 19 markup cases plus two client-serialization cases) passed on
+Node 26.12.0. Those are not HTTP-service, authenticated browser, database or
+erasure results. Actual ordered 34-stage
+execution, compiled UI, screenshots, isolation/teardown and exact-head full
+CI/CodeQL remain required. No phase is promoted by adding a gate.
+
 ## October 23 account-deletion request language — markup evidence only
 
 The existing account-deletion request panel now follows the current English/Dutch
@@ -21,9 +50,10 @@ form submission, authentication, database transitions or browser interactions.
 Both source-derived inventories were regenerated and reviewed: only the panel's
 hash, hook/action positions and derived digests changed. Totals remain 165 API
 operations, 58 default-admitted/107 denied, and 230 UI actions over 151 files.
-The existing maintained browser remains the original 24+6 stages followed by
+At this earlier markup-only checkpoint, the maintained browser had 24+6 stages followed by
 cold-asset probes; no connected deletion-request language journey was added or
-claimed. All 227 native checks also passed, zero failures/skips (9,751.0091 ms),
+claimed then. The subsequent source candidate above adds that required journey.
+All 227 native checks also passed, zero failures/skips (9,751.0091 ms),
 including current-source equality for both inventories.
 Full exact-head CI/typecheck/build/database/browser/security acceptance
 remains pending. All original phases remain Partial; this is a publication

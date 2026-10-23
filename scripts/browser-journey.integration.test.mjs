@@ -19,7 +19,7 @@ import {
 } from "../apps/cofounder-discovery/scripts/browser-journey-policy.mjs";
 
 test(
-  "packaged runtime completes the maintained 24-stage synthetic browser journey",
+  "packaged runtime completes the maintained 24+6+4 synthetic browser journey and cold probes",
   { timeout: 900000 },
   async () => {
     const owner = randomUUID(),
@@ -292,6 +292,7 @@ test(
         "ENABLE_ACCOUNT_MAIL_WORKER=false",
         "ENABLE_ACCOUNT_MAIL_RETENTION=false",
         "ENABLE_ACCOUNT_DELETION_WORKER=false",
+        "ENABLE_ACCOUNT_DELETION_REQUESTS=true",
         "ENABLE_PLATFORM_AUTOMATION=false",
         "ENABLE_UNSAFE_LEGACY_ROUTES=false",
         "ENABLE_OWNER_NOTIFICATIONS=false",

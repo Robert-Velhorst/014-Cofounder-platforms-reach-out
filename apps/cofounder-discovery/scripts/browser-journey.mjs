@@ -9,6 +9,7 @@ import {
   hasSyntheticCjkGlyphs,
 } from "./browser-journey-policy.mjs";
 import { runSyntheticOnboardingJourney } from "./browser-onboarding-journey.mjs";
+import { runSyntheticAccountRightsJourney } from "./browser-journey-account-rights.mjs";
 import { runColdAssetCompatibility } from "./browser-cold-assets.mjs";
 const require = createRequire(import.meta.url);
 const { randomUUID, randomBytes, scryptSync } = require("node:crypto"),
@@ -2770,6 +2771,20 @@ async function stage(name, run) {
     });
     assert.deepEqual(errors, []);
     assert.deepEqual(external, []);
+    const accountRightsStages = await runSyntheticAccountRightsJourney({
+      page,
+      context,
+      db,
+      origin,
+      owner,
+      foreignOwner: foreign.insertId,
+      password,
+      onStage: name => {
+        activeStage = name;
+      },
+    });
+    assert.deepEqual(errors, []);
+    assert.deepEqual(external, []);
     const coldAssets = await runColdAssetCompatibility({
       page,
       origin,
@@ -2785,6 +2800,7 @@ async function stage(name, run) {
         transport: "isolated-http-loopback",
         stages,
         onboardingStages,
+        accountRightsStages,
         coldAssets,
         rpcMocks: 0,
         responseFaultsInjected: 1,

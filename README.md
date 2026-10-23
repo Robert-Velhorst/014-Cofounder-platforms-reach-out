@@ -32,7 +32,8 @@ The first maintained browser run also failed a font-family assertion; its
 do not qualify the full browser journey. Passing scan jobs are not zero findings.
 
 The latest source also adds a required [cold static-asset compatibility probe](docs/MAINTAINED_BROWSER_JOURNEY.md#cold-static-asset-compatibility-candidate--not-yet-qualified)
-after the original 24 browser stages and six onboarding stages. It measures
+after the original 24 browser stages, six onboarding stages and four new
+account-request stages. It measures
 100 cold asset sets at each of two viewport sizes from one client address,
 without changing the frontend admission limits. Its native transport tests are
 not evidence of 100 rendered browser users; full CI, compiled-asset results and
@@ -44,8 +45,10 @@ them from a successful response list. Its native regressions are not browser acc
 The account-deletion request panel now follows the English/Dutch language choice,
 including review/withdrawal states and warnings. It records a request for operator
 review, not completed erasure. Focused server-rendered markup tests cover its
-initial safeguards; connected browser, database and actual erasure acceptance
-are separate and remain unqualified. See the [delivery ledger](docs/PUBLIC_BETA_DELIVERY.md#october-23-account-deletion-request-language--markup-evidence-only).
+initial safeguards. A new [connected account-request candidate](docs/MAINTAINED_BROWSER_JOURNEY.md#account-request-extension--source-defined-not-executed)
+requires actual UI transitions, reload, canonical wire tokens, audit/quota checks
+and ownership refusals in CI. Its browser/database/screenshots are not yet
+qualified; actual erasure remains a separate, disabled path.
 
 The [workload evidence and limits](docs/CUSTOMER_LOAD_ACCEPTANCE.md) describe the
 100-account/10,000-candidate rehearsal, including successful 150-request/second

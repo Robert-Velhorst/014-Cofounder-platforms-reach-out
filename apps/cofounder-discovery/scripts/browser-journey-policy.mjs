@@ -39,6 +39,13 @@ export const BROWSER_ONBOARDING_STAGES = Object.freeze([
   "private-profile-cross-account-browser-boundary",
 ]);
 
+export const BROWSER_ACCOUNT_RIGHTS_STAGES = Object.freeze([
+  "account-deletion-english-request-refresh-and-reload",
+  "account-deletion-dutch-withdraw-retains-account",
+  "account-deletion-dutch-rerequest-and-english-withdraw",
+  "account-deletion-http-owner-and-anonymous-refusals",
+]);
+
 // Both are OS CJK fonts in the reviewed Debian/Playwright test environment.
 // Retain actual three-glyph coverage; reject custom/last-resort font reports.
 export function hasSyntheticCjkGlyphs(fonts) {
@@ -123,6 +130,7 @@ export function browserJourneyFailureDiagnostics(stderr, secrets = []) {
       value.stage !== "startup" &&
       !BROWSER_JOURNEY_STAGES.includes(value.stage) &&
       !BROWSER_ONBOARDING_STAGES.includes(value.stage) &&
+      !BROWSER_ACCOUNT_RIGHTS_STAGES.includes(value.stage) &&
       value.stage !== COLD_ASSET_PHASE
     )
       continue;
@@ -161,6 +169,11 @@ export function validateBrowserJourneyReceipt(value) {
     value.onboardingStages.length !== BROWSER_ONBOARDING_STAGES.length ||
     value.onboardingStages.some(
       (name, index) => name !== BROWSER_ONBOARDING_STAGES[index]
+    ) ||
+    !Array.isArray(value.accountRightsStages) ||
+    value.accountRightsStages.length !== BROWSER_ACCOUNT_RIGHTS_STAGES.length ||
+    value.accountRightsStages.some(
+      (name, index) => name !== BROWSER_ACCOUNT_RIGHTS_STAGES[index]
     ) ||
     value.rpcMocks !== 0 ||
     value.responseFaultsInjected !== 1 ||

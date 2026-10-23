@@ -9,6 +9,7 @@ import { EventEmitter } from "node:events";
 import {
   BROWSER_JOURNEY_STAGES,
   BROWSER_ONBOARDING_STAGES,
+  BROWSER_ACCOUNT_RIGHTS_STAGES,
   hasSyntheticCjkGlyphs,
   validateBrowserFixtureDatabase,
   redactBrowserFailure,
@@ -20,6 +21,11 @@ import {
   assertSyntheticPrivateProfile,
   runSyntheticOnboardingJourney,
 } from "../apps/cofounder-discovery/scripts/browser-onboarding-journey.mjs";
+import {
+  assertSyntheticDeletionRow,
+  assertSyntheticDeletionWire,
+  runSyntheticAccountRightsJourney,
+} from "../apps/cofounder-discovery/scripts/browser-journey-account-rights.mjs";
 import {
   COLD_ASSET_CLIENTS,
   COLD_ASSET_CONCURRENCY,
@@ -41,6 +47,11 @@ const onboardingPath = new URL(
   root,
 );
 const onboarding = readFileSync(onboardingPath, "utf8");
+const accountRightsPath = new URL(
+  "apps/cofounder-discovery/scripts/browser-journey-account-rights.mjs",
+  root,
+);
+const accountRights = readFileSync(accountRightsPath, "utf8");
 const fixture = readFileSync(
   new URL("scripts/browser-journey.integration.test.mjs", root),
   "utf8",
@@ -178,6 +189,7 @@ function receipt() {
     transport: "isolated-http-loopback",
     stages: [...BROWSER_JOURNEY_STAGES],
     onboardingStages: [...BROWSER_ONBOARDING_STAGES],
+    accountRightsStages: [...BROWSER_ACCOUNT_RIGHTS_STAGES],
     coldAssets: coldEvidence(),
     rpcMocks: 0,
     responseFaultsInjected: 1,
@@ -725,6 +737,11 @@ test("browser receipt refuses skipped/reordered stages, fabricated provider work
     { onboardingStages: [] },
     { onboardingStages: [...BROWSER_ONBOARDING_STAGES].reverse() },
     { onboardingStages: Array(6).fill(BROWSER_ONBOARDING_STAGES[0]) },
+    { accountRightsStages: undefined },
+    { accountRightsStages: [] },
+    { accountRightsStages: BROWSER_ACCOUNT_RIGHTS_STAGES.slice(1) },
+    { accountRightsStages: [...BROWSER_ACCOUNT_RIGHTS_STAGES].reverse() },
+    { accountRightsStages: Array(4).fill(BROWSER_ACCOUNT_RIGHTS_STAGES[0]) },
     { rpcMocks: 1 },
     { responseFaultsInjected: 0 },
     { externalProviderActions: 1 },
@@ -872,6 +889,208 @@ test("onboarding SQL assertions require one canonical private owned row with sta
   assert.throws(() => assertSyntheticPrivateProfile([row], 7, location, 4));
 });
 
+test("four account rights stages preserve all 24+6 stages, side-effect boundaries and diagnostic reporting", () => {
+  assert.equal(BROWSER_ACCOUNT_RIGHTS_STAGES.length, 4);
+  assert.ok(Object.isFrozen(BROWSER_ACCOUNT_RIGHTS_STAGES));
+  const names = [...accountRights.matchAll(/await stage\(\s*"([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  assert.deepEqual(names, BROWSER_ACCOUNT_RIGHTS_STAGES);
+  assert.ok(
+    driver.indexOf("await runSyntheticAccountRightsJourney(") >
+      driver.indexOf("await runSyntheticOnboardingJourney("),
+  );
+  assert.ok(
+    driver.indexOf("await runColdAssetCompatibility(") >
+      driver.indexOf("await runSyntheticAccountRightsJourney("),
+  );
+  assert.match(driver, /accountRightsStages,/);
+  assert.match(accountRights, /deletion_fenced_at/);
+  assert.match(accountRights, /account_mail_jobs/);
+  assert.match(accountRights, /attempts: revision \+ 1/);
+  assert.match(accountRights, /deletionEnabled: false/);
+  assert.match(accountRights, /\/task-output\//);
+  assert.match(accountRights, /await page\.reload\(\)/);
+  assert.match(
+    accountRights,
+    /assert\.deepEqual\(state.counts, initial.counts\)/,
+  );
+  assert.doesNotMatch(
+    accountRights,
+    /route\.fulfill|INSERT INTO|UPDATE\s|DELETE FROM|createConnection|chromium\.launch|\.skip\(|clearCookies|process\.env/,
+  );
+  for (const stage of BROWSER_ACCOUNT_RIGHTS_STAGES) {
+    const [failure] = browserJourneyFailureDiagnostics(
+      JSON.stringify({
+        event: "browser_journey_failed",
+        stage,
+        error: "synthetic",
+      }),
+    );
+    assert.equal(failure.stage, stage);
+  }
+});
+
+test("account rights row assertions reject foreign, changed, duplicated or incomplete review requests", () => {
+  const key = "a6a38911-b48e-4352-bc45-fce05735c468";
+  const row = {
+    user_id: 7,
+    request_key: key,
+    status: "pending_review",
+    revision: 1,
+    attempts: 1,
+    requested_at: new Date("2026-10-23T04:00:00.000Z"),
+    withdrawn_at: null,
+  };
+  const expected = {
+    status: "pending_review",
+    revision: 1,
+    attempts: 1,
+    requestKey: key,
+  };
+  assert.equal(assertSyntheticDeletionRow([row], 7, expected), key);
+  assert.equal(
+    assertSyntheticDeletionRow(
+      [
+        {
+          ...row,
+          status: "withdrawn",
+          revision: 2,
+          attempts: 2,
+          withdrawn_at: new Date("2026-10-23T04:01:00.000Z"),
+        },
+      ],
+      7,
+      { ...expected, status: "withdrawn", revision: 2, attempts: 2 },
+    ),
+    key,
+  );
+  for (const rows of [
+    [],
+    [row, row],
+    [{ ...row, user_id: 8 }],
+    [{ ...row, revision: 2 }],
+    [{ ...row, attempts: 0 }],
+    [{ ...row, status: "none" }],
+    [{ ...row, request_key: "invalid" }],
+    [{ ...row, request_key: "b6a38911-b48e-4352-bc45-fce05735c468" }],
+    [{ ...row, requested_at: null }],
+    [{ ...row, requested_at: "invalid" }],
+    [{ ...row, withdrawn_at: new Date() }],
+  ])
+    assert.throws(() => assertSyntheticDeletionRow(rows, 7, expected));
+  assert.throws(() =>
+    assertSyntheticDeletionRow([{ ...row, status: "withdrawn" }], 7, {
+      ...expected,
+      status: "withdrawn",
+    }),
+  );
+});
+
+test("account rights wire assertions retain canonical request and withdrawal commands", () => {
+  const key = "a6a38911-b48e-4352-bc45-fce05735c468";
+  for (const action of ["request", "withdraw"]) {
+    const operation =
+      action === "request" ? "requestDeletion" : "withdrawDeletion";
+    const command = {
+      accountId: 7,
+      password: "synthetic-only-password",
+      expectedRevision: 1,
+      requestKey: key,
+      confirmation: action === "request" ? "REQUEST ACCOUNT DELETION" : true,
+    };
+    const request = {
+      url: `http://localhost:13216/api/trpc/accountData.${operation}?batch=1`,
+      method: "POST",
+      body: { 0: { json: command } },
+    };
+    const expected = {
+      action,
+      accountId: 7,
+      revision: 1,
+      password: command.password,
+      requestKey: key,
+    };
+    assert.equal(assertSyntheticDeletionWire(request, expected), key);
+    for (const change of [
+      { accountId: 8 },
+      { expectedRevision: 0 },
+      { password: "wrong" },
+      {
+        confirmation:
+          action === "request" ? "ACCOUNTVERWIJDERING AANVRAGEN" : "true",
+      },
+      { requestKey: "invalid" },
+      { extra: "field" },
+    ])
+      assert.throws(() =>
+        assertSyntheticDeletionWire(
+          { ...request, body: { 0: { json: { ...command, ...change } } } },
+          expected,
+        ),
+      );
+    for (const change of [
+      { method: "GET" },
+      { url: request.url.replace("localhost", "production.invalid") },
+      { url: request.url.replace("?batch=1", "") },
+      { body: { 0: { json: command }, 1: { json: command } } },
+      { body: { json: command } },
+    ])
+      assert.throws(() =>
+        assertSyntheticDeletionWire({ ...request, ...change }, expected),
+      );
+    assert.throws(() =>
+      assertSyntheticDeletionWire(request, { ...expected, action: "erase" }),
+    );
+  }
+});
+
+test("account rights refuses invalid fixture origin, identities or credentials before any I/O", async () => {
+  const base = {
+    origin: "http://localhost:13216",
+    owner: 1,
+    foreignOwner: 2,
+    password: "synthetic-only-password",
+    onStage: () => {},
+  };
+  for (const changes of [
+    { origin: "https://production.invalid" },
+    { origin: "http://127.0.0.1:13216" },
+    { owner: 0 },
+    { owner: "1" },
+    { foreignOwner: 1 },
+    { foreignOwner: -1 },
+    { password: "short" },
+    { password: undefined },
+    { password: "x".repeat(129) },
+    { onStage: undefined },
+  ])
+    await assert.rejects(
+      runSyntheticAccountRightsJourney({ ...base, ...changes }),
+      assert.AssertionError,
+    );
+});
+
+test("only the isolated browser fixture opts into review-held intake; erasure and providers stay off", () => {
+  assert.equal(
+    (fixture.match(/"ENABLE_ACCOUNT_DELETION_REQUESTS=true"/g) || []).length,
+    1,
+  );
+  for (const flag of [
+    "ENABLE_ACCOUNT_DELETION_WORKER",
+    "ENABLE_ACCOUNT_MAIL_WORKER",
+    "ENABLE_PLATFORM_AUTOMATION",
+    "ENABLE_OWNER_NOTIFICATIONS",
+  ])
+    assert.ok(fixture.includes(`"${flag}=false"`));
+  const config = readFileSync(
+    new URL("apps/cofounder-discovery/server/config.ts", root),
+    "utf8",
+  );
+  assert.match(config, /const booleanFromString[\s\S]*?default\("false"\)/);
+  assert.match(config, /ENABLE_ACCOUNT_DELETION_REQUESTS: booleanFromString/);
+});
+
 test("onboarding refuses unexpected origin or owners before browser/database access", async () => {
   const base = { origin: "http://localhost:13216", owner: 1, foreignOwner: 2 };
   for (const changes of [
@@ -892,6 +1111,7 @@ test("browser code parses and refuses execution before loading browser/database 
   for (const path of [
     driverPath,
     onboardingPath,
+    accountRightsPath,
     new URL("apps/cofounder-discovery/scripts/browser-cold-assets.mjs", root),
     new URL("scripts/browser-journey.integration.test.mjs", root),
   ]) {

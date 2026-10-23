@@ -88,7 +88,7 @@ alter the previously assessed PR #125 head. It extracts the existing 60-second,
 1,200-request client and 6,000-request process thresholds to one shared policy
 module. No admission threshold is raised or lowered to make a test pass.
 
-After all 24 workflow and six onboarding stages, the existing owned CI browser
+After all 24 workflow, six onboarding and four account-request stages, the existing owned CI browser
 captures the actual compiled `/outreach` resource graph at desktop (1365×1000)
 and mobile (375×812) sizes. The probe retains duplicate resource requests,
 requires the document, JavaScript and stylesheet, bounds the snapshot and permits
@@ -116,7 +116,7 @@ scenario, positive body checks, deliberate content changes, 429 refusal and
 redirect refusal without retries. These are transport/algorithm checks against
 synthetic bytes, **not results from the compiled product or a real browser**.
 Full exact-head CI, both actual compiled-asset scenarios, the complete ordered
-30-stage browser receipt, screenshot review and a fresh security scan remain
+34-stage browser receipt, screenshot review and a fresh security scan remain
 required before any merge/release claim. A draft publication preserves progress;
 it is not acceptance or authorization to expose a service.
 
@@ -210,6 +210,59 @@ fixtures and reject duplicate/foreign/public/incomplete/changed-identity rows;
 they also exercise invalid origin/owner refusal before I/O. Syntax checks include
 the new module, and source checks preserve the original 24 stages and require
 the extension before a passing receipt. These are not rendered UI tests.
+
+## Account-request extension — source-defined, not executed
+
+The next required flow is: the existing second synthetic account's `/outreach`
+account-data tab -> English request -> refresh and reload -> Dutch withdrawal ->
+new Dutch request -> English withdrawal -> ownership and anonymous HTTP refusals.
+The four new stages follow the original 24 workflow and six onboarding stages;
+all remain required and ordered before cold-asset probes:
+
+1. `account-deletion-english-request-refresh-and-reload`
+2. `account-deletion-dutch-withdraw-retains-account`
+3. `account-deletion-dutch-rerequest-and-english-withdraw`
+4. `account-deletion-http-owner-and-anonymous-refusals`
+
+Only the isolated CI runtime enables `ENABLE_ACCOUNT_DELETION_REQUESTS=true`.
+Its erasure, email and provider workers stay disabled. This is review-held intake
+and withdrawal, not an erasure executor, account suspension or completion promise.
+Production configuration/defaults are unchanged. No fixture, account, password,
+secret, dependency or resource/deadline increase is added.
+
+UI actions must produce real HTTP mutations and SQL revisions 1–4 within the
+unchanged five-attempt/15-minute allowance. The observer inspects the actual
+[batched request payload](https://playwright.dev/docs/api/class-request#request-post-data-json)
+without logging bodies/passwords: request confirmation stays
+`REQUEST ACCOUNT DELETION` in either language, withdrawal stays boolean `true`,
+and owner, revision and request key must match. It registers the
+[response wait before the action](https://playwright.dev/docs/api/class-page#page-wait-for-response),
+requires HTTP 200 and checks the rendered resulting state and cleared controls.
+SQL only observes; this module never inserts, updates or deletes rows directly.
+
+Refresh must receive a real status response; reload must retain the first key.
+Withdrawal retains that key; re-request creates a different key. Four exact
+successful audit events must agree with owner, transition, key and revision.
+Both accounts remain present/unfenced, candidate/profile/user counts stay equal,
+mail-job count does not increase and the original account gets no request row.
+Screenshots cover Dutch pending-review and English withdrawn states at 1365×1000
+and 375×812, after password/confirmation controls are cleared. The screen must
+have the expected title/route, no Vite overlay and no horizontal overflow.
+
+The final HTTP checks require owned status with `deletionEnabled: false`, 403 for
+another account, 401 without cookies for both status and mutations, and 400 for
+a translated confirmation token. Request rows, attempts, audits, retained counts
+and fence state must remain unchanged by those refusals. Page-console and
+external-request checks remain enforced by the parent driver; direct APIRequest
+and Node fetch refusals are not fabricated browser-console events.
+
+Native tests cover the pure row/wire assertions, invalid fixture preflight,
+source boundaries, failure-stage redaction and missing/reordered/duplicated
+account-rights receipts. Two actual-client serialization tests use explicit fetch
+doubles, not the application service. These checks do not execute the UI or SQL.
+The complete 34-stage browser, screenshot inspection, compiled runtime and clean
+fixture teardown remain unverified until exact-head CI actually runs. No erasure,
+retention policy, provider delivery, legal or hosted acceptance is claimed.
 
 ## Commands and artifact boundaries
 
