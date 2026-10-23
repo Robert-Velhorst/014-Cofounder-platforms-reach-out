@@ -2,10 +2,18 @@ import type { RequestHandler, Response } from "express";
 import { ipKeyGenerator, type Options } from "express-rate-limit";
 import { createLocalRateLimiter } from "./rate-limit";
 
-export const FRONTEND_WINDOW_MS = 60_000;
-export const FRONTEND_PROCESS_LIMIT = 6_000;
-export const FRONTEND_CLIENT_LIMIT = 1_200;
-export const FRONTEND_CLIENT_CAPACITY = 4_096;
+import {
+  FRONTEND_WINDOW_MS,
+  FRONTEND_PROCESS_LIMIT,
+  FRONTEND_CLIENT_LIMIT,
+  FRONTEND_CLIENT_CAPACITY,
+} from "../shared/frontend-admission-policy";
+export {
+  FRONTEND_WINDOW_MS,
+  FRONTEND_PROCESS_LIMIT,
+  FRONTEND_CLIENT_LIMIT,
+  FRONTEND_CLIENT_CAPACITY,
+} from "../shared/frontend-admission-policy";
 
 function refuse(res: Response, status: 429 | 503, seconds: number) {
   res.setHeader("cache-control", "private, no-store");

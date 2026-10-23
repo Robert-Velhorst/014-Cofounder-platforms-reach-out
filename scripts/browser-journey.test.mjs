@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
+import { createServer } from "node:http";
 import {
   BROWSER_JOURNEY_STAGES,
   BROWSER_ONBOARDING_STAGES,
@@ -17,6 +19,14 @@ import {
   assertSyntheticPrivateProfile,
   runSyntheticOnboardingJourney,
 } from "../apps/cofounder-discovery/scripts/browser-onboarding-journey.mjs";
+import {
+  COLD_ASSET_CLIENTS,
+  COLD_ASSET_CONCURRENCY,
+  COLD_ASSET_PHASE,
+  measureColdAssetBurst,
+  validateColdAssetEvidence,
+  runColdAssetCompatibility,
+} from "../apps/cofounder-discovery/scripts/browser-cold-assets.mjs";
 
 const root = new URL("../", import.meta.url);
 const driverPath = new URL(
@@ -166,6 +176,7 @@ function receipt() {
     transport: "isolated-http-loopback",
     stages: [...BROWSER_JOURNEY_STAGES],
     onboardingStages: [...BROWSER_ONBOARDING_STAGES],
+    coldAssets: coldEvidence(),
     rpcMocks: 0,
     responseFaultsInjected: 1,
     externalProviderActions: 0,
@@ -177,6 +188,262 @@ function receipt() {
     external: [],
   };
 }
+
+// Synthetic receipt shape only; successful validation is not a browser run.
+function coldEvidence() {
+  return {
+    format: "cofounder-cold-assets/v1",
+    scope: "cold-static-assets-not-rendered-browser-users",
+    windowMs: 60_000,
+    clientLimit: 1_200,
+    processLimit: 6_000,
+    scenarios: ["desktop", "mobile"].map((viewport) => ({
+      viewport,
+      freshWindowWaitMs: 61_000,
+      clients: 100,
+      assetRequestsPerClient: 3,
+      snapshotSha256: "b".repeat(64),
+      snapshotBytes: 30,
+      expectedRequests: 300,
+      started: 300,
+      completed: 300,
+      failed: 0,
+      dropped: 0,
+      statuses: { 200: 300 },
+      hashMismatches: 0,
+      byteMismatches: 0,
+      mimeMismatches: 0,
+      transferredBytes: 3_000,
+      automaticRetries: 0,
+      maximumInFlight: 16,
+      peakInFlight: 16,
+      durationMs: 100,
+    })),
+  };
+}
+
+test("cold asset evidence refuses missing, reduced, retried or incomplete scenarios", () => {
+  assert.equal(COLD_ASSET_CLIENTS, 100);
+  assert.equal(COLD_ASSET_CONCURRENCY, 16);
+  assert.equal(validateColdAssetEvidence(coldEvidence()).scenarios.length, 2);
+  for (const changes of [
+    { clients: 99 },
+    { assetRequestsPerClient: 2 },
+    { freshWindowWaitMs: 59_999 },
+    { started: 299 },
+    { completed: 299 },
+    { failed: 1 },
+    { dropped: 1 },
+    { hashMismatches: 1 },
+    { byteMismatches: 1 },
+    { mimeMismatches: 1 },
+    { automaticRetries: 1 },
+    { transferredBytes: 2_999 },
+    { durationMs: 60_000 },
+    { statuses: { 200: 299, 429: 1 } },
+    { snapshotSha256: "invalid" },
+  ]) {
+    const value = coldEvidence();
+    Object.assign(value.scenarios[0], changes);
+    assert.throws(
+      () => validateColdAssetEvidence(value),
+      /cold_asset_evidence_refused/,
+    );
+  }
+  for (const changes of [
+    { scope: "100-rendered-browser-users" },
+    { clientLimit: 1_201 },
+    { scenarios: coldEvidence().scenarios.reverse() },
+    { scenarios: [] },
+  ])
+    assert.throws(() =>
+      validateColdAssetEvidence({ ...coldEvidence(), ...changes }),
+    );
+  assert.throws(() =>
+    validateBrowserJourneyReceipt({ ...receipt(), coldAssets: undefined }),
+  );
+});
+
+async function withColdServer(run) {
+  const bodies = [
+    [
+      "/outreach",
+      "document",
+      "text/html",
+      "<html>Synthetic transport fixture</html>",
+    ],
+    [
+      "/assets/test.js",
+      "script",
+      "text/javascript",
+      "console.log('synthetic');",
+    ],
+    ["/assets/test.css", "stylesheet", "text/css", "body { color: black; }"],
+  ];
+  let mode = "normal";
+  const counts = {};
+  const resources = bodies.map(([path, kind, mime, body]) => ({
+    path,
+    kind,
+    mime,
+    bytes: Buffer.byteLength(body),
+    sha256: createHash("sha256").update(body).digest("hex"),
+  }));
+  const server = createServer((request, response) => {
+    counts[request.url] = (counts[request.url] || 0) + 1;
+    if (mode === "quota") {
+      response.writeHead(429, { "Retry-After": "1" }).end();
+      return;
+    }
+    if (mode === "redirect") {
+      response.writeHead(302, { Location: "/redirect-target" }).end();
+      return;
+    }
+    const row = bodies.find(([path]) => path === request.url);
+    if (!row) {
+      response.writeHead(404).end();
+      return;
+    }
+    response.writeHead(200, {
+      "Content-Type": mode === "changed" ? "text/plain" : row[2],
+    });
+    response.end(mode === "changed" ? "changed" : row[3]);
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  try {
+    await run({
+      origin: `http://127.0.0.1:${server.address().port}`,
+      resources,
+      counts,
+      mode: (value) => {
+        mode = value;
+      },
+    });
+  } finally {
+    server.closeAllConnections();
+    await new Promise((resolve, reject) =>
+      server.close((error) => (error ? reject(error) : resolve())),
+    );
+  }
+}
+
+test("cold transport offers all 100 asset sets without retries and checks actual bodies", async () => {
+  await withColdServer(async ({ origin, resources, counts, mode }) => {
+    const report = await measureColdAssetBurst(origin, resources);
+    assert.deepEqual(counts, {
+      "/outreach": 100,
+      "/assets/test.js": 100,
+      "/assets/test.css": 100,
+    });
+    assert.equal(report.expectedRequests, 300);
+    assert.equal(report.started, 300);
+    assert.equal(report.completed, 300);
+    assert.equal(
+      report.failed +
+        report.dropped +
+        report.hashMismatches +
+        report.byteMismatches +
+        report.mimeMismatches,
+      0,
+    );
+    assert.equal(
+      report.transferredBytes,
+      100 * resources.reduce((sum, row) => sum + row.bytes, 0),
+    );
+    assert.ok(report.peakInFlight <= 16);
+    mode("changed");
+    const changed = await measureColdAssetBurst(origin, resources);
+    assert.equal(changed.hashMismatches, 300);
+    assert.equal(changed.byteMismatches, 300);
+    assert.equal(changed.mimeMismatches, 300);
+  });
+});
+
+test("cold transport neither retries quotas nor follows redirects", async () => {
+  await withColdServer(async ({ origin, resources, counts, mode }) => {
+    for (const [value, status] of [
+      ["quota", 429],
+      ["redirect", 302],
+    ]) {
+      mode(value);
+      const report = await measureColdAssetBurst(origin, resources);
+      assert.equal(report.started, 300);
+      assert.equal(report.completed, 300);
+      assert.equal(report.failed, 300);
+      assert.deepEqual(report.statuses, { [status]: 300 });
+      assert.equal(report.automaticRetries, 0);
+    }
+    assert.equal(
+      Object.values(counts).reduce((a, b) => a + b, 0),
+      600,
+    );
+    assert.equal(counts["/redirect-target"], undefined);
+  });
+});
+
+test("cold capture refuses external, API, encoded, noncanonical and oversized inputs before IO", async () => {
+  await withColdServer(async ({ origin, resources, counts }) => {
+    for (const invalid of [
+      "https://production.invalid",
+      origin + "/",
+      origin + "?x=1",
+      "http://localhost",
+    ]) {
+      await assert.rejects(
+        measureColdAssetBurst(invalid, resources),
+        /cold_asset_evidence_refused/,
+      );
+    }
+    for (const changes of [
+      { path: "/api/health" },
+      { path: "/%61pi/health" },
+      { path: "/assets/../api/health" },
+      { path: "//production.invalid/script" },
+      { path: "/assets/test.js?cache=1" },
+      { path: "/outreach", kind: "script" },
+      { bytes: 8 * 1024 * 1024 + 1 },
+    ]) {
+      const source = structuredClone(resources);
+      Object.assign(source[1], changes);
+      await assert.rejects(
+        measureColdAssetBurst(origin, source),
+        /cold_asset_evidence_refused/,
+      );
+    }
+    await assert.rejects(
+      measureColdAssetBurst(origin, Array(65).fill(resources[0])),
+    );
+    assert.deepEqual(counts, {});
+  });
+  await assert.rejects(
+    runColdAssetCompatibility({ origin: "https://production.invalid" }),
+  );
+});
+
+test("cold assets extend all 24 plus six stages without resetting production thresholds", () => {
+  const cold = readFileSync(
+    new URL("apps/cofounder-discovery/scripts/browser-cold-assets.mjs", root),
+    "utf8",
+  );
+  assert.ok(
+    driver.indexOf("await runColdAssetCompatibility(") >
+      driver.indexOf("await runSyntheticOnboardingJourney("),
+  );
+  assert.match(driver, /coldAssets,/);
+  assert.match(cold, /FRONTEND_WINDOW_MS \+ 1000/);
+  assert.doesNotMatch(
+    cold,
+    /x-forwarded-for|\.skip\(|route\.fulfill|createConnection|chromium\.launch/i,
+  );
+  const diagnostic = browserJourneyFailureDiagnostics(
+    JSON.stringify({
+      event: "browser_journey_failed",
+      stage: COLD_ASSET_PHASE,
+      error: "synthetic",
+    }),
+  );
+  assert.equal(diagnostic[0].stage, COLD_ASSET_PHASE);
+});
 test("browser receipt refuses skipped/reordered stages, fabricated provider work and unexplained errors", () => {
   assert.equal(validateBrowserJourneyReceipt(receipt()).stages.length, 24);
   for (const change of [
@@ -356,6 +623,7 @@ test("browser code parses and refuses execution before loading browser/database 
   for (const path of [
     driverPath,
     onboardingPath,
+    new URL("apps/cofounder-discovery/scripts/browser-cold-assets.mjs", root),
     new URL("scripts/browser-journey.integration.test.mjs", root),
   ]) {
     const checked = spawnSync(

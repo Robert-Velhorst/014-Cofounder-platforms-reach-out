@@ -9,6 +9,7 @@ import {
   hasSyntheticCjkGlyphs,
 } from "./browser-journey-policy.mjs";
 import { runSyntheticOnboardingJourney } from "./browser-onboarding-journey.mjs";
+import { runColdAssetCompatibility } from "./browser-cold-assets.mjs";
 const require = createRequire(import.meta.url);
 const { randomUUID, randomBytes, scryptSync } = require("node:crypto"),
   assert = require("node:assert/strict");
@@ -2759,12 +2760,22 @@ async function stage(name, run) {
     });
     assert.deepEqual(errors, []);
     assert.deepEqual(external, []);
+    const coldAssets = await runColdAssetCompatibility({
+      page,
+      origin,
+      onPhase: name => {
+        activeStage = name;
+      },
+    });
+    assert.deepEqual(errors, []);
+    assert.deepEqual(external, []);
     console.log(
       JSON.stringify({
         passed: true,
         transport: "isolated-http-loopback",
         stages,
         onboardingStages,
+        coldAssets,
         rpcMocks: 0,
         responseFaultsInjected: 1,
         externalProviderActions: 0,

@@ -31,6 +31,13 @@ The first maintained browser run also failed a font-family assertion; its
 [actual failure and correction](docs/MAINTAINED_BROWSER_JOURNEY.md#first-maintained-execution--failed-not-qualified)
 do not qualify the full browser journey. Passing scan jobs are not zero findings.
 
+The latest source also adds a required [cold static-asset compatibility probe](docs/MAINTAINED_BROWSER_JOURNEY.md#cold-static-asset-compatibility-candidate--not-yet-qualified)
+after the original 24 browser stages and six onboarding stages. It measures
+100 cold asset sets at each of two viewport sizes from one client address,
+without changing the frontend admission limits. Its native transport tests are
+not evidence of 100 rendered browser users; full CI, compiled-asset results and
+screenshot review remain pending. This work is published for review, not release.
+
 The [workload evidence and limits](docs/CUSTOMER_LOAD_ACCEPTANCE.md) describe the
 100-account/10,000-candidate rehearsal, including successful 150-request/second
 scheduled acceptance. This is bounded CI evidence, not a service-level guarantee,

@@ -1,4 +1,8 @@
 // Pure safety/receipt rules shared by the real driver, fixture runner and native tests.
+import {
+  COLD_ASSET_PHASE,
+  validateColdAssetEvidence,
+} from "./browser-cold-assets.mjs";
 export const BROWSER_JOURNEY_STAGES = Object.freeze([
   "normal-and-hover-login-text-contrast",
   "responsive-login-headings-and-keyboard-form",
@@ -118,7 +122,8 @@ export function browserJourneyFailureDiagnostics(stderr, secrets = []) {
     if (
       value.stage !== "startup" &&
       !BROWSER_JOURNEY_STAGES.includes(value.stage) &&
-      !BROWSER_ONBOARDING_STAGES.includes(value.stage)
+      !BROWSER_ONBOARDING_STAGES.includes(value.stage) &&
+      value.stage !== COLD_ASSET_PHASE
     )
       continue;
     const diagnostic = { event: value.event, stage: value.stage };
@@ -171,5 +176,6 @@ export function validateBrowserJourneyReceipt(value) {
     value.external.length !== 0
   )
     refuse();
+  validateColdAssetEvidence(value.coldAssets);
   return value;
 }

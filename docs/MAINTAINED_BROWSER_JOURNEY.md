@@ -40,6 +40,45 @@ reporting for that failure, not successful completion of the journey. After the
 source correction, all 214 native checks passed on Node 26.12.0 with zero
 failures/skips (9,163.5296 ms); the actual complete rerun remains required.
 
+## Cold static-asset compatibility candidate — not yet qualified
+
+The latest source extends the combined browser/admission candidate; it does not
+alter the previously assessed PR #125 head. It extracts the existing 60-second,
+1,200-request client and 6,000-request process thresholds to one shared policy
+module. No admission threshold is raised or lowered to make a test pass.
+
+After all 24 workflow and six onboarding stages, the existing owned CI browser
+captures the actual compiled `/outreach` resource graph at desktop (1365×1000)
+and mobile (375×812) sizes. The probe retains duplicate resource requests,
+requires the document, JavaScript and stylesheet, bounds the snapshot and permits
+only canonical loopback `/outreach`, `/assets/…` and favicon resources. API,
+external, encoded, query-bearing and traversal URLs are refused.
+
+For each viewport, it waits 61 seconds for the existing bucket to expire
+naturally, then offers **100 complete asset sets from one client address**, with
+at most 16 HTTP requests in flight. No application restart, quota reset,
+forwarded-address spoofing, automatic retry or extra database/container fixture
+is used. The receipt requires every expected request to complete within the
+60-second window with status 200, matching body SHA-256, decoded byte count and
+MIME type. Quota denials, redirects, dropped work and content mismatches fail
+qualification; reduced client counts cannot produce a passing receipt.
+
+This measures **cold static-asset delivery**, not 100 rendered browser contexts,
+concurrent authenticated sessions, API load, shared-NAT fairness under arbitrary
+traffic or a hosted service-level guarantee. The screenshot pair documents the
+two resource-capture views, not the rendering of 100 users. Existing driver,
+fixture and workflow deadlines are unchanged.
+
+On local Windows, the 17 focused native browser-fixture checks passed on Node
+26.12.0. Their ephemeral HTTP server exercised 300 requests per three-resource
+scenario, positive body checks, deliberate content changes, 429 refusal and
+redirect refusal without retries. These are transport/algorithm checks against
+synthetic bytes, **not results from the compiled product or a real browser**.
+Full exact-head CI, both actual compiled-asset scenarios, the complete ordered
+30-stage browser receipt, screenshot review and a fresh security scan remain
+required before any merge/release claim. A draft publication preserves progress;
+it is not acceptance or authorization to expose a service.
+
 ## What this gate proves when it passes
 
 The flow under test is: compiled login -> authenticated workspace -> reviewed
