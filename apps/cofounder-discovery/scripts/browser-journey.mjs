@@ -52,7 +52,7 @@ assert.equal(
 );
 assert.equal(
   catalogue.filter(row => row.workflowReview === "discovery-only").length,
-  46
+  47
 );
 const origin = "http://localhost:13216",
   stages = [],
