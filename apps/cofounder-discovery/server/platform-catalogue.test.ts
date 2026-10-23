@@ -12,10 +12,52 @@ async function catalogue() {
 }
 
 describe("published platform catalogue", () => {
+  it("lists WASL Network as restricted MENA discovery without granting account or contact access", async () => {
+    const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
+    const records = publicPlatformCatalogue();
+    const row = records.find((item: any) => item.id === "wasl-network-mena");
+    for (const query of [
+      "WASL Network",
+      "wasl-network.com",
+      "MENA Cairo",
+      "Riyadh Saudi Arabia",
+    ])
+      expect(
+        filterPlatforms(records, query, "dedicated").map((item: any) => item.id)
+      ).toContain("wasl-network-mena");
+    expect(row).toMatchObject({
+      category: "dedicated",
+      workflowReview: "discovery-only",
+      pricingStatus: "free-entry",
+      reviewedAt: "2026-10-23",
+      integration: {
+        implemented: false,
+        permissionVerified: false,
+        liveVerified: false,
+      },
+    });
+    expect(row.access).toMatch(/administrator review/);
+    expect(row.access).toMatch(/age eligibility.*untested/);
+    expect(row.pricing).toMatch(/Free registration.*entitlement.*not verified/);
+    expect(row.restrictions).toMatch(/prohibit automated.*harvesting/);
+    expect(row.restrictions).toMatch(
+      /mutual acceptance.*not external-contact consent/
+    );
+    expect(row.aliases).not.toContain("Wasl");
+    expect(row.aliases).not.toContain("Founders Majlis");
+    expect(row.evidence).toContain("https://wasl-network.com/terms-of-service");
+    expect(row.evidence).toContain("https://wasl-network.com/privacy-policy");
+    expect(
+      records.filter(
+        (item: any) => new URL(item.url).hostname === "wasl-network.com"
+      )
+    ).toHaveLength(1);
+    expect(filterPlatforms(records, "WASL Network", "community")).toEqual([]);
+  });
   it("keeps the Indonesian directory distinct from matching and profile-collection permission", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
     const records = publicPlatformCatalogue();
-    expect(records).toHaveLength(68);
+    expect(records).toHaveLength(69);
     for (const query of [
       "Indonesia",
       "Jakarta",
@@ -101,7 +143,7 @@ describe("published platform catalogue", () => {
     ).toHaveLength(23);
     expect(
       records.filter((r: any) => r.workflowReview === "discovery-only")
-    ).toHaveLength(45);
+    ).toHaveLength(46);
   });
   it("retains Hong Kong ecosystem restrictions and Chinese discovery without promising co-founder matching", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
@@ -258,7 +300,7 @@ describe("published platform catalogue", () => {
     ).toHaveLength(23);
     expect(
       records.filter((r: any) => r.workflowReview === "discovery-only")
-    ).toHaveLength(45);
+    ).toHaveLength(46);
   });
   it("finds Caribbean ecosystem routes without promising solo-founder matching or included travel", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
@@ -547,7 +589,7 @@ describe("published platform catalogue", () => {
   it("distinguishes West Asian residency, ecosystem and unpublished prototype", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
     const records = publicPlatformCatalogue();
-    expect(records).toHaveLength(68);
+    expect(records).toHaveLength(69);
     expect(
       filterPlatforms(records, "Middle East", "program")
         .map((r: any) => r.id)
@@ -586,10 +628,10 @@ describe("published platform catalogue", () => {
   it("labels India paid access and Korean indirect networking without admitting workflows", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
     const records = publicPlatformCatalogue();
-    expect(records).toHaveLength(68);
+    expect(records).toHaveLength(69);
     expect(
       records.filter((row: any) => row.category === "dedicated")
-    ).toHaveLength(21);
+    ).toHaveLength(22);
     expect(
       records.filter((row: any) => row.category === "community")
     ).toHaveLength(24);
@@ -622,7 +664,7 @@ describe("published platform catalogue", () => {
   it("adds independently identified discovery listings without implying live access or permissions", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
     const records = publicPlatformCatalogue();
-    expect(records).toHaveLength(68);
+    expect(records).toHaveLength(69);
     expect(
       filterPlatforms(records, "FoundersList", "dedicated").map(
         (row: any) => row.id
@@ -658,7 +700,7 @@ describe("published platform catalogue", () => {
   it("adds African discovery with waiting-list, early-access and policy uncertainty visible", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
     const records = publicPlatformCatalogue();
-    expect(records).toHaveLength(68);
+    expect(records).toHaveLength(69);
     expect(
       filterPlatforms(records, "Morocco", "dedicated").map((row: any) => row.id)
     ).toEqual(["sharakalab"]);
@@ -833,6 +875,12 @@ describe("published platform catalogue", () => {
     expect(html).toContain("<h3>Cofondateur.fr (France)</h3>");
     expect(html).toContain("<h3>Cofoundr (France beta)</h3>");
     expect(html).toContain("<h3>CoFoundry (France students)</h3>");
+    expect(html).toContain("<h3>WASL Network (MENA)</h3>");
+    expect(html).toContain(
+      "Free registration advertised; complete matching entitlement"
+    );
+    expect(html).toContain("not external-contact consent");
+    expect(html).toContain('href="https://wasl-network.com/terms-of-service"');
     expect(html).toContain(
       "company-registration, address and publication-director placeholders"
     );

@@ -30,6 +30,29 @@ type ReviewedSource = Pick<
 
 const sources: ReviewedSource[] = [
   {
+    id: "wasl-network-mena",
+    name: "WASL Network (MENA)",
+    url: "https://wasl-network.com/",
+    aliases: ["WASL Network", "wasl-network.com", "Wasl Network MENA"],
+    category: "dedicated",
+    audience:
+      "Middle East and North Africa / MENA founders seeking complementary co-founders; provider lists Cairo, Egypt and Riyadh, Saudi Arabia hubs. Regional branding does not establish country eligibility or an Arabic interface.",
+    access:
+      "Public English pages and signup form reviewed. Founder profiles require administrator review before the matching pool. Member access, accepted countries, age eligibility and actual introductions untested; no account created.",
+    pricingStatus: "free-entry",
+    pricing:
+      "Free registration advertised; complete matching entitlement, later fees and paid features not verified. Investor-directory access is a separate offering, not proof of co-founder access.",
+    restrictions:
+      "Discovery only; import/outreach not reviewed. Terms prohibit automated founder/investor data harvesting and fake accounts. Provider describes contact disclosure only after mutual acceptance; this is not external-contact consent. Privacy/verification claims and pending legal-review notices are not independently accepted; no profiles collected or API/message permission established.",
+    evidence: [
+      "https://wasl-network.com/",
+      "https://wasl-network.com/about",
+      "https://wasl-network.com/terms-of-service",
+      "https://wasl-network.com/privacy-policy",
+    ],
+    reviewedAt: "2026-10-23",
+  },
+  {
     id: "founderbro-indonesia",
     name: "founderbro (Indonesia)",
     url: "https://founderbro.id/",

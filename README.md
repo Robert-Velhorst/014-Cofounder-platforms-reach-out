@@ -153,14 +153,21 @@ checkpoint approves a production release.
 
 ## Platforms and worldwide coverage
 
-The catalogue source currently contains **68 public discovery records**: 21 dedicated
+The catalogue source currently contains **69 public discovery records**: 22 dedicated
 services, 24 community/channel routes and 23 programme/event/ecosystem routes.
-These are not 68 working integrations or a complete worldwide list. Regional
+These are not 69 working integrations or a complete worldwide list. Regional
 supplements cover multiple ecosystems; geographic, native-language and
 membership-only gaps remain.
 
-Latest source increment: [Indonesia directory review](docs/PLATFORM_INDONESIA_REVIEW_2026-10-02.md).
-The new founderbro card is discovery-only, with scraping/bulk-export restrictions;
+Latest source increment: [WASL Network / MENA review](docs/PLATFORM_WASL_MENA_REVIEW_2026-10-23.md).
+The new dedicated listing is discovery-only: free registration is not verified
+matching access, mutual contact disclosure is not external-contact consent, and
+automated harvesting is prohibited. Its source/card/admission and exact-package
+qualification are tracked separately; preceding 68-source results do not qualify
+this added record or establish native member access.
+
+Preceding increment: [Indonesia directory review](docs/PLATFORM_INDONESIA_REVIEW_2026-10-02.md).
+The founderbro card is discovery-only, with scraping/bulk-export restrictions;
 no profile import, contact permission or integration is added. Its
 [fresh package qualification](docs/INDONESIA_68_SOURCE_PACKAGE_QUALIFICATION_2026-10-02.md)
 passed 1,009 packaged units, 724 database cases, compiled parity/startup probes and
@@ -249,7 +256,7 @@ not 100-user successful capacity. Fresh packaging now passed
 Wider script/device, new-image connected acceptance, whole-product load, remote recovery and post-snapshot
 reconciliation remain open; preceding 63-source receipts are historical.
 
-There are 23 manual-reviewed records and 45 discovery-only records. Manual review
+There are 23 manual-reviewed records and 46 discovery-only records. Manual review
 is not a blanket permission to scrape, reuse member data or contact people.
 Platform admission and each person's rights are checked separately. Private
 groups, directories and Slack membership do not imply consent.
