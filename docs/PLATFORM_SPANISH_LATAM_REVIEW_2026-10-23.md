@@ -106,3 +106,9 @@ remain separate gates. This targeted review is not exhaustive country coverage.
 Market-research guidance required direct reads, counterevidence and separate
 discovery/access/permission decisions; no marketing statement became a verified
 integration or catalogue admission.
+
+The existing pure catalogue function was evaluated locally after bundling with
+esbuild 0.28.2: 68 records, 45 discovery-only and 23 manual-reviewed. This confirmed
+and corrected an old forty-four wording error in the coverage index. It did not
+contact a provider, change a record, establish permission or prove runtime UI
+acceptance. All 157 native checks passed on this independent main-based docs branch.
