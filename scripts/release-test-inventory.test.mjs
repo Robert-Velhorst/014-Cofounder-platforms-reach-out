@@ -127,6 +127,21 @@ test("recovery acceptance builds both test and production targets before rehears
   }
 });
 
+test("fresh-role database acceptance follows its custom image build and remains mandatory", () => {
+  const commands = activeVerifyCommands(workflow);
+  const build = commands.indexOf(
+    "docker build --file Dockerfile.hetzner-database --tag cofounder-hetzner-database:local .",
+  );
+  const tested = commands.indexOf("pnpm test:hetzner-database:integration");
+  assert.ok(build >= 0 && tested > build);
+  assert.equal(
+    commands.filter(
+      (command) => command === "pnpm test:hetzner-database:integration",
+    ).length,
+    1,
+  );
+});
+
 test("authentication admission uses the built production runtime and remains a mandatory CI gate", () => {
   const commands = activeVerifyCommands(workflow.replaceAll("\r\n", "\n"));
   const acceptance = commands.indexOf(
@@ -230,6 +245,7 @@ test("all-tests command runs local gates before mandatory database/recovery acce
     "pnpm test:runtime-startup:integration",
     "pnpm test:authentication-admission:integration",
     "pnpm test:customer-load:integration",
+    "pnpm test:hetzner-database:integration",
     "pnpm test:tls-ingress:integration",
   ]);
 });

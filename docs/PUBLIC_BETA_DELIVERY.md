@@ -1,5 +1,33 @@
 # Worldwide public beta delivery ledger
 
+## October 23 read-only grant observation and rehearsal transport fix
+
+Read-only queries against the exact retained synthetic database found that raw
+runtime grant text passed the strict production guard and the migration identity
+was rejected. Default MySQL batch output doubled schema-escape backslashes, so
+the CLI rehearsal now explicitly requests raw output through shared immutable
+options. A second read using those exact shared options passed. The production
+grant parser and SQL accounts are unchanged. All 196 native operator/source tests
+passed, including a regression that continues to reject double-escaped text.
+[The scoped receipt](HETZNER_DATABASE_REHEARSAL.md) is a grant snapshot only;
+permission denials, full migrations/app/TLS and the complete corrected rehearsal
+remain unverified. The policy-blocked fixture was not deleted or replaced.
+
+## October 23 fresh database rehearsal — failed local acceptance, retained fixture
+
+The custom database artifact from `f0568b5` built locally. A maintained real
+fresh-role gate is now wired after that build and before the remaining CI
+rehearsals. All 195 native operator/source tests passed on Node 25.2.1, including
+explicit synthetic-subnet validation and test-inventory wiring. This is not a
+passing database result: local default pools were exhausted, then an explicit
+isolated attempt failed on Docker inspection timeouts before permission acceptance.
+Cleanup could not be verified; a subsequent native cleanup command was blocked by
+policy and not retried. The owned synthetic fixture/network/scratch directory
+remain for operator resolution. [Scope, observations and limits](HETZNER_DATABASE_REHEARSAL.md)
+are authoritative; local recovery IDs/paths and diagnostics are not uploaded.
+No real database or existing service was changed. Full application/MySQL/TLS
+qualification and all original phases remain incomplete.
+
 ## October 23 isolated database identities — candidate, qualification pending
 
 [PR #117](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/117)

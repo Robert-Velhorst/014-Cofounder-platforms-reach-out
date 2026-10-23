@@ -628,6 +628,11 @@ license grant, copyright holder or redistribution permission from metadata.
 Third-party notices and service terms need separate review. See
 [release rights review](docs/THIRD_PARTY_RELEASE_REVIEW_2026-10-02.md).
 
+For the standalone custom-database boundary rehearsal, run
+`pnpm test:hetzner-database:integration` after building its image. It checks real
+fresh initialization, DML and denied elevated operations in an owned synthetic
+database—not the full app or TLS path. See [the evidence and recovery limits](docs/HETZNER_DATABASE_REHEARSAL.md).
+
 ## Deployment target
 
 Public deployment targets Hetzner. The local tunnel launcher is retired. Follow
