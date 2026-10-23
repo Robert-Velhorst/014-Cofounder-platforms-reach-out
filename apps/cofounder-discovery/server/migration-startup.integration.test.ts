@@ -15,10 +15,11 @@ import {
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import { randomUUID } from "node:crypto";
-import { mkdtemp, mkdir, writeFile, rm, symlink } from "node:fs/promises";
+import { mkdtemp, mkdir, writeFile, rm, symlink, cp } from "node:fs/promises";
 import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve, sep } from "node:path";
+import { hashPassword } from "./auth-password";
 
 const require = createRequire(import.meta.url);
 const entry = resolve("scripts/migrate.ts");
@@ -34,10 +35,12 @@ let folder = "",
   database = "",
   databaseUrl = "",
   lockName = "";
+let runtimeUser = "";
 const children: ReturnType<typeof start>[] = [];
 function start(
   extraEnv: Record<string, string | undefined> = {},
-  mode: "source" | "compiled" | "container" = "source"
+  mode: "source" | "compiled" | "container" = "source",
+  cli: string[] = []
 ) {
   const args =
     mode === "container"
@@ -47,7 +50,7 @@ function start(
         : [require.resolve("tsx/cli"), entry];
   const child = spawn(
     mode === "container" ? containerCommand[0] : process.execPath,
-    args,
+    [...args, ...cli],
     {
       cwd: folder,
       env: {
@@ -135,6 +138,25 @@ async function journalCount() {
   );
   return Number(rows[0].n);
 }
+async function restrictedDatabaseUrl() {
+  runtimeUser = `cf_rt_${randomUUID().replaceAll("-", "").slice(0, 24)}`;
+  if (!/^cf_rt_[a-f0-9]{24}$/.test(runtimeUser))
+    throw new Error("unsafe_fixture_user");
+  const password =
+    randomUUID().replaceAll("-", "") + randomUUID().replaceAll("-", "");
+  await admin.query("CREATE USER ?@'%' IDENTIFIED BY ?", [
+    runtimeUser,
+    password,
+  ]);
+  await admin.query(
+    `GRANT SELECT, INSERT, UPDATE, DELETE ON \`${database}\`.* TO ?@'%'`,
+    [runtimeUser]
+  );
+  const target = new URL(databaseUrl);
+  target.username = runtimeUser;
+  target.password = password;
+  return target.toString();
+}
 async function waitForQuery(fragment: string) {
   const deadline = Date.now() + 6000;
   while (Date.now() < deadline) {
@@ -170,6 +192,7 @@ describe("serialized migration startup on isolated MySQL", () => {
   });
   beforeEach(async () => {
     database = `cf_migration_test_${randomUUID().replaceAll("-", "")}`;
+    runtimeUser = "";
     if (!/^cf_migration_test_[a-f0-9]{32}$/.test(database))
       throw new Error("unsafe_fixture_database");
     await admin.query(`CREATE DATABASE \`${database}\``);
@@ -195,6 +218,8 @@ describe("serialized migration startup on isolated MySQL", () => {
     await owner?.end();
     if (/^cf_migration_test_[a-f0-9]{32}$/.test(database))
       await admin.query(`DROP DATABASE \`${database}\``);
+    if (/^cf_rt_[a-f0-9]{24}$/.test(runtimeUser))
+      await admin.query("DROP USER ?@'%'", [runtimeUser]);
     if (
       folder.startsWith(resolve(tmpdir()) + sep + "cofounder-migration-test-")
     )
@@ -204,6 +229,249 @@ describe("serialized migration startup on isolated MySQL", () => {
     await admin?.end();
   });
 
+  it("verifies complete history as a DML-only user through source and compiled entries", async () => {
+    expect((await start().done).code).toBe(0);
+    const limitedUrl = await restrictedDatabaseUrl();
+    const limited = await createConnection(limitedUrl);
+    try {
+      await limited.query("INSERT INTO migration_probe VALUES (7)");
+      await limited.query("UPDATE migration_probe SET id=8 WHERE id=7");
+      expect(
+        (await limited.query("SELECT id FROM migration_probe"))[0]
+      ).toEqual([{ id: 8 }]);
+      await limited.query("DELETE FROM migration_probe WHERE id=8");
+      await expect(
+        limited.query("CREATE TABLE forbidden_runtime_ddl (id INT)")
+      ).rejects.toMatchObject({ code: "ER_TABLEACCESS_DENIED_ERROR" });
+      const [before] = await owner.query("SELECT * FROM __drizzle_migrations");
+      for (const mode of ["source", "compiled"] as const) {
+        const result = await start({ DATABASE_URL: limitedUrl }, mode, [
+          "--verify-only",
+        ]).done;
+        expect(result.code, result.stderr).toBe(0);
+        expect(result.stdout).toContain('"event":"migration_history_verified"');
+        expect(result.stdout).not.toContain("migrations_applied");
+        expect(
+          (await owner.query("SELECT * FROM __drizzle_migrations"))[0]
+        ).toEqual(before);
+      }
+      // Default application still needs the migration role, not an implicit
+      // fallback from a DDL-denied connection to a success receipt.
+      const apply = await start({ DATABASE_URL: limitedUrl }).done;
+      expect(apply.code).toBe(1);
+      expect(apply.stderr).toContain('"code":"migration_apply_failed"');
+    } finally {
+      await limited.end();
+    }
+  });
+  it("actual compiled app verifies full history and handles login/session/logout with DML-only credentials", async () => {
+    await rm(join(folder, "drizzle"), { recursive: true });
+    await cp(resolve("drizzle"), join(folder, "drizzle"), { recursive: true });
+    expect((await start({}, "compiled").done).code).toBe(0);
+    await owner.execute(
+      "INSERT INTO users (id,openId,name,email,loginMethod,password_hash,emailVerified) VALUES (1,'synthetic-role-owner','Synthetic role owner','role-owner@example.invalid','email',?,1)",
+      [await hashPassword("Synthetic-Role-Startup-A1-password")]
+    );
+    const limitedUrl = await restrictedDatabaseUrl();
+    const [historyBefore] = await owner.query(
+      "SELECT * FROM __drizzle_migrations"
+    );
+    await symlink(resolve("dist"), join(folder, "dist"), "dir");
+    const origin = "http://127.0.0.1:13219";
+    const running = start(
+      {
+        DATABASE_URL: limitedUrl,
+        STARTUP_MIGRATION_MODE: "verify",
+        NODE_ENV: "production",
+        APP_MODE: "production",
+        HOST: "127.0.0.1",
+        PORT: "13219",
+        PUBLIC_ORIGIN: origin,
+        TRUST_PROXY: "false",
+        JWT_SECRET:
+          "synthetic-role-startup-session-secret-at-least-32-characters",
+        CREDENTIAL_ENCRYPTION_SECRET:
+          "synthetic-role-startup-encryption-secret-only",
+        ENABLE_REGISTRATION: "false",
+        ENABLE_ACCOUNT_DELETION_WORKER: "false",
+        ENABLE_ACCOUNT_MAIL_WORKER: "false",
+        ENABLE_ACCOUNT_MAIL_RETENTION: "false",
+        ENABLE_OWNER_NOTIFICATIONS: "false",
+        ENABLE_PLATFORM_AUTOMATION: "false",
+        ENABLE_UNSAFE_LEGACY_ROUTES: "false",
+        OUTREACH_PAUSED: "true",
+      },
+      "container"
+    );
+    try {
+      let ready = false;
+      const deadline = Date.now() + 8000;
+      while (Date.now() < deadline && running.child.exitCode === null) {
+        try {
+          const response = await fetch(origin + "/api/ready", {
+            signal: AbortSignal.timeout(500),
+          });
+          await response.arrayBuffer();
+          if (response.status === 200) {
+            ready = true;
+            break;
+          }
+        } catch {}
+        await new Promise(resolveWait => setTimeout(resolveWait, 50));
+      }
+      expect(ready).toBe(true);
+      const login = await fetch(origin + "/api/trpc/auth.login", {
+        method: "POST",
+        headers: { origin, "content-type": "application/json" },
+        body: JSON.stringify({
+          json: {
+            email: "role-owner@example.invalid",
+            password: "Synthetic-Role-Startup-A1-password",
+          },
+        }),
+        signal: AbortSignal.timeout(2000),
+      });
+      expect(login.status).toBe(200);
+      expect((await login.json()).result.data.json.id).toBe(1);
+      const session = login.headers.get("set-cookie");
+      expect(session).toBeTruthy();
+      const cookie = session!.split(";")[0];
+      const me = await fetch(
+        origin + "/api/trpc/auth.me?input=%7B%22json%22%3Anull%7D",
+        { headers: { cookie }, signal: AbortSignal.timeout(2000) }
+      );
+      expect(me.status).toBe(200);
+      expect((await me.json()).result.data.json.id).toBe(1);
+      const logout = await fetch(origin + "/api/trpc/auth.logout", {
+        method: "POST",
+        headers: { origin, cookie, "content-type": "application/json" },
+        body: JSON.stringify({ json: null }),
+        signal: AbortSignal.timeout(2000),
+      });
+      expect(logout.status).toBe(200);
+      expect((await logout.json()).result.data.json.success).toBe(true);
+      const revoked = await fetch(
+        origin + "/api/trpc/auth.me?input=%7B%22json%22%3Anull%7D",
+        { headers: { cookie }, signal: AbortSignal.timeout(2000) }
+      );
+      expect(revoked.status).toBe(200);
+      expect((await revoked.json()).result.data.json).toBeNull();
+      expect(
+        (await owner.query("SELECT * FROM __drizzle_migrations"))[0]
+      ).toEqual(historyBefore);
+    } finally {
+      running.child.kill("SIGTERM");
+      const stopped = await running.done;
+      expect(stopped.code).toBe(0);
+      expect(stopped.stdout).toContain('"event":"migration_history_verified"');
+      expect(stopped.stdout).toContain('"event":"shutdown_completed"');
+      expect(stopped.stdout).not.toContain("migrations_applied");
+    }
+  });
+  it("read-only verification refuses an empty database without creating a journal or schema", async () => {
+    const limitedUrl = await restrictedDatabaseUrl();
+    for (const mode of ["source", "compiled"] as const) {
+      const result = await start({ DATABASE_URL: limitedUrl }, mode, [
+        "--verify-only",
+      ]).done;
+      expect(result.code).toBe(1);
+      expect(result.stderr).toContain(
+        '"code":"migration_history_verification_failed"'
+      );
+      expect(result.stdout).not.toMatch(
+        /migration_history_verified|migrations_applied/
+      );
+      const [tables] = await owner.query("SHOW TABLES");
+      expect(tables).toEqual([]);
+    }
+  });
+  it.each(["pending", "damaged", "newer"])(
+    "verify-before-serving refuses %s history before starting the actual server",
+    async damage => {
+      expect((await start().done).code).toBe(0);
+      if (damage === "pending") await appendMigration();
+      if (damage === "damaged")
+        await owner.query("UPDATE __drizzle_migrations SET hash='damaged'");
+      if (damage === "newer") {
+        await appendMigration();
+        expect((await start().done).code).toBe(0);
+        await fixture("CREATE TABLE migration_probe (id INT PRIMARY KEY);");
+      }
+      const [before] = await owner.query("SELECT * FROM __drizzle_migrations");
+      const limitedUrl = await restrictedDatabaseUrl();
+      await symlink(resolve("dist"), join(folder, "dist"), "dir");
+      const result = await start(
+        { DATABASE_URL: limitedUrl, STARTUP_MIGRATION_MODE: "verify" },
+        "container"
+      ).done;
+      expect(result.code).toBe(1);
+      expect(result.signal).toBeNull();
+      expect(result.stderr).toContain(
+        '"code":"migration_history_verification_failed"'
+      );
+      expect(result.stdout).not.toMatch(
+        /server_started|"phase":"server"|migrations_applied|migration_history_verified/
+      );
+      expect(
+        (await owner.query("SELECT * FROM __drizzle_migrations"))[0]
+      ).toEqual(before);
+      expect(await pendingExists()).toBe(damage === "newer" ? 1 : 0);
+    }
+  );
+  it("loads verify startup mode from the ordinary dotenv path without applying a pending suffix", async () => {
+    expect((await start().done).code).toBe(0);
+    await appendMigration();
+    await symlink(resolve("dist"), join(folder, "dist"), "dir");
+    await writeFile(join(folder, ".env"), "STARTUP_MIGRATION_MODE=verify\n");
+    const result = await start(
+      { STARTUP_MIGRATION_MODE: undefined },
+      "container"
+    ).done;
+    expect(result.code).toBe(1);
+    expect(result.stderr).toContain(
+      '"code":"migration_history_verification_failed"'
+    );
+    expect(result.stdout).not.toMatch(/"phase":"server"|migrations_applied/);
+    expect(await pendingExists()).toBe(0);
+    expect(await journalCount()).toBe(1);
+  });
+  it("invalid startup mode and unknown migration arguments fail without echoing values or applying DDL", async () => {
+    await symlink(resolve("dist"), join(folder, "dist"), "dir");
+    const marker = "private-unknown-mode-must-not-escape";
+    const startup = await start({ STARTUP_MIGRATION_MODE: marker }, "container")
+      .done;
+    expect(startup.code).toBe(1);
+    expect(startup.stderr).toContain('"code":"runtime_migration_mode_invalid"');
+    expect(startup.stdout).not.toContain("runtime_child_started");
+    const command = await start({}, "compiled", [marker]).done;
+    expect(command.code).toBe(1);
+    expect(command.stderr).toContain(
+      '"code":"migration_configuration_invalid"'
+    );
+    expect(
+      startup.stdout + startup.stderr + command.stdout + command.stderr
+    ).not.toContain(marker);
+    expect(await probeExists()).toBe(0);
+  });
+  it("read-only verification respects the same migration lock and releases it on refusal", async () => {
+    expect((await start().done).code).toBe(0);
+    const limitedUrl = await restrictedDatabaseUrl();
+    await owner.query("SELECT GET_LOCK(?,0)", [lockName]);
+    const result = await start(
+      { DATABASE_URL: limitedUrl, MIGRATION_LOCK_TIMEOUT_SECONDS: "1" },
+      "compiled",
+      ["--verify-only"]
+    ).done;
+    expect(result.code).toBe(1);
+    expect(result.stderr).toContain('"code":"migration_lock_timeout"');
+    await owner.query("SELECT RELEASE_LOCK(?)", [lockName]);
+    const [locks] = await owner.query<RowDataPacket[]>(
+      "SELECT GET_LOCK(?,0) AS acquired",
+      [lockName]
+    );
+    expect(locks[0].acquired).toBe(1);
+    expect(await journalCount()).toBe(1);
+  });
   it("does not apply any DDL when another connection holds the migration lock", async () => {
     await owner.query("SELECT GET_LOCK(?,0)", [lockName]);
     const result = await start({ MIGRATION_LOCK_TIMEOUT_SECONDS: "1" }).done;

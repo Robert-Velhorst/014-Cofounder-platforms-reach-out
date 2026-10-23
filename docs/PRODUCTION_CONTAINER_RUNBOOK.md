@@ -6,6 +6,11 @@ For a new approved Hetzner single-host installation, use the standalone
 reviewed private database and external proxy; it must not be mixed with local
 database defaults. The new stack keeps the same closed launch-sensitive settings.
 
+For the opt-in read-only startup mode and separate-credential deployment boundary,
+see [migration verification and roles](DATABASE_MIGRATION_ROLES.md). The default
+applying startup path is retained; configuring verification does not itself
+provision or reduce database privileges.
+
 This is an operator runbook, not authorization to deploy. The public beta is
 not ready merely because its containers start. Preserve the full release gates in
 [the delivery ledger](PUBLIC_BETA_DELIVERY.md#release-requirements-and-evidence).
