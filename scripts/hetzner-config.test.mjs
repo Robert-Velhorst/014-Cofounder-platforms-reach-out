@@ -21,7 +21,12 @@ import {
   tlsNoNewPrivileges,
   tlsProbeFailurePhase,
 } from "./tls-ingress-config.mjs";
-import { randomUUID } from "node:crypto";
+import { randomUUID, X509Certificate } from "node:crypto";
+import { rootCertificates } from "node:tls";
+import {
+  readTlsRootCertificate,
+  validateTlsRootCertificate,
+} from "./tls-root-certificate.mjs";
 
 const directory = mkdtempSync(join(tmpdir(), "cofounder-hetzner-model-"));
 for (const name of ["mysql", "caddy-data", "caddy-config"])
@@ -427,3 +432,109 @@ for (const key of [
     assert.ok(result.stderr.includes(key));
   });
 }
+
+// Public roots supplied by the Node runtime, never the user's certificate store.
+const sampleRoot = rootCertificates
+  .map((pem) => new X509Certificate(pem))
+  .find(
+    (cert) => cert.ca && cert.checkIssued(cert) && cert.verify(cert.publicKey),
+  );
+assert.ok(sampleRoot);
+const samplePem = sampleRoot.toString();
+const sampleNow =
+  (Date.parse(sampleRoot.validFrom) + Date.parse(sampleRoot.validTo)) / 2;
+
+test("TLS root extraction accepts only one current, self-signed CA certificate", () => {
+  assert.deepEqual(validateTlsRootCertificate(samplePem, sampleNow), {
+    pem: samplePem,
+    fingerprint256: sampleRoot.fingerprint256,
+  });
+  const corrupt = Buffer.from(sampleRoot.raw);
+  corrupt[corrupt.length - 1] ^= 1;
+  const brokenPem = `-----BEGIN CERTIFICATE-----\n${corrupt
+    .toString("base64")
+    .match(/.{1,64}/g)
+    .join("\n")}\n-----END CERTIFICATE-----\n`;
+  for (const [pem, now] of [
+    ["synthetic-private-input-must-not-escape", sampleNow],
+    [samplePem + samplePem, sampleNow],
+    [samplePem + "-----BEGIN PRIVATE KEY-----", sampleNow],
+    ["x".repeat(16385), sampleNow],
+    [brokenPem, sampleNow],
+    [samplePem, Date.parse(sampleRoot.validFrom) - 1000],
+    [samplePem, Date.parse(sampleRoot.validTo) + 1000],
+    [samplePem, NaN],
+  ])
+    assert.throws(
+      () => validateTlsRootCertificate(pem, now),
+      /^Error: tls_root_certificate_invalid$/,
+    );
+});
+
+test("TLS public certificate reads the owned mounted namespace with a bounded file read", async () => {
+  const id = "a".repeat(64);
+  let calls = 0,
+    elapsed = 0;
+  const result = await readTlsRootCertificate({
+    containerId: id,
+    clock: () => elapsed,
+    now: () => sampleNow,
+    pause: async (ms) => {
+      elapsed += ms;
+    },
+    run: (args, timeout) => {
+      assert.deepEqual(args, [
+        "exec",
+        id,
+        "head",
+        "-c",
+        "16385",
+        "/data/caddy/pki/authorities/local/root.crt",
+      ]);
+      assert.ok(timeout > 0 && timeout <= 2000);
+      return calls++ === 0
+        ? { status: 1, stderr: "private diagnostic must not escape" }
+        : { status: 0, stdout: samplePem };
+    },
+  });
+  assert.equal(calls, 2);
+  assert.equal(result.fingerprint256, sampleRoot.fingerprint256);
+});
+
+test("TLS CA observation keeps one deadline and never accepts malformed success or invalid fixture IDs", async () => {
+  let elapsed = 0,
+    calls = 0;
+  await assert.rejects(
+    readTlsRootCertificate({
+      containerId: "a".repeat(64),
+      timeoutMs: 1000,
+      clock: () => elapsed,
+      pause: async (ms) => {
+        elapsed += ms;
+      },
+      run: () => {
+        calls++;
+        return { status: null, error: new Error("private transient") };
+      },
+    }),
+    /^Error: tls_root_certificate_unavailable$/,
+  );
+  assert.equal(elapsed, 1000);
+  assert.equal(calls, 4);
+  await assert.rejects(
+    readTlsRootCertificate({
+      containerId: "a".repeat(64),
+      now: () => sampleNow,
+      run: () => ({ status: 0, stdout: "-----BEGIN PRIVATE KEY-----" }),
+    }),
+    /^Error: tls_root_certificate_invalid$/,
+  );
+  for (const containerId of ["a".repeat(12), "unowned-name", "", undefined])
+    await assert.rejects(
+      readTlsRootCertificate({
+        containerId,
+        run: () => assert.fail("must not invoke Docker"),
+      }),
+      /^Error: tls_root_certificate_configuration_invalid$/,
+    );
+});
