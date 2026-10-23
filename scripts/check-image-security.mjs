@@ -7,7 +7,7 @@ const text = value => typeof value === 'string' && value.trim().length > 0;
 function reject(reason) { throw new Error('Image security report rejected: ' + reason); }
 export function validateImageReport(report, dependencies) {
   if (!object(report) || report.SchemaVersion !== 2 || report.ArtifactType !== 'container_image'
-      || report.Metadata?.OS?.Family !== 'debian' || !text(report.Metadata.OS.Name)
+      || report.Metadata?.OS?.Family !== 'ubuntu' || report.Metadata.OS.Name !== '26.10'
       || (Object.hasOwn(report.Metadata.OS, 'EOSL') && report.Metadata.OS.EOSL !== false)
       || !Array.isArray(report.Results) || !report.Results.length) reject('INVALID_REPORT');
   let osResults = 0, packageCount = 0;
@@ -16,7 +16,7 @@ export function validateImageReport(report, dependencies) {
     if (!object(result) || !text(result.Target) || !Array.isArray(result.Packages) || !result.Packages.length
         || !['os-pkgs', 'lang-pkgs'].includes(result.Class)) reject('MISSING_INVENTORY');
     if (result.Class === 'os-pkgs') {
-      if (result.Type !== 'debian') reject('INVALID_OS_INVENTORY');
+      if (result.Type !== 'ubuntu') reject('INVALID_OS_INVENTORY');
       osResults++;
     }
     if (Object.hasOwn(result, 'Vulnerabilities') && (!Array.isArray(result.Vulnerabilities) || result.Vulnerabilities.length)) reject('VULNERABILITIES_PRESENT');

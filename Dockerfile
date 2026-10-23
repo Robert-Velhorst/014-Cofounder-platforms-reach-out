@@ -1,4 +1,4 @@
-FROM debian:trixie-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS node-runtime
+FROM ubuntu:26.10@sha256:93e29beff5257b2cdf1c024d831f6d2997e53655a653ff76a811fc9e6564a719 AS node-runtime
 ARG TARGETARCH
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates curl xz-utils libatomic1 \
@@ -39,19 +39,33 @@ RUN pnpm build \
  && pnpm exec esbuild scripts/synthetic-tls-ingress.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/synthetic-tls-ingress.mjs
 CMD ["sh", "-c", "pnpm db:migrate && pnpm test:integration"]
 
-FROM debian:trixie-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS runtime
-ENV NODE_ENV=production
-RUN groupadd --gid 1000 node && useradd --uid 1000 --gid 1000 --create-home node
+FROM ubuntu:26.10@sha256:93e29beff5257b2cdf1c024d831f6d2997e53655a653ff76a811fc9e6564a719 AS runtime
+ENV NODE_ENV=production PLAYWRIGHT_BROWSERS_PATH=/opt/cofounder-browsers XDG_CACHE_HOME=/tmp/cofounder-cache XDG_CONFIG_HOME=/tmp/cofounder-config
 RUN apt-get update \
  && apt-get upgrade -y --no-install-recommends \
- && apt-get install -y --no-install-recommends ca-certificates libatomic1 \
+ && apt-get install -y --no-install-recommends ca-certificates libatomic1 passwd \
  && rm -rf /var/lib/apt/lists/*
+# Preserve the existing UID/GID 1000 application contract. Ubuntu reserves that
+# identity for its default account; fail on any unexpected pre-existing owner.
+RUN if getent passwd 1000 >/dev/null; then \
+      test "$(id -u ubuntu)" = 1000 && test "$(id -g ubuntu)" = 1000 \
+      && usermod --login node --home /home/node --move-home ubuntu \
+      && groupmod --new-name node ubuntu; \
+    else groupadd --gid 1000 node && useradd --uid 1000 --gid 1000 --create-home node; fi \
+ && mkdir -p /home/node && chown 1000:1000 /home/node
 WORKDIR /app
 COPY --from=node-runtime /usr/local /usr/local
 RUN rm -rf /usr/local/lib/node_modules/npm \
  && rm -f /usr/local/bin/npm /usr/local/bin/npx
 COPY --from=build /prod/app/package.json ./package.json
 COPY --from=build /prod/app/node_modules ./node_modules
+# Keep GNU/Linux and qualify the actual current Playwright browser artifact.
+# Ubuntu 26.10 is newer than Playwright's documented Ubuntu support; the
+# offline adapter probe is mandatory and does not authorize provider browsing.
+RUN node node_modules/playwright/cli.js install --with-deps --only-shell chromium \
+ && chmod -R a+rX /opt/cofounder-browsers \
+ && apt-get update && apt-get upgrade -y --no-install-recommends \
+ && rm -rf /var/lib/apt/lists/*
 # pnpm deploy intentionally follows package/ignore rules, so compiled output and
 # migrations come from the verified workspace build while dependencies stay pruned.
 COPY --from=build /app/apps/cofounder-discovery/dist ./dist

@@ -93,9 +93,14 @@ jobs:
           mkdir -p output
           docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint caddy cofounder-hetzner-edge:local version > output/caddy-version.txt
           docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint mysqld cofounder-hetzner-database:local --version > output/mysql-version.txt
-          grep -Eq '^v2[.]11[.]7-cofounder[.]20261023( |$)' output/caddy-version.txt
+          grep -Eq '^v2[.]11[.]7-cofounder[.]20261023[.]2( |$)' output/caddy-version.txt
           docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint cat cofounder-hetzner-edge:local /usr/share/caddy/build-info.txt > output/caddy-build-info.txt
           grep -q 'go1.27.3' output/caddy-build-info.txt
+          for item in linked-packages.txt build-environment.json binary-sha256.txt; do
+            docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint cat cofounder-hetzner-edge:local "/usr/share/caddy/$item" > "output/caddy-$item"
+          done
+          docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint sha256sum cofounder-hetzner-edge:local /usr/bin/caddy > output/caddy-runtime-sha256.txt
+          test "$(cut -d' ' -f1 output/caddy-binary-sha256.txt)" = "$(cut -d' ' -f1 output/caddy-runtime-sha256.txt)"
           grep -Eq 'golang.org/x/net[[:space:]]+v0[.]61[.]0[[:space:]]' output/caddy-build-info.txt
           grep -Eq 'golang.org/x/crypto[[:space:]]+v0[.]58[.]0[[:space:]]' output/caddy-build-info.txt
           grep -q '26.10.0' output/mysql-version.txt
@@ -121,7 +126,8 @@ jobs:
             output/stable-runtime-verification.json
             output/image-security-*.json
             output/*-version.txt
-            output/caddy-build-info.txt
+            output/caddy-*.txt
+            output/caddy-build-environment.json
 
 
   container-smoke:
@@ -164,6 +170,15 @@ jobs:
           docker compose exec -T app node --input-type=module < scripts/production-smoke.mjs > output/stable-container-verification.json
       - name: Verify compiled frontend at desktop and mobile sizes
         run: node scripts/check-stable-browser.mjs
+      - name: Verify installed Chromium through the application adapter
+        run: |
+          app_image="$(docker compose images --quiet app | head -n1)"
+          test -n "$app_image"
+          docker run --rm --init --read-only --network none --cap-drop ALL --security-opt no-new-privileges \
+            --cpus 1 --memory 512m --memory-swap 512m --pids-limit 256 \
+            --tmpfs /tmp:rw,noexec,nosuid,size=64m,mode=1777 \
+            --entrypoint node "$app_image" --input-type=module - \
+            < scripts/check-installed-browser.mjs > output/installed-browser-verification.json
       - name: Verify graceful application shutdown
         run: |
           docker compose stop app
@@ -194,6 +209,7 @@ jobs:
           path: |
             output/stable-container-verification.json
             output/stable-browser-verification.json
+            output/installed-browser-verification.json
             output/stable-browser-*.png
             output/image-security.json
 

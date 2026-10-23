@@ -32,14 +32,21 @@ test('omits only reviewed tRPC compiler peers while retaining the development co
   assert.equal(manifest.dependencies['@sparticuz/chromium'],undefined); assert.equal(manifest.dependencies['puppeteer-core'],undefined);
 });
 test('image evidence requires both inventories and rejects findings or build compilers', () => {
-  const report = { SchemaVersion: 2, ArtifactType: 'container_image', Metadata: { OS: { Family: 'debian', Name: '13', EOSL: false } }, Results: [
-    { Target: 'debian', Class: 'os-pkgs', Type: 'debian', Packages: [{ Name: 'libc6', Version: '2.41' }] },
+  const report = { SchemaVersion: 2, ArtifactType: 'container_image', Metadata: { OS: { Family: 'ubuntu', Name: '26.10', EOSL: false } }, Results: [
+    { Target: 'ubuntu', Class: 'os-pkgs', Type: 'ubuntu', Packages: [{ Name: 'libc6', Version: '2.41' }] },
     { Target: 'node', Class: 'lang-pkgs', Type: 'node-pkg', Packages: [{ Name: 'example', Version: '1.0.0' }] },
   ] };
   assert.equal(validateImageReport(report, {example:'1.0.0'}).passed,true);
+  assert.throws(()=>validateImageReport({...report,Metadata:{OS:{Family:'debian',Name:'13',EOSL:false}}},{}),/INVALID_REPORT/);
+  assert.throws(()=>validateImageReport({...report,Metadata:{OS:{Family:'ubuntu',Name:'26.04',EOSL:false}}},{}),/INVALID_REPORT/);
   assert.throws(()=>validateImageReport(report,{missing:'1.0.0'}),/MISSING_RUNTIME_DEPENDENCY/);
   assert.throws(()=>validateImageReport({...report,Results:report.Results.slice(1)},{}),/MISSING_OS_INVENTORY/);
   assert.throws(()=>validateImageReport({...report,Results:[{...report.Results[0],Vulnerabilities:[{}]}]},{}),/VULNERABILITIES_PRESENT/);
   assert.throws(()=>validateImageReport({...report,Results:[{...report.Results[0],ExperimentalModifiedFindings:[{}]}]},{}),/SUPPRESSED_FINDINGS/);
   assert.throws(()=>validateImageReport({...report,Results:[{...report.Results[1],Packages:[{Name:'typescript',Version:'7.0.2'}]}]},{}),/BUILD_COMPILER_IN_RUNTIME/);
+});
+
+if (process.platform === 'win32') test('installed browser evidence refuses a host run before importing application code', () => {
+  const child=spawnSync(process.execPath,[fileURLToPath(new URL('./check-installed-browser.mjs',import.meta.url))],{encoding:'utf8',timeout:10_000});
+  assert.equal(child.status,1); assert.match(child.stderr,/Linux production image required/); assert.equal(child.stdout,'');
 });

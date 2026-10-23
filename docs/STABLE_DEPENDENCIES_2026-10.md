@@ -10,9 +10,10 @@ release-age exceptions, dotenv 18.0.9 and Chart.js 4.6.1; the general policy is
 retained. Deprecated upstream esbuild-kit dependencies remain separate work.
 
 Node 26.12.1 is pinned, with official SHA-256 verification for Linux x64 and
-ARM64 archives. Debian Trixie, MySQL 26.10.0 and Caddy 2.11.7 image digests were
-refreshed from their official registries. GNU/Linux compatibility is retained
-for Playwright; container acceptance must verify the actual artifacts.
+ARM64 archives. MySQL 26.10.0 and Caddy 2.11.7 image digests were refreshed
+from their official registries. The initial Debian Trixie image failed its
+installed-package scan; the current draft qualifies a digest-pinned Ubuntu
+26.10 GNU/Linux base. Container acceptance must verify the actual artifacts.
 
 Production uses pnpm's current lock-based deployment with injected workspace
 packages. The version-specific hook omits the three tRPC 11.19.0 compiler-only
@@ -59,7 +60,52 @@ standard Caddy modules remain enabled. The installed-binary scan and actual
 HTTPS/session tests remain required; rebuilding alone does not prove the
 unmaintained OpenPGP package advisory is absent or inapplicable.
 
+A follow-up checks all 159 linked Go modules against the official Go proxy.
+Fifty-six additional forward stable-tag updates are selected, including the
+OpenTelemetry stable logging API. Fourteen modules publish untagged revisions;
+this is not reported as an all-tagged-stable graph. The upstream go-attestation
+requirement is newer than its highest public stable tag; it is preserved rather
+than downgraded. The fallback CA submodule is explicitly advanced to Go's
+reviewed October 20 security update removing roots associated with compromised
+intermediates. This CA-data security fix has an exact public revision, not a
+fabricated stable release tag. The edge also refreshes its runtime Alpine
+packages. Actual build info, source dependency paths, build environment and
+matching built/runtime binary hashes are retained for applicability review.
+All strict vulnerability scan gates remain unchanged.
+
+The completed 26f352e hosted run passes all functional qualification gates.
+Its database image has 116 inventoried packages and zero reported findings.
+The rebuilt Caddy image has 32 OS and 161 Go package entries, with only
+GO-2026-5932 remaining. Go's primary advisory scopes it to seven OpenPGP
+package paths. The new dependency-path evidence must establish whether these
+paths are included; absence is not assumed and no finding is suppressed.
+
 ## Deployment and data
+
+### GNU/Linux base and installed browser follow-up
+
+Ubuntu 26.10 is the current stable interim release, supported until July 2027.
+Playwright documents Ubuntu support through 26.04 LTS; 26.10 is not claimed as
+an officially supported Playwright platform. The new base must pass every
+existing source, database, recovery, startup, auth, load, TLS and browser gate.
+The installed-image verifier now requires actual Ubuntu 26.10 inventory and
+retains all advisory severities, inventory completeness and suppression checks.
+Switching distributions does not itself prove security acceptance.
+
+The final image installs the browser revision associated with pinned
+Playwright 1.64.1 and its system dependencies. A separately emitted bundle of
+the unchanged application browser adapter is probed in the final image as
+UID/GID 1000, read-only, without network, capabilities or persistent mounts,
+with the existing 512 MiB / 1 CPU / 64 MiB tmpfs limits. Trusted inline content
+must execute JavaScript and DOM interaction at desktop and mobile sizes. The
+report records the actual OS, GNU libc, Node, browser revision/version and
+adapter hash. It cannot establish external-provider or untrusted-page safety.
+The existing adapter disables Chromium sandboxing; this trusted fixture does
+not authorize live scraping or qualify that existing sandbox limitation.
+Provider workers and unsafe legacy routes remain disabled in production config.
+
+Sources: [Ubuntu 26.10 release notes](https://documentation.ubuntu.com/release-notes/26.10/),
+[Playwright container support](https://playwright.dev/docs/docker).
 
 Hetzner remains the deployment target. Retain the existing secret-file, TLS,
 database-role, backup/restore and rollback boundaries. No production deployment,
