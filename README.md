@@ -6,57 +6,33 @@ decide whether contact is appropriate and send messages yourself. The applicatio
 organizes that work; it does not automatically contact people.
 
 **Status: in development for a free public beta, not approved for public production.**
-GitHub `main` contains the accumulated implementation from merged PR #83. The
-[October 20 baseline CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39467835793)
-passed build, database, recovery, startup, admission and container checks. Live
-hosting, email, privacy/operator decisions and complete release acceptance remain
-unfinished. The [complete customer-load gate](docs/CUSTOMER_LOAD_ACCEPTANCE.md)
-now retains the original workload in CI; a successful run is required before
-claiming normal 150-request/second capacity. Initial budget planning is
-**EUR 100/month**; no purchase or deployment is authorized by that plan.
-The [October 2 GitHub snapshot](docs/GITHUB_REPOSITORY_STATE_2026-10-02.md) records the historical repository state; current branch and PR status must be checked live.
-Historical October 2–3 local qualification follows; these receipts retain their
-own image and source scope and do not describe a fresh run of the current branch.
-The October 3 increment uses [one live joined account/session read](docs/AUTH_JOINED_READ_2026-10-03.md)
-per authentication instead of two, preserving owner, revocation, expiry and
-deletion-fence checks. Actual SDK regression proves 40 reads instead of 80 for
-40 authentications; typecheck, all 1,036 units and a fresh 11-case MySQL session
-suite passed. Full current-candidate runtime/database/admission/load qualification
-remains pending, so no capacity fix is claimed.
-The preceding increment [reuses authentication query construction](docs/AUTH_QUERY_REUSE_2026-10-02.md)
-without caching account/session results. Its [fresh packaged qualification](docs/AUTH_QUERY_REUSE_PACKAGE_2026-10-03.md)
-passed typecheck/build, 1,030 unit cases, all 725 database cases and compiled
-package parity. The original full workload still failed at 150 requests/s:
-95 busy refusals and three actor-start drops. Read/write/race/isolation checks
-passed their retained rules; fresh browser/recovery checks on that image remain
-pending. This is not a capacity fix or public-release approval.
-The previous packaged increment adds [bounded session-key reuse](docs/SESSION_KEY_REUSE_2026-10-02.md):
-one import instead of 41 for signing plus 40 concurrent authentications, without
-caching account/session decisions. Fresh candidate typecheck/build and 1,025 unit
-cases passed. The unchanged full workload still failed at 150 requests/s (125
-busy refusals); retained write/race/isolation checks passed. This is not a capacity
-fix or full release qualification; earlier package receipts retain their own scope.
-Fresh mandatory database acceptance also passed 724 cases across 43 files without
-skips, with matching compiled application/migration files in the runtime and test
-packages. A fresh 24-stage connected browser workflow passed, including private
-export and lost-response CSV retry. This is not all UI/accessibility acceptance;
-isolated encrypted recovery also passed, including restored-owner isolation and
-revoked-link/session refusal. Off-host recovery, post-backup reconciliation,
-hosted acceptance and the capacity failure remain unfinished.
-Capacity diagnosis remains open. Increasing only the app or database to two CPUs
-did not clear the full workload. Identity-only failures also persist without
-warmup; one two-CPU identity pass failed on unchanged repeat. The latest
-[database boundary measurement and diagnostic history](docs/IDENTITY_DATABASE_BOUNDARY_2026-10-02.md)
-reproduced failure despite no new database-quota throttling and short measured
-server SELECT times. Application/protocol/scheduling delays remain to distinguish;
-no reliable fix or production sizing is approved. The maintained
-[authentication-admission regression](docs/SESSION_KEY_REUSE_2026-10-02.md)
-detects removal of its guard, but does not certify capacity. Diagnostic images
-and shortened tests do not replace complete release acceptance.
-The latest [sampled application profile](docs/IDENTITY_CPU_PROFILE_2026-10-02.md)
-reproduced failure without new app/DB/driver quota throttling. No single dominant
-function or reliable fix has been established; the first mistimed profile was
-rejected, then rerun with explicit readiness acknowledgements.
+
+Reviewed October 23, 2026: the verified main checkpoint is
+[`4f0a696`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/4f0a69653a5e8656e39825de217aecfc12023c08).
+It includes the accumulated implementation from PR #83 and the maintained full
+customer-workload gate from PR #112. Its
+[post-merge CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39870898817)
+passed build, database, readiness, recovery, startup, authentication-admission,
+container and complete synthetic customer-workload checks. CI means automated
+checks on GitHub—not approval of a public service.
+
+The [workload evidence and limits](docs/CUSTOMER_LOAD_ACCEPTANCE.md) describe the
+100-account/10,000-candidate rehearsal, including successful 150-request/second
+scheduled acceptance. This is bounded CI evidence, not a service-level guarantee,
+host sizing or proof that earlier Windows-host capacity failures were diagnosed.
+Those [historical authentication/capacity notes](README_REFERENCE.md#historical-readme-introduction-october-23-preservation)
+remain available with their original dates and artifact scope.
+
+Public hosting, real email delivery, privacy/operator decisions, off-host recovery,
+provider permissions and complete release/customer acceptance remain unfinished.
+All [116 original phases](docs/GOAL_COMPLETION_MATRIX.md) remain incomplete.
+Additional deployment and database-role work is tracked separately in
+[PR #116](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/116),
+[PR #117](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/117)
+and [PR #118](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/118);
+inspect their current state before relying on branch-only features.
+Initial budget planning is **EUR 100/month**; this does not authorize purchases,
+deployment or external messages.
 
 ## Start here
 
@@ -302,7 +278,7 @@ The supported app is `apps/cofounder-discovery`, not the historical root demo.
 | ---------- | ------------------------------------------------------------------------------------------------------- |
 | Browser    | React 19, TypeScript, Vite, Wouter, tRPC/React Query                                                    |
 | Server     | Node.js, Express 5, tRPC and validated inputs                                                           |
-| Database   | MySQL (Compose pins 26.7.0), Drizzle schema and versioned migrations                                                      |
+| Database   | MySQL (Compose pins 26.7.0), Drizzle schema and versioned migrations                                    |
 | Accounts   | Scrypt passwords, signed HTTP-only cookies and durable sessions                                         |
 | Workspace  | Owner boundaries, account locks, reviewed revisions, atomic audits and retry records                    |
 | Runtime    | Multi-stage Docker image; nonroot, read-only application filesystem                                     |
@@ -442,18 +418,18 @@ Run from the repo root using the pinned package manager:
 The table abbreviates the invocation as `pnpm`; on Windows with blocked shims,
 replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
 
-| Command                           | Scope                                                                                                       |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `pnpm check`                      | Application TypeScript                                                                                      |
-| `pnpm test`                       | Root operator/inventory gates and app units; Compose needed for configuration checks                        |
-| `pnpm build`                      | Client and bundled server/operator artifacts                                                                |
-| `pnpm test:integration`           | Mandatory dedicated-database suites; build first                                                            |
-| `pnpm test:all`                   | Root/unit/database checks plus readiness, recovery, startup, admission and the complete customer workload |
+| Command                               | Scope                                                                                                     |
+| ------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `pnpm check`                          | Application TypeScript                                                                                    |
+| `pnpm test`                           | Root operator/inventory gates and app units; Compose needed for configuration checks                      |
+| `pnpm build`                          | Client and bundled server/operator artifacts                                                              |
+| `pnpm test:integration`               | Mandatory dedicated-database suites; build first                                                          |
+| `pnpm test:all`                       | Root/unit/database checks plus readiness, recovery, startup, admission and the complete customer workload |
 | `pnpm test:customer-load:integration` | Full packaged synthetic read/write/race/isolation and scheduled-arrival acceptance; local images required |
-| `pnpm requirements:check`         | Phase/title/evidence-path integrity, not completion                                                         |
-| `pnpm audit:api`, `pnpm audit:ui` | Source inventories, not behavioral acceptance                                                               |
-| `pnpm doctor`                     | Runtime configuration diagnostics                                                                           |
-| `pnpm verify`                     | App check/units/build/diagnostic pass, not the full root release gate                                       |
+| `pnpm requirements:check`             | Phase/title/evidence-path integrity, not completion                                                       |
+| `pnpm audit:api`, `pnpm audit:ui`     | Source inventories, not behavioral acceptance                                                             |
+| `pnpm doctor`                         | Runtime configuration diagnostics                                                                         |
+| `pnpm verify`                         | App check/units/build/diagnostic pass, not the full root release gate                                     |
 
 Isolated disposable integration workflow:
 
@@ -608,10 +584,15 @@ require explicit authority.
 
 ## License
 
-Package metadata declares MIT, but a standalone repository license and complete
-inherited ZIP/demo asset rights review are still missing. Do not infer a completed
-license grant, copyright holder or redistribution permission from metadata.
-Third-party notices and service terms need separate review. See
+The repository contains the [GNU Affero GPL version 3 license text](LICENSE), and
+both root and application package metadata declare `AGPL-3.0-only`. This corrects
+older historical notes describing MIT metadata and a missing license file; those
+notes are not the current repository declaration. No license or package metadata
+is changed by this documentation update.
+
+Complete inherited ZIP/demo asset rights, third-party notices and service terms
+still need separate review; the presence of `LICENSE` does not prove that audit
+is complete. See
 [release rights review](docs/THIRD_PARTY_RELEASE_REVIEW_2026-10-02.md).
 
 ## Deployment target
