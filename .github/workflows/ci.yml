@@ -75,6 +75,8 @@ jobs:
         run: docker build --file Dockerfile.hetzner-edge --tag cofounder-hetzner-edge:local .
       - name: Build the privilege-separated Hetzner database
         run: docker build --file Dockerfile.hetzner-database --tag cofounder-hetzner-database:local .
+      - name: Verify fresh database role and permission boundaries
+        run: pnpm test:hetzner-database:integration
       - run: pnpm test:recovery:integration
       - run: pnpm test:runtime-startup:integration
       - run: pnpm test:authentication-admission:integration

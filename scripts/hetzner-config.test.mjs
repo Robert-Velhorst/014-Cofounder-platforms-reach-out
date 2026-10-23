@@ -22,6 +22,40 @@ import {
   tlsProbeFailurePhase,
 } from "./tls-ingress-config.mjs";
 import { randomUUID } from "node:crypto";
+import { syntheticSubnetArguments } from "./synthetic-network.mjs";
+
+test("explicit synthetic subnet must be private, aligned, small and free of Docker overlap", () => {
+  assert.deepEqual(syntheticSubnetArguments(undefined), []);
+  assert.deepEqual(
+    syntheticSubnetArguments("10.230.241.0/28", ["172.17.0.0/16", "fd00::/64"]),
+    ["--subnet", "10.230.241.0/28"],
+  );
+  for (const value of [
+    "",
+    "10.230.241.1/28",
+    "10.0.0.0/8",
+    "8.8.8.0/28",
+    "127.0.0.0/28",
+    "192.169.1.0/28",
+    "010.2.3.0/28",
+    "10.2.3.0/028",
+    "10.2.3.0/28\n",
+    "::1/28",
+  ])
+    assert.throws(() => syntheticSubnetArguments(value));
+  for (const occupied of [
+    ["10.0.0.0/8"],
+    ["10.230.241.0/24"],
+    ["10.230.241.2/32"],
+    ["invalid"],
+    [null],
+  ])
+    assert.throws(() => syntheticSubnetArguments("10.230.241.0/28", occupied));
+  assert.deepEqual(
+    syntheticSubnetArguments("192.168.63.240/28", ["192.168.64.0/24"]),
+    ["--subnet", "192.168.63.240/28"],
+  );
+});
 
 const directory = mkdtempSync(join(tmpdir(), "cofounder-hetzner-model-"));
 for (const name of ["mysql", "caddy-data", "caddy-config"])
