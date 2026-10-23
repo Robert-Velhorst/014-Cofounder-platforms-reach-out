@@ -36,7 +36,8 @@ GitHub, database administration or recovery scripts; those need operator control
 ## Implemented cryptographic boundary
 
 - Exact dependency: `@simplewebauthn/server` 14.0.3, recorded with integrity hashes
-  in the workspace lockfile. Node 22 is the repository's container/CI runtime.
+  in the workspace lockfile. Node 26.12.0 is the current pinned container/CI runtime;
+  the dated October 1 acceptance below retains its original runtime scope.
 - Relying party and expected origin come only from configured `PUBLIC_ORIGIN`,
   never a request Host/forwarding header. HTTPS is required except explicit
   `http://localhost` development. Changing the production origin is a credential

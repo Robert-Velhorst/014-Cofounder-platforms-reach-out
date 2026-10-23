@@ -13,12 +13,11 @@ on October 20. The maintained full customer-load gate was subsequently merged
 through [PR #112](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/112).
 That historical checkpoint was `4f0a69653a5e8656e39825de217aecfc12023c08`;
 its [post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39870898817)
-passed. The latest merged checkpoint is now `a2cead7075da557f64a81ab32f5101e4d514b894`
-through [PR #119](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/119).
-Its tree was checked identical to head `61b353cb16fbb384f1303b31019c4c6d4ba16c46`,
-which passed [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887876731)
-and [CodeQL](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887872452).
-The separate post-merge main runs and PRs 120–121 are still pending at this
+passed. The latest merged checkpoint is now `9e15816b2f34b06e69635ea475f2aa55f03c02d2`
+through [PR #120](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/120).
+Its tree was checked identical to head `8a71007a2e847c91f159f03263ab59c02c7ee04f`,
+which passed [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39888984086).
+The separate post-merge main CI/CodeQL runs and PRs 121–122 are still pending at this
 checkpoint; neither browser acceptance nor their candidate changes are qualified.
 Dirty-branch descriptions in dated evidence refer to the historical audit,
 not this publication checkpoint. Current capacity qualification is tracked by
@@ -203,4 +202,6 @@ acceptance, or that any phase has met its definition of done. It always
 reports completion as unproven. Final approval must inspect substantive evidence
 for **every phase and additional requirement** and retain the entire goal.
 
-The workstation tunnel launcher is retired. Hetzner deployment, migration, hosted acceptance and rollback remain open operator gates under `DEPLOYMENT_TARGET.md`.
+The workstation tunnel launcher is retired. Hetzner deployment, migration, hosted
+acceptance and rollback remain open operator gates under the repository-root
+[deployment target](../DEPLOYMENT_TARGET.md).

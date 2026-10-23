@@ -1,5 +1,30 @@
 # Worldwide public beta delivery ledger
 
+## October 23 current operator documentation and WASL qualification
+
+PR #120 was merged as `9e15816b2f34b06e69635ea475f2aa55f03c02d2`, with its tree
+checked identical to exact green head `8a71007a2e847c91f159f03263ab59c02c7ee04f`.
+[Its qualification receipt](PLATFORM_WASL_MENA_REVIEW_2026-10-23.md#subsequent-exact-head-ci-and-merge)
+records 1,043 units, 736 database cases, actual role/TLS and full workload checks.
+Browser candidate PRs #121–122 and separate post-merge main runs remain pending;
+CI qualification is not hosted/customer/provider or whole-goal acceptance.
+
+Current budget, monitoring, recovery and administrator guidance now names the
+pinned Node 26.12.0 runtime. The existing repository-root deployment target is
+linked from the README, operator runbook, matrix and retired-tunnel notice.
+Historical runtime versions and failed-attempt receipts were not relabelled.
+Two new mandatory release-contract checks failed against the earlier prose and
+passed after these edits. All 210 native operator/source checks passed locally
+on Windows Node 25.2.1, zero failures/skips (10,269.984 ms); this is not a new
+supported-runtime application or browser run.
+
+The documentation-governance read-only full audit passed with Python UTF-8 mode
+after its default Windows output encoding could not print a checkmark. All
+actual Markdown links resolved. Optional default governance-role/ADR filenames
+are not adopted here; the audit's missing-role and possible-orphan warnings were
+reviewed without creating duplicate documents or deleting history. This audit
+does not validate prose truth, current runtime behavior or phase completion.
+
 ## October 23 browser failure diagnostics and current publication checkpoint
 
 The browser fixture now retains bounded, allowlisted driver failure envelopes
