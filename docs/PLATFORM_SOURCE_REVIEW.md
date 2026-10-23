@@ -1,5 +1,11 @@
 # Co-founder discovery source review
 
+October 23 Spanish-language/LatAm supplement: [direct review and held decisions](PLATFORM_SPANISH_LATAM_REVIEW_2026-10-23.md)
+adds WeFoundy and pre-launch cofound.space as research leads and resolves the
+earlier cofound.lat page-reader limitation with rendered-browser evidence.
+Access, policy and app-identity gaps remain; no runtime catalogue addition,
+workflow admission or integration permission is implied.
+
 Current catalogue source:68 public discovery records (21 dedicated,24 community/channel,
 23 programme/event/ecosystem), plus held F6S internally. This count does not measure
 worldwide completeness or working integrations. Dated supplements retain their
