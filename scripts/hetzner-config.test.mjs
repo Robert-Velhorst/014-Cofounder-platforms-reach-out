@@ -27,6 +27,40 @@ import {
   readTlsRootCertificate,
   validateTlsRootCertificate,
 } from "./tls-root-certificate.mjs";
+import { syntheticSubnetArguments } from "./synthetic-network.mjs";
+
+test("explicit synthetic subnet must be private, aligned, small and free of Docker overlap", () => {
+  assert.deepEqual(syntheticSubnetArguments(undefined), []);
+  assert.deepEqual(
+    syntheticSubnetArguments("10.230.241.0/28", ["172.17.0.0/16", "fd00::/64"]),
+    ["--subnet", "10.230.241.0/28"],
+  );
+  for (const value of [
+    "",
+    "10.230.241.1/28",
+    "10.0.0.0/8",
+    "8.8.8.0/28",
+    "127.0.0.0/28",
+    "192.169.1.0/28",
+    "010.2.3.0/28",
+    "10.2.3.0/028",
+    "10.2.3.0/28\n",
+    "::1/28",
+  ])
+    assert.throws(() => syntheticSubnetArguments(value));
+  for (const occupied of [
+    ["10.0.0.0/8"],
+    ["10.230.241.0/24"],
+    ["10.230.241.2/32"],
+    ["invalid"],
+    [null],
+  ])
+    assert.throws(() => syntheticSubnetArguments("10.230.241.0/28", occupied));
+  assert.deepEqual(
+    syntheticSubnetArguments("192.168.63.240/28", ["192.168.64.0/24"]),
+    ["--subnet", "192.168.63.240/28"],
+  );
+});
 
 const directory = mkdtempSync(join(tmpdir(), "cofounder-hetzner-model-"));
 for (const name of ["mysql", "caddy-data", "caddy-config"])
@@ -48,6 +82,8 @@ const env = {
   JWT_SECRET_FILE: secret,
   MYSQL_PASSWORD_SECRET_FILE: secret,
   MYSQL_ROOT_PASSWORD_SECRET_FILE: secret,
+  MYSQL_MIGRATOR_PASSWORD_SECRET_FILE: secret,
+  MIGRATION_DATABASE_URL_SECRET_FILE: secret,
   HETZNER_DATA_ROOT: directory,
 };
 test("TLS inspection accepts only unambiguous enabled no-new-privileges forms", () => {
@@ -290,12 +326,19 @@ test("Hetzner stack exposes only the edge and isolates private application/datab
   const result = model();
   assert.equal(result.status, 0, "hetzner_compose_model_invalid");
   const m = JSON.parse(result.stdout);
-  assert.deepEqual(Object.keys(m.services).sort(), ["app", "database", "edge"]);
-  const { app, database, edge } = m.services;
+  assert.deepEqual(Object.keys(m.services).sort(), [
+    "app",
+    "database",
+    "edge",
+    "migrate",
+  ]);
+  const { app, database, edge, migrate } = m.services;
   assert.deepEqual(app.ports || [], []);
   assert.deepEqual(database.ports || [], []);
   assert.deepEqual(Object.keys(app.networks).sort(), ["database", "ingress"]);
   assert.deepEqual(Object.keys(database.networks), ["database"]);
+  assert.deepEqual(Object.keys(migrate.networks), ["database"]);
+  assert.deepEqual(migrate.ports || [], []);
   assert.deepEqual(Object.keys(edge.networks), ["ingress"]);
   assert.equal(m.networks.database.internal, true);
   assert.deepEqual(
@@ -306,6 +349,29 @@ test("Hetzner stack exposes only the edge and isolates private application/datab
     ],
   );
   assert.equal(app.environment.TRUST_PROXY, "true");
+  assert.equal(app.environment.STARTUP_MIGRATION_MODE, "verify");
+  assert.equal(app.environment.STARTUP_DATABASE_AUTHORITY, "runtime-dml");
+  assert.equal(
+    app.depends_on.migrate.condition,
+    "service_completed_successfully",
+  );
+  assert.equal(migrate.depends_on.database.condition, "service_healthy");
+  assert.deepEqual(migrate.command, ["node", "dist/migrate.js"]);
+  assert.equal(migrate.restart, "no");
+  assert.equal(
+    migrate.environment.DATABASE_URL_FILE,
+    "/run/secrets/migration_database_url",
+  );
+  assert.equal(migrate.environment.JWT_SECRET_FILE, undefined);
+  assert.equal(migrate.environment.STARTUP_DATABASE_AUTHORITY, undefined);
+  assert.deepEqual(
+    migrate.secrets.map((s) => s.source),
+    ["migration_database_url"],
+  );
+  assert.deepEqual(app.secrets.map((s) => s.source).sort(), [
+    "database_url",
+    "jwt_secret",
+  ]);
   assert.equal(database.environment.MYSQL_ROOT_HOST, "localhost");
   assert.equal(
     app.environment.PUBLIC_ORIGIN,
@@ -314,6 +380,7 @@ test("Hetzner stack exposes only the edge and isolates private application/datab
   for (const [service, user, memory, cpus, pids] of [
     [app, "1000:1000", 512, 1, 256],
     [database, "999:999", 2048, 1, 256],
+    [migrate, "1000:1000", 512, 1, 128],
     [edge, "1000:1000", 256, 0.5, 128],
   ]) {
     assert.equal(service.image, pinned);
@@ -338,6 +405,7 @@ test("Hetzner stack exposes only the edge and isolates private application/datab
     assert.equal(app.environment[flag], "false");
   assert.equal(app.environment.OUTREACH_PAUSED, "true");
   assert.deepEqual(database.secrets.map((s) => s.source).sort(), [
+    "mysql_migrator_password",
     "mysql_password",
     "mysql_root_password",
   ]);
@@ -366,6 +434,18 @@ test("Hetzner stack exposes only the edge and isolates private application/datab
   );
   assert.equal(result.stdout.includes("synthetic-fixture-only"), false);
 });
+test("Hetzner runtime separation is not weakened by standalone apply-mode environment defaults", () => {
+  const result = model({
+    STARTUP_MIGRATION_MODE: "apply",
+    STARTUP_DATABASE_AUTHORITY: "skip",
+  });
+  assert.equal(result.status, 0);
+  const { app, migrate } = JSON.parse(result.stdout).services;
+  assert.equal(app.environment.STARTUP_MIGRATION_MODE, "verify");
+  assert.equal(app.environment.STARTUP_DATABASE_AUTHORITY, "runtime-dml");
+  assert.equal(migrate.environment.STARTUP_MIGRATION_MODE, undefined);
+  assert.equal(migrate.environment.STARTUP_DATABASE_AUTHORITY, undefined);
+});
 for (const key of [
   "PRODUCTION_APP_IMAGE",
   "PRODUCTION_EDGE_IMAGE",
@@ -376,6 +456,8 @@ for (const key of [
   "JWT_SECRET_FILE",
   "MYSQL_PASSWORD_SECRET_FILE",
   "MYSQL_ROOT_PASSWORD_SECRET_FILE",
+  "MYSQL_MIGRATOR_PASSWORD_SECRET_FILE",
+  "MIGRATION_DATABASE_URL_SECRET_FILE",
   "HETZNER_DATA_ROOT",
 ]) {
   test(`Hetzner model refuses missing ${key}`, () => {

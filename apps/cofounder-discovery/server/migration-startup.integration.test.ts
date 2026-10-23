@@ -149,7 +149,7 @@ async function restrictedDatabaseUrl() {
     password,
   ]);
   await admin.query(
-    `GRANT SELECT, INSERT, UPDATE, DELETE ON \`${database}\`.* TO ?@'%'`,
+    `GRANT SELECT, INSERT, UPDATE, DELETE ON \`${database.replaceAll("_", "\\_")}\`.* TO ?@'%'`,
     [runtimeUser]
   );
   const target = new URL(databaseUrl);
@@ -229,6 +229,52 @@ describe("serialized migration startup on isolated MySQL", () => {
     await admin?.end();
   });
 
+  it("runtime authority guard refuses root and added DDL while admitting only exact-schema DML", async () => {
+    expect((await start().done).code).toBe(0);
+    const limitedUrl = await restrictedDatabaseUrl();
+    for (const mode of ["source", "compiled"] as const) {
+      const refused = await start(
+        { STARTUP_DATABASE_AUTHORITY: "runtime-dml" },
+        mode,
+        ["--verify-only"]
+      ).done;
+      expect(refused.code).toBe(1);
+      expect(refused.stderr).toContain(
+        '"code":"runtime_database_authority_refused"'
+      );
+      expect(refused.stdout + refused.stderr).not.toMatch(
+        /GRANT |root@|ALL PRIVILEGES/
+      );
+      const allowed = await start(
+        { DATABASE_URL: limitedUrl, STARTUP_DATABASE_AUTHORITY: "runtime-dml" },
+        mode,
+        ["--verify-only"]
+      ).done;
+      expect(allowed.code, allowed.stderr).toBe(0);
+      expect(allowed.stdout).toContain('"event":"migration_history_verified"');
+    }
+    await admin.query(
+      `GRANT CREATE ON \`${database.replaceAll("_", "\\_")}\`.* TO ?@'%'`,
+      [runtimeUser]
+    );
+    await symlink(resolve("dist"), join(folder, "dist"), "dir");
+    const startup = await start(
+      {
+        DATABASE_URL: limitedUrl,
+        STARTUP_MIGRATION_MODE: "verify",
+        STARTUP_DATABASE_AUTHORITY: "runtime-dml",
+      },
+      "container"
+    ).done;
+    expect(startup.code).toBe(1);
+    expect(startup.stderr).toContain(
+      '"code":"runtime_database_authority_refused"'
+    );
+    expect(startup.stdout).not.toMatch(
+      /"phase":"server"|migrations_applied|migration_history_verified/
+    );
+    expect(await journalCount()).toBe(1);
+  });
   it("verifies complete history as a DML-only user through source and compiled entries", async () => {
     expect((await start().done).code).toBe(0);
     const limitedUrl = await restrictedDatabaseUrl();
@@ -282,6 +328,7 @@ describe("serialized migration startup on isolated MySQL", () => {
       {
         DATABASE_URL: limitedUrl,
         STARTUP_MIGRATION_MODE: "verify",
+        STARTUP_DATABASE_AUTHORITY: "runtime-dml",
         NODE_ENV: "production",
         APP_MODE: "production",
         HOST: "127.0.0.1",

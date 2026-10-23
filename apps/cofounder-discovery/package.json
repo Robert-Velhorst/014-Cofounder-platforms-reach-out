@@ -17,6 +17,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:verify": "tsx scripts/migrate.ts --verify-only",
+    "db:verify:runtime": "cross-env STARTUP_DATABASE_AUTHORITY=runtime-dml tsx scripts/migrate.ts --verify-only",
     "db:push": "drizzle-kit generate && pnpm db:migrate",
     "doctor": "tsx scripts/doctor.ts",
     "verify": "pnpm check && pnpm test:unit && pnpm build && pnpm run doctor -- --allow-missing-runtime",

@@ -8,14 +8,16 @@ organizes that work; it does not automatically contact people.
 **Status: in development for a free public beta, not approved for public production.**
 
 Reviewed October 23, 2026: main checkpoint
-[`68d46fc`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/68d46fcc37e6123028f908374835d3258c204e81)
+[`cb8944a`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/cb8944afced4b3510a20d5f14a3211579d58defd)
 includes the accumulated implementation from PR #83, the maintained full
 customer-workload gate from PR #112 and the private deployment/read-only migration
-work consolidated in PR #116. The merged tree is identical to qualified head
-`2da786b`; its [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39883590317)
+work from PRs #116–118, including separate runtime and migration credentials.
+The merged tree is identical to qualified head
+`7741911`; its [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39883752403)
 passed build, database, readiness, recovery, startup, authentication-admission,
-container, complete synthetic customer-workload and actual HTTPS/session checks.
-The separate [post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887250880)
+container, complete synthetic customer-workload, fresh database-role and actual
+HTTPS/session checks. The separate
+[post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887723059)
 was queued at this documentation checkpoint. CI means automated checks on
 GitHub—not approval of a public service.
 
@@ -29,10 +31,10 @@ remain available with their original dates and artifact scope.
 Public hosting, real email delivery, privacy/operator decisions, off-host recovery,
 provider permissions and complete release/customer acceptance remain unfinished.
 All [116 original phases](docs/GOAL_COMPLETION_MATRIX.md) remain incomplete.
-Additional database-role isolation and rehearsal work is tracked separately in
-[PR #117](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/117)
-and [PR #118](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/118);
-inspect their current state before relying on branch-only features.
+The [private-stack runbook](docs/HETZNER_DEPLOYMENT.md) and
+[database-role rehearsal](docs/HETZNER_DATABASE_REHEARSAL.md) explain the merged
+deployment controls and their fresh-database-only limits. No existing database
+accounts or grants were changed by merging this code.
 Initial budget planning is **EUR 100/month**; this does not authorize purchases,
 deployment or external messages.
 
@@ -405,22 +407,30 @@ roles. See [migration verification and credential separation](docs/DATABASE_MIGR
 The [example configuration](apps/cofounder-discovery/.env.example) documents
 settings; it is not a production secret file.
 
-| Group             | Important settings / boundary                                                                      |
-| ----------------- | -------------------------------------------------------------------------------------------------- |
-| Identity/database | `APP_MODE`, `HOST`, `PORT`, `PUBLIC_ORIGIN`, `DATABASE_URL`, `JWT_SECRET`                          |
-| Ingress           | `TRUST_PROXY`: only at a reviewed proxy boundary                                                   |
-| Migration startup | `STARTUP_MIGRATION_MODE`: `apply` by default, or read-only `verify`; invalid values refuse startup |
-| Account access    | Explicit registration; deletion-request intake separately opt-in                                   |
-| Mail              | Resend key, verified sender, independent mail-encryption secret, explicit worker/retention flags   |
-| Capacity          | `API_MAX_ACTIVE_WORK`, `CAPACITY_*`, shared mail-attempt ceilings                                  |
-| Outreach          | `OUTREACH_PAUSED` blocks preparation, not all research                                             |
-| Legacy providers  | Automation, unsafe routes and owner notifications stay off                                         |
-| HAI               | Token/account binding; content omitted by default                                                  |
+| Group             | Important settings / boundary                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------------------------------- |
+| Identity/database | `APP_MODE`, `HOST`, `PORT`, `PUBLIC_ORIGIN`, `DATABASE_URL`, `JWT_SECRET`                                     |
+| Ingress           | `TRUST_PROXY`: only at a reviewed proxy boundary                                                              |
+| Migration startup | `STARTUP_MIGRATION_MODE`: `apply` by default, or read-only `verify`; invalid values refuse startup            |
+| Runtime authority | `STARTUP_DATABASE_AUTHORITY=runtime-dml`: exact-schema DML-only grant check; requires migration mode `verify` |
+| Account access    | Explicit registration; deletion-request intake separately opt-in                                              |
+| Mail              | Resend key, verified sender, independent mail-encryption secret, explicit worker/retention flags              |
+| Capacity          | `API_MAX_ACTIVE_WORK`, `CAPACITY_*`, shared mail-attempt ceilings                                             |
+| Outreach          | `OUTREACH_PAUSED` blocks preparation, not all research                                                        |
+| Legacy providers  | Automation, unsafe routes and owner notifications stay off                                                    |
+| HAI               | Token/account binding; content omitted by default                                                             |
 
 Supported secrets can use documented `NAME_FILE` mounts; conflicting sources
 fail closed. Production uses separate Compose/preflight requirements. Changing
 only the local stack's URL does not make it suitable for public deployment.
 See [production secrets, ingress and migration guidance](docs/PRODUCTION_CONTAINER_RUNBOOK.md).
+
+The hardened Hetzner Compose stack runs migrations in a separate one-shot service.
+The application receives only the runtime database credential, starts in read-only
+migration-verification mode, and refuses broader grants or roles. Fresh database
+initialization creates the separated identities; it does not repair or silently
+revoke permissions on an existing database. Use the
+[role and migration runbook](docs/DATABASE_MIGRATION_ROLES.md) before deployment.
 
 ## CI and verification
 
@@ -428,22 +438,25 @@ Run from the repo root using the pinned package manager:
 The table abbreviates the invocation as `pnpm`; on Windows with blocked shims,
 replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
 
-| Command                               | Scope                                                                                                           |
-| ------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `pnpm check`                          | Application TypeScript                                                                                          |
-| `pnpm test`                           | Root operator/inventory gates and app units; Compose needed for configuration checks                            |
-| `pnpm build`                          | Client and bundled server/operator artifacts                                                                    |
-| `pnpm test:integration`               | Mandatory dedicated-database suites; build first                                                                |
-| `pnpm test:all`                       | Root/unit/database checks plus readiness, recovery, startup, admission and the complete customer workload       |
-| `pnpm test:customer-load:integration` | Full packaged synthetic read/write/race/isolation and scheduled-arrival acceptance; local images required       |
-| `pnpm test:hetzner-config`            | Read-only private-stack model and preflight checks                                                              |
-| `pnpm hetzner:preflight`              | Validate reviewed Hetzner inputs and the Compose model without starting services                                |
-| `pnpm test:tls-ingress:integration`   | Real TLS/session/forwarding rehearsal using the isolated Hetzner stack and synthetic data                       |
-| `pnpm db:verify`                      | Read-only exact migration-history check against the configured database; not schema repair or role provisioning |
-| `pnpm requirements:check`             | Phase/title/evidence-path integrity, not completion                                                             |
-| `pnpm audit:api`, `pnpm audit:ui`     | Source inventories, not behavioral acceptance                                                                   |
-| `pnpm doctor`                         | Runtime configuration diagnostics                                                                               |
-| `pnpm verify`                         | App check/units/build/diagnostic pass, not the full root release gate                                           |
+| Command                                  | Scope                                                                                                           |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `pnpm check`                             | Application TypeScript                                                                                          |
+| `pnpm test`                              | Root operator/inventory gates and app units; Compose needed for configuration checks                            |
+| `pnpm build`                             | Client and bundled server/operator artifacts                                                                    |
+| `pnpm test:integration`                  | Mandatory dedicated-database suites; build first                                                                |
+| `pnpm test:all`                          | Root/unit/database checks plus readiness, recovery, startup, admission and the complete customer workload       |
+| `pnpm test:customer-load:integration`    | Full packaged synthetic read/write/race/isolation and scheduled-arrival acceptance; local images required       |
+| `pnpm test:hetzner-config`               | Read-only private-stack model and preflight checks                                                              |
+| `pnpm test:hetzner-database`             | Synthetic shell/secret-validation and fresh-role SQL checks; not live MySQL execution                           |
+| `pnpm test:hetzner-database:integration` | Real disposable fresh-database role/permission rehearsal; no production data or account changes                 |
+| `pnpm hetzner:preflight`                 | Validate reviewed Hetzner inputs and the Compose model without starting services                                |
+| `pnpm test:tls-ingress:integration`      | Real TLS/session/forwarding rehearsal using the isolated Hetzner stack and synthetic data                       |
+| `pnpm db:verify`                         | Read-only exact migration-history check against the configured database; not schema repair or role provisioning |
+| `pnpm db:verify:runtime`                 | Read-only history and exact-schema DML-authority check; rejects broader grants/roles without altering them      |
+| `pnpm requirements:check`                | Phase/title/evidence-path integrity, not completion                                                             |
+| `pnpm audit:api`, `pnpm audit:ui`        | Source inventories, not behavioral acceptance                                                                   |
+| `pnpm doctor`                            | Runtime configuration diagnostics                                                                               |
+| `pnpm verify`                            | App check/units/build/diagnostic pass, not the full root release gate                                           |
 
 Isolated disposable integration workflow:
 
@@ -609,12 +622,19 @@ still need separate review; the presence of `LICENSE` does not prove that audit
 is complete. See
 [release rights review](docs/THIRD_PARTY_RELEASE_REVIEW_2026-10-02.md).
 
+For the standalone custom-database boundary rehearsal, run
+`pnpm test:hetzner-database:integration` after building its image. It checks real
+fresh initialization, DML and denied elevated operations in an owned synthetic
+database—not the full app or TLS path. See [the evidence and recovery limits](docs/HETZNER_DATABASE_REHEARSAL.md).
+
 ## Deployment target
 
 Public deployment targets Hetzner. The local tunnel launcher is retired. Follow
 [the concrete Hetzner stack and deployment guide](docs/HETZNER_DEPLOYMENT.md)
-and `DEPLOYMENT_TARGET.md`. The stack includes a private database and hardened TLS
-proxy, with a read-only preflight and isolated HTTPS/session rehearsal. Complete
+and `DEPLOYMENT_TARGET.md`. The candidate stack includes a private custom database,
+separate one-shot migration process and restricted runtime identity, plus a hardened
+TLS proxy, read-only preflight and isolated HTTPS/session rehearsal. Its new
+credential-separation path still needs successful real-container qualification. Complete
 infrastructure, secrets, DNS/ACME, database migration, backup, monitoring and rollback
 acceptance before cutover. Configuration and synthetic tests do not prove an
 actual hosted deployment or approve opening registration.
