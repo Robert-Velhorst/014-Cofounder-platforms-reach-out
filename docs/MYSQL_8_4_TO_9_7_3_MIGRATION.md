@@ -1,6 +1,6 @@
 # MySQL 8.4 to 9.7.3 LTS upgrade
 
-This historical checklist targets MySQL 9.7.3. The current Compose and CI stack instead pin MySQL 26.7.0; this checklist is not acceptance evidence for migrating to that version. MySQL 9.7 is the next LTS series after MySQL 8.4. The official upgrade guidance supports upgrading from 8.4 LTS to 9.7 LTS; use MySQL Shell's Upgrade Checker and rehearse against a restored copy before changing any persistent database.
+This historical checklist targets MySQL 9.7.3. The current Compose and CI stack instead pin MySQL 26.10.0; this checklist is not acceptance evidence for migrating to that version. MySQL 9.7 is the next LTS series after MySQL 8.4. The official upgrade guidance supports upgrading from 8.4 LTS to 9.7 LTS; use MySQL Shell's Upgrade Checker and rehearse against a restored copy before changing any persistent database.
 
 This guide describes an operator-controlled migration. It does not run during application startup or deploy a database to Hetzner.
 

@@ -289,7 +289,7 @@ The supported app is `apps/cofounder-discovery`, not the historical root demo.
 | ---------- | ------------------------------------------------------------------------------------------------------- |
 | Browser    | React 19, TypeScript, Vite, Wouter, tRPC/React Query                                                    |
 | Server     | Node.js, Express 5, tRPC and validated inputs                                                           |
-| Database   | MySQL (Compose pins 26.7.0), Drizzle schema and versioned migrations                                    |
+| Database   | MySQL (Compose pins 26.10.0), Drizzle schema and versioned migrations                                    |
 | Accounts   | Scrypt passwords, signed HTTP-only cookies and durable sessions                                         |
 | Workspace  | Owner boundaries, account locks, reviewed revisions, atomic audits and retry records                    |
 | Runtime    | Multi-stage Docker image; nonroot, read-only application filesystem                                     |

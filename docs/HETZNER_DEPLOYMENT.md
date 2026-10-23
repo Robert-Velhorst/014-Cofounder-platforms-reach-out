@@ -55,7 +55,7 @@ and checks configuration syntax. Runtime uses high internal ports without adding
 Linux capabilities. The public HTTP/HTTPS ports remain 80/443; Caddy's internal
 port options do not change client URLs. See [Caddy's option reference](https://caddyserver.com/docs/caddyfile/options#http_port).
 
-The database Dockerfile retains the reviewed MySQL 26.7.0 base digest used in CI.
+The database Dockerfile retains the reviewed MySQL 26.10.0 base digest used in CI.
 It adds a file-only secret validator and a fresh-initialization role script. The
 production image must be this separately reviewed **custom database artifact**,
 not the unmodified base MySQL image. A plain base image lacks the migrator and
