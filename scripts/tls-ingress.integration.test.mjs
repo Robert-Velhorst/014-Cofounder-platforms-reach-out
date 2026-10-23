@@ -7,13 +7,13 @@ import {
   realpathSync,
   readFileSync,
   writeFileSync,
-  chmodSync,
   rmSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { getCiMysqlImage } from "./ci-mysql-image.mjs";
+import { readTlsRootCertificate } from "./tls-root-certificate.mjs";
 import {
   tlsIngressOverride,
   ownedTlsFixture,
@@ -386,12 +386,21 @@ esac`,
         console.log(result.stdout.trim());
       }
       probe("seed", dbId);
-      docker(
-        "cp",
-        `${edgeId}:/data/caddy/pki/authorities/local/root.crt`,
-        join(directory, "root.crt"),
+      const rootCertificate = await readTlsRootCertificate({
+        run: invoke,
+        containerId: edgeId,
+      });
+      writeFileSync(join(directory, "root.crt"), rootCertificate.pem, {
+        mode: 0o444,
+      });
+      console.log(
+        JSON.stringify({
+          event: "tls_root_certificate_validated",
+          fingerprint256: rootCertificate.fingerprint256,
+          ca: true,
+          selfSignatureVerified: true,
+        }),
       );
-      chmodSync(join(directory, "root.crt"), 0o444);
       probe("client", edgeId);
       probe("verify", dbId);
     } catch (error) {

@@ -213,6 +213,14 @@ actual Hetzner Compose graph with uniquely owned synthetic fixtures. It substitu
 tmpfs for persistent stores, removes every public port, makes both networks
 internal and changes only the certificate issuer to Caddy's internal test CA.
 
+The public root certificate is read from the exact inspected edge's mounted
+namespace, not with `docker cp` from tmpfs (a documented Docker limitation).
+Extraction reads only the fixed public certificate path, limits it to 16 KiB,
+keeps a single bounded deadline and validates one current self-signed CA and its
+signature before recording the fingerprint and giving that CA to the TLS client.
+It never exports a private key or disables hostname/certificate verification.
+See the [scoped failed-CI observation and correction](BETA_CONSOLIDATION_2026-10-23.md).
+
 The TLS client verifies that CA and hostname; it does not use insecure TLS. It
 checks readiness/security headers, HTTP redirect, real login/session/logout,
 cookie scope, hostile forwarding claims, cross-origin mutation refusal and revoked
