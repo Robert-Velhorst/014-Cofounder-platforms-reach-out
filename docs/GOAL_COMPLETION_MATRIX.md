@@ -2,13 +2,28 @@
 
 Updated: 2026-10-23. Overall goal: **not complete**.
 
+The [maintained browser-journey candidate](MAINTAINED_BROWSER_JOURNEY.md) restores
+the archived 24-stage workflow plus six required private-profile onboarding
+stages as a mandatory source-defined gate. Its native checks passed. The first
+unextended browser run failed on a font-family assertion; the corrected full
+candidate's image/browser execution and all-stage screenshot review remain
+unverified. No phase is promoted by this implementation or its wiring.
+
 Publication checkpoint: the accumulated implementation was merged through
 [PR #83](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/83)
 on October 20. The maintained full customer-load gate was subsequently merged
 through [PR #112](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/112).
-Current verified `main` checkpoint is `4f0a69653a5e8656e39825de217aecfc12023c08`;
+That historical checkpoint was `4f0a69653a5e8656e39825de217aecfc12023c08`;
 its [post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39870898817)
-passed. Dirty-branch descriptions in dated evidence refer to the historical audit,
+passed. The latest merged checkpoint is now `9e15816b2f34b06e69635ea475f2aa55f03c02d2`
+through [PR #120](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/120).
+Its tree was checked identical to head `8a71007a2e847c91f159f03263ab59c02c7ee04f`,
+which passed [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39888984086).
+The separate post-merge main CI and CodeQL workflows also completed successfully;
+the scan still reports the two open findings in [the security record](SECURITY.md).
+PRs 121–122 failed the CJK font-family assertion. Their corrected full candidate
+is unqualified; neither browser acceptance nor candidate changes are promoted.
+Dirty-branch descriptions in dated evidence refer to the historical audit,
 not this publication checkpoint. Current capacity qualification is tracked by
 [the complete customer-load gate](CUSTOMER_LOAD_ACCEPTANCE.md). All original
 phase statuses remain Partial pending their substantive remaining acceptance.
@@ -191,4 +206,6 @@ acceptance, or that any phase has met its definition of done. It always
 reports completion as unproven. Final approval must inspect substantive evidence
 for **every phase and additional requirement** and retain the entire goal.
 
-The workstation tunnel launcher is retired. Hetzner deployment, migration, hosted acceptance and rollback remain open operator gates under `DEPLOYMENT_TARGET.md`.
+The workstation tunnel launcher is retired. Hetzner deployment, migration, hosted
+acceptance and rollback remain open operator gates under the repository-root
+[deployment target](../DEPLOYMENT_TARGET.md).

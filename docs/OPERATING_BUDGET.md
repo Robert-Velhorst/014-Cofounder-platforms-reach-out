@@ -60,7 +60,7 @@ well as the provider review; a local plan cannot substitute for them.
 
 ## Run the check
 
-From the repository root with Node 22:
+From the repository root with the supported Node 26.12.0 runtime:
 
 ```sh
 node scripts/production-budget.mjs --plan docs/production-budget.example.json

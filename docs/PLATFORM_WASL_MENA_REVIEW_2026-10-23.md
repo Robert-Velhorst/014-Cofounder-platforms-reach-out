@@ -61,6 +61,26 @@ tabs were closed afterward. Reader failure is not evidence of service closure.
 
 ## Qualification and remaining work
 
+### Subsequent exact-head CI and merge
+
+Head `8a71007a2e847c91f159f03263ab59c02c7ee04f` passed
+[full CI run 39888984086](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39888984086).
+The actual run executed all 1,043 units across 102 files (including the 28-case
+catalogue/SSR file and 126-case regional admission file), 736 database cases across
+43 files, typecheck/build, runtime/recovery, complete customer-load, fresh role
+and actual HTTPS/session rehearsals. At 150 scheduled arrivals/second, all 1,500
+requests returned 200 with zero errors, drops or automatic retries. This is a
+bounded synthetic CI result, not hosted sizing or a service-level guarantee.
+
+PR #120 was ordinarily merged as `9e15816b2f34b06e69635ea475f2aa55f03c02d2`;
+the merged tree was checked identical to the exact green head, and that head is
+an ancestor of main. Main's separate post-merge CI/CodeQL runs and PR #121's new
+maintained browser gate are pending. No live WASL account, country admission,
+matching, collection, contact or connector permission is established by these
+checks. No new local fixture was created; the older Windows fixture remains held.
+
+### Earlier local source checkpoint
+
 On local Windows Node 25.2.1, execution of the actual pure catalogue/filter
 modules passed the 69-record and 22/24/23 category counts, 23/46 admission
 classifications, unique domain/identity, search and closed integration flags.
