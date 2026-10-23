@@ -2,6 +2,10 @@ import "dotenv/config";
 import { readRuntimeSecret } from "../server/runtime-secrets";
 import { migrationVerificationOnly } from "../server/migration-startup-mode";
 import {
+  confinedRuntimeDml,
+  requireRuntimeDmlCheck,
+} from "../server/runtime-database-authority";
+import {
   createConnection,
   type Connection,
   type RowDataPacket,
@@ -22,6 +26,10 @@ async function main() {
   let verifyOnly = false;
   try {
     verifyOnly = migrationVerificationOnly(process.argv.slice(2));
+    const checkRuntimeAuthority = requireRuntimeDmlCheck(
+      process.env.STARTUP_DATABASE_AUTHORITY,
+      verifyOnly
+    );
     const databaseUrl = readRuntimeSecret("DATABASE_URL");
     if (!databaseUrl) throw new Error();
     const target = new URL(databaseUrl);
@@ -39,6 +47,27 @@ async function main() {
     // A dedicated physical connection holds the lock through Drizzle's commits.
     // Never acquire a connection-scoped advisory lock through the app's pool.
     connection = await createConnection(databaseUrl);
+    if (checkRuntimeAuthority) {
+      phase = "runtime_database_authority_refused";
+      const [identity] = await connection.query<RowDataPacket[]>(
+        "SELECT DATABASE() AS databaseName, CURRENT_ROLE() AS currentRole, @@GLOBAL.mandatory_roles AS mandatoryRoles"
+      );
+      const [rows] = await connection.query<RowDataPacket[]>(
+        "SHOW GRANTS FOR CURRENT_USER"
+      );
+      const grants = rows.map(row =>
+        Object.keys(row).length === 1 ? Object.values(row)[0] : null
+      );
+      if (
+        !confinedRuntimeDml(
+          grants,
+          identity[0]?.databaseName,
+          identity[0]?.currentRole,
+          identity[0]?.mandatoryRoles
+        )
+      )
+        throw new Error();
+    }
     phase = "migration_lock_failed";
     const [names] = await connection.query<RowDataPacket[]>(
       "SELECT CONCAT('cofounder:migrate:', LEFT(SHA2(LOWER(DATABASE()),256),40)) AS name"

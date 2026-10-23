@@ -7,6 +7,88 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  confinedRuntimeDml,
+  requireRuntimeDmlCheck,
+} from "../apps/cofounder-discovery/server/runtime-database-authority.ts";
+
+test("runtime DML authority requires complete exact-schema grants without roles or delegation", () => {
+  const principal = "`cofounder`@`%`";
+  const usage = `GRANT USAGE ON *.* TO ${principal}`;
+  const dml = `GRANT SELECT, INSERT, UPDATE, DELETE ON \`cofounder\`.* TO ${principal}`;
+  assert.equal(confinedRuntimeDml([usage, dml], "cofounder", "NONE", ""), true);
+  assert.equal(confinedRuntimeDml([dml], "cofounder", "NONE", ""), true);
+  assert.equal(
+    confinedRuntimeDml(
+      [dml.replace("`cofounder`.*", "`cofounder\\_test`.*")],
+      "cofounder_test",
+      "NONE",
+      "",
+    ),
+    true,
+  );
+  for (const grants of [
+    [],
+    [usage],
+    [dml, dml],
+    [dml.replace("SELECT, INSERT, UPDATE, DELETE", "SELECT")],
+    [dml.replace("SELECT, INSERT, UPDATE, DELETE", "ALL PRIVILEGES")],
+    [
+      dml.replace(
+        "SELECT, INSERT, UPDATE, DELETE",
+        "SELECT, INSERT, UPDATE, DELETE, CREATE",
+      ),
+    ],
+    [usage.replace("USAGE", "SELECT"), dml],
+    [dml.replace("`cofounder`.*", "`other`.*")],
+    [dml + " WITH GRANT OPTION"],
+    [dml, `GRANT \`role\`@\`%\` TO ${principal}`],
+    [dml, `GRANT PROXY ON 'root'@'localhost' TO ${principal}`],
+    [usage, dml.replace("`cofounder`@", "`other`@")],
+    [dml.replace("`cofounder`.*", "`cofounder_test`.*")],
+    [null],
+  ])
+    assert.equal(confinedRuntimeDml(grants, "cofounder", "NONE", ""), false);
+  assert.equal(confinedRuntimeDml([dml], "cofounder", "`role`@`%`", ""), false);
+  assert.equal(confinedRuntimeDml([dml], "cofounder%", "NONE", ""), false);
+  assert.equal(
+    confinedRuntimeDml([dml], "cofounder", "NONE", "`latent_admin`@`%`"),
+    false,
+  );
+  assert.equal(
+    confinedRuntimeDml([dml], "cofounder", "NONE", undefined),
+    false,
+  );
+  assert.equal(
+    confinedRuntimeDml(
+      [dml.replace("`cofounder`.*", "`cofounder_test`.*")],
+      "cofounder_test",
+      "NONE",
+      "",
+    ),
+    false,
+  );
+  assert.equal(
+    confinedRuntimeDml([dml.repeat(5000)], "cofounder", "NONE", ""),
+    false,
+  );
+});
+test("runtime authority enforcement cannot be selected for the applying migrator or silently disabled", () => {
+  assert.equal(requireRuntimeDmlCheck(undefined, false), false);
+  assert.equal(requireRuntimeDmlCheck(undefined, true), false);
+  assert.equal(requireRuntimeDmlCheck("runtime-dml", true), true);
+  for (const [value, verify] of [
+    ["runtime-dml", false],
+    ["", true],
+    ["false", true],
+    ["skip", true],
+    ["runtime-dml ", true],
+  ])
+    assert.throws(
+      () => requireRuntimeDmlCheck(value, verify),
+      /^Error: migration_authority_mode_invalid$/,
+    );
+});
+import {
   startupMigrationArguments,
   migrationVerificationOnly,
 } from "../apps/cofounder-discovery/server/migration-startup-mode.ts";
@@ -84,6 +166,10 @@ test("production runtime launches migration/server through the signal-aware Node
   assert.equal(
     app.scripts["db:verify"],
     "tsx scripts/migrate.ts --verify-only",
+  );
+  assert.equal(
+    app.scripts["db:verify:runtime"],
+    "cross-env STARTUP_DATABASE_AUTHORITY=runtime-dml tsx scripts/migrate.ts --verify-only",
   );
 });
 const env = {

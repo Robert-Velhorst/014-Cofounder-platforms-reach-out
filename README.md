@@ -462,6 +462,7 @@ replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
 | `pnpm hetzner:preflight`              | Validate reviewed Hetzner inputs and the Compose model without starting services                                |
 | `pnpm test:tls-ingress:integration`   | Real TLS/session/forwarding rehearsal using the isolated Hetzner stack and synthetic data                       |
 | `pnpm db:verify`                      | Read-only exact migration-history check against the configured database; not schema repair or role provisioning |
+| `pnpm db:verify:runtime`              | Read-only history and exact-schema DML-authority check; rejects broader grants/roles without altering them      |
 | `pnpm requirements:check`             | Phase/title/evidence-path integrity, not completion                                                             |
 | `pnpm audit:api`, `pnpm audit:ui`     | Source inventories, not behavioral acceptance                                                                   |
 | `pnpm doctor`                         | Runtime configuration diagnostics                                                                               |

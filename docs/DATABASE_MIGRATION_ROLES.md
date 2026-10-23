@@ -50,6 +50,47 @@ for the runtime to validate. Merely setting `verify` does not reduce SQL grants.
 
 ## Intended deployment separation
 
+### Follow-up runtime-authority guard
+
+`pnpm db:verify:runtime` adds a read-only authority check to complete-history
+verification. The compiled equivalent selects `STARTUP_DATABASE_AUTHORITY=runtime-dml`
+and `--verify-only`; the same environment selection works with verify-before-serving
+startup. Selecting this authority mode for an applying migrator, or supplying an
+unknown/empty value, refuses configuration before connecting. An unset value
+retains the existing unqualified-authority path; it is not proof of least privilege.
+
+The check reads the selected database, active roles, server mandatory roles and
+`SHOW GRANTS FOR CURRENT_USER`. It permits only USAGE globally plus all four
+SELECT/INSERT/UPDATE/DELETE privileges on the exact schema. It rejects schema
+wildcards, foreign-schema/global/DDL powers, delegation, assigned/active/mandatory
+roles, mixed principals and unknown/oversized grant grammar. Grant text, account
+names and secret values are not emitted on refusal. No grants are changed.
+
+Mandatory roles are inspected separately because they can apply to every user and
+can be activated later; CURRENT_ROLE=NONE alone is not a sufficient boundary.
+See the [selected MySQL 26.7 role documentation](https://dev.mysql.com/doc/refman/26.7/en/roles.html).
+The guard is conservative about underscore escaping; unsupported configurations
+fail rather than guessing their authority. This is MySQL-specific, not MariaDB
+compatibility proof.
+
+The separate process/secret provisioning and deployment-profile wiring are still
+unfinished in this follow-up. The ordinary production Compose definition does not
+automatically enable this guard or reduce existing grants. Real MySQL regression
+execution remains required, including broad-root/DDL refusal and compiled-app
+readiness/login/logout with the guard enabled. Unit fixtures do not prove those
+outcomes. This startup observation also does not audit definer objects, prevent a
+privileged administrator from changing grants later, or establish full schema/
+tenant/security acceptance.
+
+Local preservation check on 23 October 2026: all 184 native operator/source
+tests passed on Windows with Node 25.2.1, using the lockfile's TypeScript 6.0.3
+parser behind the 6.0.2 compatibility package. The standalone authority helper
+passed strict TypeScript checking, and the changed migration entry bundled with
+external imports. These checks are not the supported Node 26.12.0 full application
+qualification. Local container rehearsals could not run because their required
+pinned database/runtime images were absent; the added MySQL cases and full
+application qualification remain pending CI.
+
 Before an approved production cutover:
 
 1. Provision and independently review separate migration and runtime identities
