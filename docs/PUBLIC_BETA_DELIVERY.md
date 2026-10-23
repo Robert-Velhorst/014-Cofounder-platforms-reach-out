@@ -1,5 +1,18 @@
 # Worldwide public beta delivery ledger
 
+## October 23 read-only grant observation and rehearsal transport fix
+
+Read-only queries against the exact retained synthetic database found that raw
+runtime grant text passed the strict production guard and the migration identity
+was rejected. Default MySQL batch output doubled schema-escape backslashes, so
+the CLI rehearsal now explicitly requests raw output through shared immutable
+options. A second read using those exact shared options passed. The production
+grant parser and SQL accounts are unchanged. All 196 native operator/source tests
+passed, including a regression that continues to reject double-escaped text.
+[The scoped receipt](HETZNER_DATABASE_REHEARSAL.md) is a grant snapshot only;
+permission denials, full migrations/app/TLS and the complete corrected rehearsal
+remain unverified. The policy-blocked fixture was not deleted or replaced.
+
 ## October 23 fresh database rehearsal — failed local acceptance, retained fixture
 
 The custom database artifact from `f0568b5` built locally. A maintained real

@@ -6,6 +6,29 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 import { getCiMysqlImage } from "./ci-mysql-image.mjs";
+import { MYSQL_RAW_BATCH_OPTIONS } from "./mysql-client-options.mjs";
+import { confinedRuntimeDml } from "../apps/cofounder-discovery/server/runtime-database-authority.ts";
+
+test("grant CLI requests raw batch text without weakening exact-schema escape validation", () => {
+  assert.deepEqual(MYSQL_RAW_BATCH_OPTIONS, [
+    "--batch",
+    "--skip-column-names",
+    "--raw",
+  ]);
+  assert.ok(Object.isFrozen(MYSQL_RAW_BATCH_OPTIONS));
+  const grant =
+    "GRANT SELECT, INSERT, UPDATE, DELETE ON `cofounder\\_test`.* TO `cofounder`@`%`";
+  assert.equal(confinedRuntimeDml([grant], "cofounder_test", "NONE", ""), true);
+  assert.equal(
+    confinedRuntimeDml(
+      [grant.replaceAll("\\", "\\\\")],
+      "cofounder_test",
+      "NONE",
+      "",
+    ),
+    false,
+  );
+});
 
 const directory = mkdtempSync(join(tmpdir(), "cofounder-mysql-unit-"));
 after(() => rmSync(directory, { recursive: true, force: true }));

@@ -9,6 +9,7 @@ import { setTimeout as pause } from "node:timers/promises";
 import { confinedRuntimeDml } from "../apps/cofounder-discovery/server/runtime-database-authority.ts";
 import { tlsNoNewPrivileges } from "./tls-ingress-config.mjs";
 import { syntheticSubnetArguments } from "./synthetic-network.mjs";
+import { MYSQL_RAW_BATCH_OPTIONS } from "./mysql-client-options.mjs";
 
 test(
   "custom MySQL initializes separate exact-schema identities and refuses elevated runtime actions",
@@ -104,7 +105,7 @@ test(
           "bash",
           image,
           "-ec",
-          `export MYSQL_PWD="$(cat /qa/password)"; exec mysql --no-defaults --host=database --protocol=TCP --connect-timeout=3 --user=${user} --database=cofounder_test --batch --skip-column-names`,
+          `export MYSQL_PWD="$(cat /qa/password)"; exec mysql --no-defaults --host=database --protocol=TCP --connect-timeout=3 --user=${user} --database=cofounder_test ${MYSQL_RAW_BATCH_OPTIONS.join(" ")}`,
         ],
         sql,
       );
@@ -129,7 +130,7 @@ test(
             database,
             "bash",
             "-ec",
-            'export MYSQL_PWD="$(cat /run/secrets/mysql_root_password)"; exec mysql --no-defaults --protocol=socket --user=root --batch --skip-column-names',
+            `export MYSQL_PWD="$(cat /run/secrets/mysql_root_password)"; exec mysql --no-defaults --protocol=socket --user=root ${MYSQL_RAW_BATCH_OPTIONS.join(" ")}`,
           ],
           sql,
         ),
