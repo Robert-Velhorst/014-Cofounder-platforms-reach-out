@@ -168,18 +168,73 @@ were not printed or published, and the archive cannot be copied wholesale into
 this public repository. Separate database/runtime data and secret files also
 remain local. Their destination or erasure authority still needs resolution.
 
+## Authorized permanent erasure — subsequent October 24 checkpoint
+
+The operator subsequently clarified the scope as **co-founder only** and selected
+controlled permanent erasure. Changepreneurship is excluded. This supersedes the
+earlier unresolved scope/private-destination questions above. Private archives,
+database contents and secret values were not uploaded to the public repository.
+
+Completed and verified absent after native deletion:
+
+| Item | Verified result |
+| --- | --- |
+| Fourteen inactive source checkouts/worktrees | Deleted; 737,069,000 logical bytes. Heads were verified on remote refs or as ancestors of the published candidate. Three linked worktrees also received file-level source comparison before deletion. |
+| Historical source checkpoint, old D-drive checkout, diagnostic folder, fresh test checkout, synthetic secret directory and browser screenshots | Six exact project directories deleted; 322,096,454 logical bytes. All 736 checkpoint source SHA-256 values were checked against the remotely verified preservation manifest before removal. |
+| Private local-test archive and obsolete desktop recovery archive | Deleted with their manifest sidecars; archive payloads totaled 147,063,712 bytes. No replacement private backup was created. |
+| Project Docker containers | Three remaining containers deleted, including the synthetic database-role fixture. |
+| Project database volume | The dedicated named MySQL volume was deleted after checking consumers. |
+| Project Docker images | Five unconsumed project images, represented by seven tags, were removed using native Docker commands. Shared base images were retained. |
+| Project Docker networks | Two empty project networks deleted after inspecting ownership and attached containers. |
+
+The file groups above total **1,206,229,166 logical bytes**, excluding archive
+sidecars and Docker storage. This is not a measured physical-disk reclamation
+figure. Concurrent activity, shared image layers and Docker's virtual disk affect
+physical space. No local Docker images were built or dependencies reinstalled.
+
+The working checkout's stash was also compared against the verified published
+Git graph, including its index and untracked trees: no additional unpublished
+blob was found. A separate consolidation bundle contains thirteen distinct heads;
+each was verified either as a published ancestor or an exact remote ref. These
+checks do not imply those remaining local objects were deleted.
+
+### Remaining exceptions — removal is not complete
+
+- The execution security layer rejected a subsequent deletion command containing
+  the remaining test cache and consolidation Git bundle. That command did not
+  execute. It was not retried through another tool or by deleting their parents.
+- The control checkout remains, including its Git history/stash and test cache.
+- The roughly 23.7 MB imported-source archive remains: its recursive review found
+  500 text entries requiring source-content review, alongside 253 exact published
+  blobs, 3,737 generated/vendor entries, 21 binary/private documents and one private
+  environment-file entry. These are entry classifications, not 500 unique features
+  or proof of useful unpublished code. It was neither blindly deleted nor uploaded.
+- Local cleanup receipts and remaining recovery/code artifacts still exist in the
+  dedicated audit directory. The separately verified consolidation bundle remains.
+- Shared Codex histories, memories, browser profiles and anonymous Docker volumes
+  were not erased wholesale. No exclusive co-founder ownership was established for
+  remaining anonymous volumes. Unrelated applications and Changepreneurship were
+  not cleanup targets.
+- The earlier drive inventory's inaccessible directories and skipped reparse points
+  remain coverage limitations. No claim is made that every file's contents were
+  searched or that no embedded co-founder records remain in shared stores.
+
+Permanent deletion here means normal filesystem/native Docker removal. It is not
+forensic SSD/media sanitization, secure overwrite, credential revocation or proof
+that remote/third-party copies do not exist.
+
 ## Still required before claiming complete local removal
 
-1. Resolve whether the separate Changepreneurship project is also in scope.
-2. Choose approved private preservation or explicit erasure for material that
-   cannot safely be published in this public repository.
-3. Compare every relevant remaining snapshot, local modification, archive and
+1. Review the remaining source-content candidates and resolve the execution-layer
+   deletion restriction without bypassing it. Scope and private erasure authority
+   are already resolved; they do not require the operator to choose again.
+2. Compare every relevant remaining snapshot, local modification, archive and
    Git ref; port unique useful source or preserve approved historical material.
-4. Verify remote preservation of each item before removing its local copies.
-5. Separately review databases, Docker consumers/volumes, application state and
+3. Verify remote preservation of each relevant source item before removing its local copies.
+4. Separately review remaining Docker consumers/volumes, application state and
    embedded records in shared stores; never delete an entire shared store to
    remove one project's data.
-6. Repeat the local audit after deletion, recording inaccessible locations and
+5. Repeat the local audit after deletion, recording inaccessible locations and
    any remaining exceptions. Until then, the all-local-data-removal goal is open.
 
 Passing CI and publishing this document do not complete those steps, approve a
