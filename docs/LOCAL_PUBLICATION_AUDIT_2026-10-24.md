@@ -204,11 +204,9 @@ checks do not imply those remaining local objects were deleted.
   the remaining test cache and consolidation Git bundle. That command did not
   execute. It was not retried through another tool or by deleting their parents.
 - The control checkout remains, including its Git history/stash and test cache.
-- The roughly 23.7 MB imported-source archive remains: its recursive review found
-  500 text entries requiring source-content review, alongside 253 exact published
-  blobs, 3,737 generated/vendor entries, 21 binary/private documents and one private
-  environment-file entry. These are entry classifications, not 500 unique features
-  or proof of useful unpublished code. It was neither blindly deleted nor uploaded.
+- The roughly 23.7 MB imported-source archive initially remained for review. That
+  review and its subsequent deletion are now complete; see the next section. The
+  archive itself was never uploaded.
 - Local cleanup receipts and remaining recovery/code artifacts still exist in the
   dedicated audit directory. The separately verified consolidation bundle remains.
 - Shared Codex histories, memories, browser profiles and anonymous Docker volumes
@@ -223,10 +221,67 @@ Permanent deletion here means normal filesystem/native Docker removal. It is not
 forensic SSD/media sanitization, secure overwrite, credential revocation or proof
 that remote/third-party copies do not exist.
 
+## Imported archive review and erasure — completed October 24
+
+The operator explicitly requested review of the remaining import archive,
+publication of relevant unique co-founder source, then removal of unneeded local
+material, with other projects excluded.
+
+The original ZIP was 23,741,829 bytes, SHA-256
+`1033690f97cb91c6cda3e1439d9798b747863d43fd037354a98af76e0b2f8d1f`.
+It contained eleven nested ZIPs. Recursive entry classification recorded 4,512
+leaf entries: 253 exact published blobs, 3,737 generated/vendor entries, 500 text
+entries requiring review, 21 binary/private documents and one private environment
+file. Repeated text entries are not unique features. The code subset reduced to
+184 distinct candidate blobs after duplicate removal.
+
+Eleven useful historical source files were selected for preservation: profile
+completeness/compatibility, feedback-weighted matching, duplicate normalization,
+message-template personalization/library, analytics, campaign design, AI
+draft/conversation design, synthetic cost experiments, and an experimental
+contribution/equity calculator. Their original bytes are available in the
+[historical import reference](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/tree/69ca0941a82df7a79d6fcfda357bfc6dc1070fb0),
+tag `archive/local-preservation-20261024/import-reference`, commit
+`69ca0941a82df7a79d6fcfda357bfc6dc1070fb0`.
+
+This is deliberately an **inert historical archive, not active app integration**.
+The selected code totals 277,775 bytes. The tag contains eleven source files plus
+a warning/provenance README and checksum manifest. Every selected blob and byte
+count, plus both documentation blobs, was checked against GitHub's recursive
+tree after publication; the remote tag was rechecked immediately before deletion.
+All eleven files passed `node --check`. Pattern checks found no selected private
+keys, credential literals, credential-bearing URLs or personal contact literals;
+the only selected email literals were two reserved-domain `example.com` examples
+in the calculator's explicit example block. These checks are not a full security
+assessment or runtime/provider acceptance.
+
+No historical module was executed, installed, wired into the app or deployed.
+The archive README specifically warns about unfinished/in-memory implementations,
+unproven ML claims, simulated benchmarks, potentially obsolete provider APIs,
+background processing, missing current security boundaries and the calculator's
+non-advisory status. Current authentication, permissions and disabled platform
+automation remain unchanged.
+
+Unselected items were redundant/superseded app revisions, generated metadata,
+vendor code, packaged executables, private/runtime/seed data, unsupported
+automation/auth/billing variants, incomplete mobile shells, original prompts and
+design prose rather than runnable source. For example, one purported JavaScript
+integration file was only an XML `AccessDenied` response. None of the private
+environment file, database query output, original prompt or full ZIP was uploaded.
+
+After remote preservation verification, native deletion removed the original ZIP,
+its manifest sidecar and all 184 temporary code-review copies: **186 files,
+26,475,900 logical bytes**. All three exact targets were verified absent afterward.
+No replacement archive or private backup was created. Small local review scripts
+and metadata receipts remain; the separate control checkout, blocked test cache,
+consolidation bundle and shared-store exceptions above are outside this completed
+import-archive deletion. Other projects and Docker resources were not modified by
+this follow-up.
+
 ## Still required before claiming complete local removal
 
-1. Review the remaining source-content candidates and resolve the execution-layer
-   deletion restriction without bypassing it. Scope and private erasure authority
+1. Resolve the earlier execution-layer deletion restriction without bypassing it.
+   The import archive review/deletion is complete. Scope and private erasure authority
    are already resolved; they do not require the operator to choose again.
 2. Compare every relevant remaining snapshot, local modification, archive and
    Git ref; port unique useful source or preserve approved historical material.
