@@ -2,7 +2,13 @@
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, writeFileSync, rmSync, readFileSync } from "node:fs";
+import {
+  mkdtempSync,
+  writeFileSync,
+  rmSync,
+  readFileSync,
+  existsSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -10,6 +16,13 @@ import {
   confinedRuntimeDml,
   requireRuntimeDmlCheck,
 } from "../apps/cofounder-discovery/server/runtime-database-authority.ts";
+import {
+  REQUIRED_CONTEXT_RULES,
+  REQUIRED_CONTEXT_FILES,
+  EXCLUDED_CONTEXT_FILES,
+  assertBuildContextRules,
+  assertSyntheticContextPaths,
+} from "./build-context-policy.mjs";
 
 test("runtime DML authority requires complete exact-schema grants without roles or delegation", () => {
   const principal = "`cofounder`@`%`";
@@ -247,6 +260,103 @@ test("build context excludes local evidence and browser artifacts without droppi
       false,
       `Required source excluded: ${rule}`,
     );
+});
+
+test("build context privacy rules cover nested backups, key material and recovery artifacts", () => {
+  const current = readFileSync(
+    new URL("../.dockerignore", import.meta.url),
+    "utf8",
+  );
+  assert.equal(
+    assertBuildContextRules(current).length,
+    REQUIRED_CONTEXT_RULES.length,
+  );
+  for (const rule of REQUIRED_CONTEXT_RULES)
+    assert.throws(() =>
+      assertBuildContextRules(
+        current
+          .split(/\r?\n/)
+          .filter((line) => line.trim() !== rule)
+          .join("\n"),
+      ),
+    );
+  assert.throws(() => assertBuildContextRules(current + "\n!**/backups/**\n"));
+  const earlierException = current.replace("!**/.env.example\n", "");
+  assert.throws(() =>
+    assertBuildContextRules("!**/.env.example\n" + earlierException),
+  );
+});
+
+test("synthetic BuildKit export evidence requires all source and refuses every private fixture", () => {
+  const paths = [...REQUIRED_CONTEXT_FILES];
+  assert.equal(assertSyntheticContextPaths(paths).forbiddenFilesObserved, 0);
+  assert.equal(
+    assertSyntheticContextPaths([...paths, "Dockerfile", ".dockerignore"])
+      .requiredFiles,
+    paths.length,
+  );
+  for (const excluded of EXCLUDED_CONTEXT_FILES)
+    assert.throws(() => assertSyntheticContextPaths([...paths, excluded]));
+  for (const missing of REQUIRED_CONTEXT_FILES)
+    assert.throws(() =>
+      assertSyntheticContextPaths(paths.filter((path) => path !== missing)),
+    );
+  for (const invalid of [
+    null,
+    {},
+    [],
+    [...paths, paths[0]],
+    [...paths, "../outside"],
+    [...paths, "unknown.json"],
+    Array(129).fill("file"),
+  ])
+    assert.throws(() => assertSyntheticContextPaths(invalid));
+});
+
+test("synthetic build-context gate never copies real credentials or starts a running fixture", () => {
+  const fixture = readFileSync(
+    new URL("./build-context.integration.test.mjs", import.meta.url),
+    "utf8",
+  );
+  assert.match(fixture, /FROM scratch\\nCOPY \. \/visible\//);
+  assert.match(fixture, /--pull=false/);
+  assert.match(fixture, /--network=none/);
+  assert.match(fixture, /shell: false/);
+  assert.match(fixture, /timeout: 60000/);
+  assert.match(fixture, /maxBuffer: 1024 \* 1024/);
+  assert.match(fixture, /synthetic-build-context-fixture-only/);
+  assert.match(fixture, /synthetic_context_cleanup_owner_refused/);
+  assert.match(fixture, /if \(exportMayStillBeActive\)/);
+  assert.match(fixture, /synthetic_build_context_observation_incomplete/);
+  assert.doesNotMatch(
+    fixture,
+    /"(?:run|create|push|login|prune|volume|--load)"|COPY.*(?:\.\.\/|\/run\/secrets)|\.skip\(/,
+  );
+  for (const file of [
+    "Dockerfile",
+    "Dockerfile.hetzner-edge",
+    "Dockerfile.hetzner-database",
+  ])
+    assert.equal(
+      existsSync(new URL(`../${file}.dockerignore`, import.meta.url)),
+      false,
+      "per_dockerfile_ignore_requires_review",
+    );
+  const parsed = spawnSync(
+    process.execPath,
+    [
+      "--check",
+      fileURLToPath(
+        new URL("./build-context.integration.test.mjs", import.meta.url),
+      ),
+    ],
+    {
+      encoding: "utf8",
+      shell: false,
+      timeout: 5000,
+    },
+  );
+  assert.equal(parsed.status, 0, parsed.stderr);
 });
 
 test("workspace audit admission settings survive Compose including explicit stops", () => {

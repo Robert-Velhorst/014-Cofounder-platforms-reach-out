@@ -16,6 +16,14 @@ const declaration = {
 
 describe("new regional listings remain discovery-only", () => {
   it.each([
+    ["cofounder-match-spain", "https://cofounder-match.com/"],
+    ["CoFounder Match (Spain)", "https://cofounder-match.com/register"],
+    ["CoFounder Match España", "https://www.cofounder-match.com/login"],
+    ["CoFounder Match Espana", "https://cofounder-match.com/privacy"],
+    [
+      "cofounder-match.com",
+      "https://cofounder-match.com/terms?review=synthetic",
+    ],
     ["wasl-network-mena", "https://wasl-network.com/"],
     ["WASL Network (MENA)", "https://wasl-network.com/matchmaking"],
     ["WASL Network", "https://www.wasl-network.com/signup"],

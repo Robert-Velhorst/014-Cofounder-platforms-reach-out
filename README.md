@@ -7,19 +7,72 @@ organizes that work; it does not automatically contact people.
 
 **Status: in development for a free public beta, not approved for public production.**
 
-Reviewed October 23, 2026: main checkpoint
-[`cb8944a`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/cb8944afced4b3510a20d5f14a3211579d58defd)
-includes the accumulated implementation from PR #83, the maintained full
+Reviewed October 24, 2026: [PR #127](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/127)
+checkpoint `3c69446` passed its complete GitHub CI and CodeQL workflows, including
+the compiled synthetic browser journey, cold-asset probe, customer workload,
+database-role, recovery and HTTPS/session checks. See the
+[publication and evidence audit](docs/LOCAL_PUBLICATION_AUDIT_2026-10-24.md)
+for exact run links, preserved historical work and remaining cleanup boundaries.
+This is automated candidate evidence, not a merge, deployment, screenshot review
+or approval for public production. No Docker images were rebuilt locally for
+this follow-up.
+
+Important follow-up: the documentation head `4c72d7b` did not repeat that green
+qualification. Its [CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/40035740275)
+stopped at the dependency-advisory gate with a high-severity `body-parser` finding
+([GHSA-27r3-jxmh-p828](https://github.com/advisories/GHSA-27r3-jxmh-p828)). CodeQL
+and container smoke passed, but later verification steps were not reached.
+The earlier pass is historical evidence, not a current dependency-security approval.
+This cleanup/publication follow-up has not changed dependencies or weakened the gate.
+
+The separately verified main checkpoint remains
+[`9e15816`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/commit/9e15816b2f34b06e69635ea475f2aa55f03c02d2).
+It includes the accumulated implementation from PR #83, the maintained full
 customer-workload gate from PR #112 and the private deployment/read-only migration
-work from PRs #116–118, including separate runtime and migration credentials.
+work from PRs #116–118, including separate runtime and migration credentials,
+plus the restricted WASL/MENA discovery increment from PR #120.
 The merged tree is identical to qualified head
-`7741911`; its [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39883752403)
-passed build, database, readiness, recovery, startup, authentication-admission,
+`8a71007`; its [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39888984086)
+passed 1,043 application unit and 736 database cases, build, readiness, recovery, startup, authentication-admission,
 container, complete synthetic customer-workload, fresh database-role and actual
 HTTPS/session checks. The separate
-[post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887723059)
-was queued at this documentation checkpoint. CI means automated checks on
+[post-merge CI run](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39893556582)
+also passed; its CodeQL workflow completed with the two open findings described
+below. Browser candidate PRs #121–122 are
+not included in that main qualification; their later consolidated candidate is
+covered by the separate PR #127 run above. CI means automated checks on
 GitHub—not approval of a public service.
+
+Two open high-severity CodeQL frontend-rate-limit findings were subsequently
+inspected. [The source fix and evidence](docs/SECURITY.md#october-23-frontend-admission-candidate--full-cicodeql-pending)
+are included in the now-passing PR #127 candidate. The older main findings were
+not suppressed; a passing candidate workflow alone does not close main alerts.
+The first maintained browser run also failed a font-family assertion; its
+[actual failure and correction](docs/MAINTAINED_BROWSER_JOURNEY.md#first-maintained-execution--failed-not-qualified)
+were not acceptance at that earlier checkpoint. The corrected synthetic journey
+now passes in the PR #127 run; human screenshot review remains separate.
+Passing scan jobs are not zero findings.
+
+The latest source also adds a required [cold static-asset compatibility probe](docs/MAINTAINED_BROWSER_JOURNEY.md#cold-static-asset-compatibility-candidate--not-yet-qualified)
+after the original 24 browser stages, six onboarding stages and four new
+account-request stages. It measures
+100 cold asset sets at each of two viewport sizes from one client address,
+without changing the frontend admission limits. Its native transport tests are
+not evidence of 100 rendered browser users. The compiled probe and full CI now
+pass for PR #127; human screenshot review remains pending. This work is published
+for review, not release.
+The [capture-accounting repair](docs/MAINTAINED_BROWSER_JOURNEY.md#capture-accounting-correction--unqualified-source-repair)
+also refuses failed or unfinished static requests rather than silently omitting
+them from a successful response list. Its native regressions are not browser acceptance.
+
+The account-deletion request panel now follows the English/Dutch language choice,
+including review/withdrawal states and warnings. It records a request for operator
+review, not completed erasure. Focused server-rendered markup tests cover its
+initial safeguards. A new [connected account-request candidate](docs/MAINTAINED_BROWSER_JOURNEY.md#account-request-extension--source-defined-not-executed)
+requires actual UI transitions, reload, canonical wire tokens, audit/quota checks
+and ownership refusals in CI. Its automated browser/database checks now pass for
+PR #127; screenshot review and real operator acceptance remain separate. Actual
+erasure remains a separate, disabled path.
 
 The [workload evidence and limits](docs/CUSTOMER_LOAD_ACCEPTANCE.md) describe the
 100-account/10,000-candidate rehearsal, including successful 150-request/second
@@ -153,14 +206,27 @@ checkpoint approves a production release.
 
 ## Platforms and worldwide coverage
 
-The catalogue source currently contains **69 public discovery records**: 22 dedicated
+The catalogue source currently contains **70 public discovery records**: 23 dedicated
 services, 24 community/channel routes and 23 programme/event/ecosystem routes.
-These are not 69 working integrations or a complete worldwide list. Regional
+These are not 70 working integrations or a complete worldwide list. Regional
 supplements cover multiple ecosystems; geographic, native-language and
 membership-only gaps remain.
 
-Latest source increment: [WASL Network / MENA review](docs/PLATFORM_WASL_MENA_REVIEW_2026-10-23.md).
-The new dedicated listing is discovery-only: free registration is not verified
+Latest regional recheck: [Australia/New Zealand/Pacific](docs/PLATFORM_OCEANIA_REVIEW_2026-10-23.md).
+It improves the existing Antler programme record's Australian search/evidence;
+it does not add a dedicated matcher or expand action permissions. Lineup and
+other unresolved leads remain held. Source lookup also now refuses ambiguous
+labels, hosts and duplicate/reserved identities instead of silently choosing a
+record; the current 70-source catalogue has no observed collisions.
+
+Latest source increment: [CoFounder Match / Spain review](docs/PLATFORM_SPAIN_REVIEW_2026-10-23.md).
+It adds a separate Spanish-language discovery-only route. Advertised free core
+features are not verified account access; collection/contact consent and all
+integrations remain unestablished. The new source's exact-package/browser
+qualification is pending; the earlier 69-source main result does not qualify it.
+
+Preceding increment: [WASL Network / MENA review](docs/PLATFORM_WASL_MENA_REVIEW_2026-10-23.md).
+The WASL listing is discovery-only: free registration is not verified
 matching access, mutual contact disclosure is not external-contact consent, and
 automated harvesting is prohibited. Its source/card/admission and exact-package
 qualification are tracked separately; preceding 68-source results do not qualify
@@ -256,7 +322,7 @@ not 100-user successful capacity. Fresh packaging now passed
 Wider script/device, new-image connected acceptance, whole-product load, remote recovery and post-snapshot
 reconciliation remain open; preceding 63-source receipts are historical.
 
-There are 23 manual-reviewed records and 46 discovery-only records. Manual review
+There are 23 manual-reviewed records and 47 discovery-only records. Manual review
 is not a blanket permission to scrape, reuse member data or contact people.
 Platform admission and each person's rights are checked separately. Private
 groups, directories and Slack membership do not imply consent.
@@ -441,29 +507,52 @@ revoke permissions on an existing database. Use the
 
 ## CI and verification
 
+The [maintained browser journey](docs/MAINTAINED_BROWSER_JOURNEY.md)
+is a candidate gate; its first execution failed and its corrected full rerun is
+pending. Its source keeps real
+UI/HTTP/persistence, English/Dutch, responsive, export and CSV retry coverage;
+native checks are not a substitute for its full browser run or screenshot review.
+It retains all original 24 stages and adds six required private-profile onboarding
+stages for language/responsive editing, actual private persistence, fresh-cookie
+login, account isolation and publication refusal, plus four required account-request/
+withdrawal/ownership stages. These extensions are also unexecuted;
+no current onboarding/browser acceptance is claimed from its native tests.
+`pnpm test:browser-journey` checks safety/receipt/source contracts without Docker;
+`pnpm test:browser-journey:integration` runs the isolated synthetic browser workflow
+after its reviewed local images are built. It is mandatory in `pnpm test:all` and
+this candidate's CI; no passing browser result is claimed yet.
+
+The [build-context privacy correction](docs/BUILD_CONTEXT_SAFETY.md) excludes
+recognized backup, data, key and recovery artifacts before build transfer. Its
+new mandatory scratch-only BuildKit export uses synthetic files, not real
+credentials or a running database/container. Native checks pass; actual export
+semantics and full image acceptance remain pending. Ignore rules do not sanitize
+existing builder caches or replace secret scanning.
+
 Run from the repo root using the pinned package manager:
 The table abbreviates the invocation as `pnpm`; on Windows with blocked shims,
 replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
 
-| Command                                  | Scope                                                                                                           |
-| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `pnpm check`                             | Application TypeScript                                                                                          |
-| `pnpm test`                              | Root operator/inventory gates and app units; Compose needed for configuration checks                            |
-| `pnpm build`                             | Client and bundled server/operator artifacts                                                                    |
-| `pnpm test:integration`                  | Mandatory dedicated-database suites; build first                                                                |
-| `pnpm test:all`                          | Root/unit/database checks plus readiness, recovery, startup, admission and the complete customer workload       |
-| `pnpm test:customer-load:integration`    | Full packaged synthetic read/write/race/isolation and scheduled-arrival acceptance; local images required       |
-| `pnpm test:hetzner-config`               | Read-only private-stack model and preflight checks                                                              |
-| `pnpm test:hetzner-database`             | Synthetic shell/secret-validation and fresh-role SQL checks; not live MySQL execution                           |
-| `pnpm test:hetzner-database:integration` | Real disposable fresh-database role/permission rehearsal; no production data or account changes                 |
-| `pnpm hetzner:preflight`                 | Validate reviewed Hetzner inputs and the Compose model without starting services                                |
-| `pnpm test:tls-ingress:integration`      | Real TLS/session/forwarding rehearsal using the isolated Hetzner stack and synthetic data                       |
-| `pnpm db:verify`                         | Read-only exact migration-history check against the configured database; not schema repair or role provisioning |
-| `pnpm db:verify:runtime`                 | Read-only history and exact-schema DML-authority check; rejects broader grants/roles without altering them      |
-| `pnpm requirements:check`                | Phase/title/evidence-path integrity, not completion                                                             |
-| `pnpm audit:api`, `pnpm audit:ui`        | Source inventories, not behavioral acceptance                                                                   |
-| `pnpm doctor`                            | Runtime configuration diagnostics                                                                               |
-| `pnpm verify`                            | App check/units/build/diagnostic pass, not the full root release gate                                           |
+| Command                                  | Scope                                                                                                             |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `pnpm check`                             | Application TypeScript                                                                                            |
+| `pnpm test`                              | Root operator/inventory gates and app units; Compose needed for configuration checks                              |
+| `pnpm build`                             | Client and bundled server/operator artifacts                                                                      |
+| `pnpm test:integration`                  | Mandatory dedicated-database suites; build first                                                                  |
+| `pnpm test:all`                          | Root/unit, context, DB, recovery/startup/admission/load, fresh roles/TLS and complete browser/cold gates          |
+| `pnpm test:build-context:integration`    | Actual BuildKit scratch export: synthetic privacy exclusions and required source; no real data or running service |
+| `pnpm test:customer-load:integration`    | Full packaged synthetic read/write/race/isolation and scheduled-arrival acceptance; local images required         |
+| `pnpm test:hetzner-config`               | Read-only private-stack model and preflight checks                                                                |
+| `pnpm test:hetzner-database`             | Synthetic shell/secret-validation and fresh-role SQL checks; not live MySQL execution                             |
+| `pnpm test:hetzner-database:integration` | Real disposable fresh-database role/permission rehearsal; no production data or account changes                   |
+| `pnpm hetzner:preflight`                 | Validate reviewed Hetzner inputs and the Compose model without starting services                                  |
+| `pnpm test:tls-ingress:integration`      | Real TLS/session/forwarding rehearsal using the isolated Hetzner stack and synthetic data                         |
+| `pnpm db:verify`                         | Read-only exact migration-history check against the configured database; not schema repair or role provisioning   |
+| `pnpm db:verify:runtime`                 | Read-only history and exact-schema DML-authority check; rejects broader grants/roles without altering them        |
+| `pnpm requirements:check`                | Phase/title/evidence-path integrity, not completion                                                               |
+| `pnpm audit:api`, `pnpm audit:ui`        | Source inventories, not behavioral acceptance                                                                     |
+| `pnpm doctor`                            | Runtime configuration diagnostics                                                                                 |
+| `pnpm verify`                            | App check/units/build/diagnostic pass, not the full root release gate                                             |
 
 Isolated disposable integration workflow:
 
@@ -638,10 +727,11 @@ database—not the full app or TLS path. See [the evidence and recovery limits](
 
 Public deployment targets Hetzner. The local tunnel launcher is retired. Follow
 [the concrete Hetzner stack and deployment guide](docs/HETZNER_DEPLOYMENT.md)
-and `DEPLOYMENT_TARGET.md`. The candidate stack includes a private custom database,
+and the repository-root [deployment target](DEPLOYMENT_TARGET.md). The candidate stack includes a private custom database,
 separate one-shot migration process and restricted runtime identity, plus a hardened
 TLS proxy, read-only preflight and isolated HTTPS/session rehearsal. Its new
-credential-separation path still needs successful real-container qualification. Complete
+credential-separation path passed the bounded isolated CI rehearsals linked above,
+not live-host acceptance. Complete
 infrastructure, secrets, DNS/ACME, database migration, backup, monitoring and rollback
 acceptance before cutover. Configuration and synthetic tests do not prove an
 actual hosted deployment or approve opening registration.

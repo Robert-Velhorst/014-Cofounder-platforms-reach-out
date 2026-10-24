@@ -1,5 +1,10 @@
 # Co-founder discovery source review
 
+October 23 Spain increment: [CoFounder Match direct public-page review](PLATFORM_SPAIN_REVIEW_2026-10-23.md)
+adds one separate dedicated discovery-only listing. Adult eligibility, advertised
+free core features, untested account access and consent/content-use restrictions
+remain explicit. No additional import/contact workflow is admitted.
+
 October 23 MENA increment: [WASL Network direct browser review](PLATFORM_WASL_MENA_REVIEW_2026-10-23.md)
 adds one dedicated discovery-only listing. Admin-reviewed matching admission,
 free-registration-only pricing evidence, mutual contact reveal and harvesting
@@ -11,11 +16,13 @@ earlier cofound.lat page-reader limitation with rendered-browser evidence.
 Access, policy and app-identity gaps remain; no runtime catalogue addition,
 workflow admission or integration permission is implied.
 
-Current catalogue source:69 public discovery records (22 dedicated,24 community/channel,
+Current catalogue source:70 public discovery records (23 dedicated,24 community/channel,
 23 programme/event/ecosystem), plus held F6S internally. This count does not measure
 worldwide completeness or working integrations. Dated supplements retain their
-historical counts; the latest increment is the WASL review above. Its exact-package
-qualification remains pending; the Indonesia receipts describe the earlier
+historical counts; the latest increment is the Spain review above. Its exact-package
+qualification remains pending. The earlier 69-source WASL head passed its
+[bounded full CI qualification](PLATFORM_WASL_MENA_REVIEW_2026-10-23.md#subsequent-exact-head-ci-and-merge),
+not provider or whole-product acceptance. The Indonesia receipts describe the earlier
 68-source catalogue. The preceding
 qualified immutable 67-source package includes the French additions, with
 997 packaged unit cases, 724 database cases, default startup and six connected

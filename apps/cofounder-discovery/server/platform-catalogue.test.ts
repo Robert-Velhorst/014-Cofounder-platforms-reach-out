@@ -57,7 +57,7 @@ describe("published platform catalogue", () => {
   it("keeps the Indonesian directory distinct from matching and profile-collection permission", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
     const records = publicPlatformCatalogue();
-    expect(records).toHaveLength(69);
+    expect(records).toHaveLength(70);
     for (const query of [
       "Indonesia",
       "Jakarta",
@@ -143,7 +143,7 @@ describe("published platform catalogue", () => {
     ).toHaveLength(23);
     expect(
       records.filter((r: any) => r.workflowReview === "discovery-only")
-    ).toHaveLength(46);
+    ).toHaveLength(47);
   });
   it("retains Hong Kong ecosystem restrictions and Chinese discovery without promising co-founder matching", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
@@ -300,7 +300,7 @@ describe("published platform catalogue", () => {
     ).toHaveLength(23);
     expect(
       records.filter((r: any) => r.workflowReview === "discovery-only")
-    ).toHaveLength(46);
+    ).toHaveLength(47);
   });
   it("finds Caribbean ecosystem routes without promising solo-founder matching or included travel", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
@@ -589,7 +589,7 @@ describe("published platform catalogue", () => {
   it("distinguishes West Asian residency, ecosystem and unpublished prototype", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
     const records = publicPlatformCatalogue();
-    expect(records).toHaveLength(69);
+    expect(records).toHaveLength(70);
     expect(
       filterPlatforms(records, "Middle East", "program")
         .map((r: any) => r.id)
@@ -600,7 +600,7 @@ describe("published platform catalogue", () => {
     ).toEqual(["antler"]);
     const antler = records.find((r: any) => r.id === "antler");
     expect(antler).toMatchObject({
-      reviewedAt: "2026-10-02",
+      reviewedAt: "2026-10-23",
       pricingStatus: "investment-terms",
     });
     expect(antler.access).toMatch(/full-time.*in-person.*10-week/i);
@@ -628,10 +628,10 @@ describe("published platform catalogue", () => {
   it("labels India paid access and Korean indirect networking without admitting workflows", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
     const records = publicPlatformCatalogue();
-    expect(records).toHaveLength(69);
+    expect(records).toHaveLength(70);
     expect(
       records.filter((row: any) => row.category === "dedicated")
-    ).toHaveLength(22);
+    ).toHaveLength(23);
     expect(
       records.filter((row: any) => row.category === "community")
     ).toHaveLength(24);
@@ -664,7 +664,7 @@ describe("published platform catalogue", () => {
   it("adds independently identified discovery listings without implying live access or permissions", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
     const records = publicPlatformCatalogue();
-    expect(records).toHaveLength(69);
+    expect(records).toHaveLength(70);
     expect(
       filterPlatforms(records, "FoundersList", "dedicated").map(
         (row: any) => row.id
@@ -700,7 +700,7 @@ describe("published platform catalogue", () => {
   it("adds African discovery with waiting-list, early-access and policy uncertainty visible", async () => {
     const { publicPlatformCatalogue, filterPlatforms } = await catalogue();
     const records = publicPlatformCatalogue();
-    expect(records).toHaveLength(69);
+    expect(records).toHaveLength(70);
     expect(
       filterPlatforms(records, "Morocco", "dedicated").map((row: any) => row.id)
     ).toEqual(["sharakalab"]);
@@ -740,7 +740,7 @@ describe("published platform catalogue", () => {
     ).toEqual(["tech-talents-match"]);
     expect(
       filterPlatforms(records, "Australia", "program").map((row: any) => row.id)
-    ).toEqual(["startmate-anz"]);
+    ).toEqual(["antler", "startmate-anz"]);
     expect(
       filterPlatforms(records, "India", "program").map((row: any) => row.id)
     ).toContain("entrepreneurs-first");
@@ -876,6 +876,10 @@ describe("published platform catalogue", () => {
     expect(html).toContain("<h3>Cofoundr (France beta)</h3>");
     expect(html).toContain("<h3>CoFoundry (France students)</h3>");
     expect(html).toContain("<h3>WASL Network (MENA)</h3>");
+    expect(html).toContain("<h3>CoFounder Match (Spain)</h3>");
+    expect(html).toContain('href="https://cofounder-match.com/terms"');
+    expect(html).toContain("not external reuse");
+    expect(html).toContain("account admission, verification inbox");
     expect(html).toContain(
       "Free registration advertised; complete matching entitlement"
     );

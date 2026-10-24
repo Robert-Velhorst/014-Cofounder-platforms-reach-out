@@ -106,6 +106,7 @@ const operators = [
   "test:production-config",
   "test:hetzner-config",
   "test:hetzner-database",
+  "test:browser-journey",
   "test:release-contract",
   "test:requirements",
   "test:support",
@@ -125,6 +126,33 @@ test("recovery acceptance builds both test and production targets before rehears
       "required recovery image not built before acceptance",
     );
   }
+});
+
+test("actual build-context acceptance is mandatory before image builds and in full local acceptance", () => {
+  const commands = activeVerifyCommands(workflow);
+  const acceptance = commands.indexOf("pnpm test:build-context:integration");
+  const build = commands.indexOf(
+    "docker build --target integration-test --tag cofounder-recovery-test:local .",
+  );
+  assert.ok(acceptance >= 0 && build > acceptance);
+  assert.equal(
+    commands.filter(
+      (command) => command === "pnpm test:build-context:integration",
+    ).length,
+    1,
+  );
+  assert.equal(
+    manifest.scripts["test:build-context:integration"],
+    "node --test scripts/build-context.integration.test.mjs",
+  );
+  assert.equal(
+    manifest.scripts["test:all"]
+      .split("&&")
+      .map((value) => value.trim())
+      .filter((value) => value === "pnpm test:build-context:integration")
+      .length,
+    1,
+  );
 });
 
 test("fresh-role database acceptance follows its custom image build and remains mandatory", () => {
@@ -239,6 +267,7 @@ test("operator suite inventory cannot silently omit a new root test file", () =>
 test("all-tests command runs local gates before mandatory database/recovery acceptance", () => {
   assert.deepEqual(commands(manifest.scripts["test:all"]), [
     "pnpm test",
+    "pnpm test:build-context:integration",
     "pnpm test:integration",
     "pnpm test:readiness:integration",
     "pnpm test:recovery:integration",
@@ -247,6 +276,7 @@ test("all-tests command runs local gates before mandatory database/recovery acce
     "pnpm test:customer-load:integration",
     "pnpm test:hetzner-database:integration",
     "pnpm test:tls-ingress:integration",
+    "pnpm test:browser-journey:integration",
   ]);
 });
 test("every root integration fixture runs exactly once locally and in CI", () => {
@@ -379,6 +409,52 @@ test("README command and license descriptions match current source contracts", (
       Object.hasOwn(manifest.scripts, command),
       `README advertises missing root command: ${command}`,
     );
+});
+
+test("current operator runtime instructions match the pinned CI and release runtime", () => {
+  const version = workflow.match(/node-version: (\d+\.\d+\.\d+)/)?.[1];
+  assert.ok(version, "pinned CI Node version missing");
+  const nextMajor = Number(version.split(".")[0]) + 1;
+  assert.equal(manifest.engines.node, `>=${version} <${nextMajor}`);
+  const runtime = readFileSync(new URL("Dockerfile", root), "utf8");
+  assert.ok(runtime.includes(`https://nodejs.org/dist/v${version}/`));
+  for (const path of [
+    "docs/OPERATING_BUDGET.md",
+    "docs/RUNTIME_MONITORING.md",
+    "docs/DATABASE_RECOVERY.md",
+    "docs/ADMIN_MFA_DESIGN.md",
+  ]) {
+    const source = readFileSync(new URL(path, root), "utf8");
+    assert.ok(source.includes(`Node ${version}`), `${path}: runtime drift`);
+    assert.doesNotMatch(
+      source,
+      /(?:use Node 22|with Node 22:|Node 22 is the repository's container\/CI runtime|\(Node 22 or later\))/,
+      `${path}: obsolete current instruction`,
+    );
+  }
+});
+
+test("current deployment instructions link to the existing repository-root target", () => {
+  for (const path of [
+    "README.md",
+    "docs/OPERATOR_RUNBOOK.md",
+    "docs/GOAL_COMPLETION_MATRIX.md",
+    "docs/HOSTED_TUNNEL.md",
+  ]) {
+    const location = new URL(path, root);
+    const source = readFileSync(location, "utf8");
+    const expected =
+      path === "README.md" ? "DEPLOYMENT_TARGET.md" : "../DEPLOYMENT_TARGET.md";
+    assert.ok(
+      source.includes(`](${expected})`),
+      `${path}: target not navigable`,
+    );
+    assert.match(
+      readFileSync(new URL(expected, location), "utf8"),
+      /# Deployment target/,
+    );
+    assert.doesNotMatch(source, /`DEPLOYMENT_TARGET\.md`/);
+  }
 });
 
 test("workflow command detection ignores conditional or commented-out steps", () => {

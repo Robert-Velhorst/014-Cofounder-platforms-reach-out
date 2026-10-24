@@ -13,6 +13,8 @@ playwright-report/
 !.env.example
 *.pem
 *.key
+*.p12
+*.pfx
 *.admin-grant
 
 # Logs and runtime state

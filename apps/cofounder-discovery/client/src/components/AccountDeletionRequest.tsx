@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { trpc } from "@/lib/trpc";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function AccountDeletionRequest({
   accountId,
@@ -11,6 +12,7 @@ export function AccountDeletionRequest({
   accountId: number;
   accountBlocked: boolean;
 }) {
+  const { language, text } = useLanguage();
   const utils = trpc.useUtils();
   const status = trpc.accountData.deletionStatus.useQuery(
     { accountId },
@@ -35,7 +37,11 @@ export function AccountDeletionRequest({
     revision: number;
   } | null>(null);
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<
+    | { kind: "original"; message: string }
+    | { kind: "account_changed" | "failed" }
+    | null
+  >(null);
   const mounted = useRef(false),
     inFlight = useRef(false);
   const current = useRef({ accountId, accountBlocked });
@@ -104,10 +110,10 @@ export function AccountDeletionRequest({
         result.accountId !== accountId ||
         current.current.accountId !== accountId ||
         current.current.accountBlocked
-      )
-        throw new Error(
-          "Your account changed. Refresh and inspect the original account's request status; this response is not displayed for another account."
-        );
+      ) {
+        setError({ kind: "account_changed" });
+        return;
+      }
       await utils.accountData.deletionStatus.cancel({ accountId });
       utils.accountData.deletionStatus.setData({ accountId }, result);
       intent.current = null;
@@ -115,8 +121,8 @@ export function AccountDeletionRequest({
       if (mounted.current)
         setError(
           caught instanceof Error
-            ? caught.message
-            : "The request could not be confirmed. Refresh its status before retrying."
+            ? { kind: "original", message: caught.message }
+            : { kind: "failed" }
         );
     } finally {
       request.reset();
@@ -127,65 +133,100 @@ export function AccountDeletionRequest({
   }
   return (
     <section
-      aria-label="Account deletion request"
+      aria-label={text(
+        "Account deletion request",
+        "Verzoek om accountverwijdering"
+      )}
+      lang={language}
       className="space-y-4 rounded-xl border p-4"
     >
-      <h2 className="text-xl font-semibold">Request account deletion</h2>
+      <h2 className="text-xl font-semibold">
+        {text("Request account deletion", "Accountverwijdering aanvragen")}
+      </h2>
       <p>
-        This records a request for the service operator to review. It does not
-        delete data, stop your account, or promise a completion date. Automated
-        deletion is not enabled. Retention exceptions, external services and
-        backups still require review. Export anything you need before deletion
-        is eventually processed.
+        {text(
+          "This records a request for the service operator to review. It does not delete data, stop your account, or promise a completion date. Automated deletion is not enabled. Retention exceptions, external services and backups still require review. Export anything you need before deletion is eventually processed.",
+          "Dit legt een verzoek vast dat de beheerder moet beoordelen. Het verwijdert geen gegevens, blokkeert je account niet en belooft geen afrondingsdatum. Automatische verwijdering is niet ingeschakeld. Bewaaruitzonderingen, externe diensten en back-ups moeten nog worden beoordeeld. Exporteer wat je nodig hebt voordat een eventuele verwijdering wordt uitgevoerd."
+        )}
       </p>
       <p className="text-sm">
-        You can withdraw a pending request here before processing begins.
-        Requests and withdrawals share five password-confirmation attempts per
-        15 minutes, including incorrect passwords. No email or platform message
-        is sent.
+        {text(
+          "You can withdraw a pending request here before processing begins. Requests and withdrawals share five password-confirmation attempts per 15 minutes, including incorrect passwords. No email or platform message is sent.",
+          "Je kunt een openstaand verzoek hier intrekken voordat de verwerking begint. Verzoeken en intrekkingen delen een limiet van vijf wachtwoordbevestigingen per 15 minuten, inclusief onjuiste wachtwoorden. Er wordt geen e-mail of platformbericht verstuurd."
+        )}
       </p>
       {accountBlocked ? (
         <p role="alert">
-          Your account could not be verified. Refresh your workspace.
+          {text(
+            "Your account could not be verified. Refresh your workspace.",
+            "Je account kon niet worden geverifieerd. Vernieuw je werkruimte."
+          )}
         </p>
       ) : status.isError ? (
-        <p role="alert">{status.error.message}</p>
+        <p role="alert">
+          {text(
+            "Service message (original): ",
+            "Originele melding van de dienst: "
+          )}
+          <span lang="en">{status.error.message}</span>
+        </p>
       ) : !row ? (
-        <p role="status">Loading deletion request status…</p>
+        <p role="status">
+          {text(
+            "Loading deletion request status…",
+            "Status van het verwijderverzoek laden…"
+          )}
+        </p>
       ) : (
         <div className="space-y-2" role="status">
           <p>
             {row.status === "pending_review"
-              ? "Awaiting operator review. Nothing has been deleted."
+              ? text(
+                  "Awaiting operator review. Nothing has been deleted.",
+                  "Nog te beoordelen door de beheerder. Er is niets verwijderd."
+                )
               : row.status === "withdrawn"
-                ? "Request withdrawn. Your account has not been deleted."
-                : "No deletion request is recorded."}
+                ? text(
+                    "Request withdrawn. Your account has not been deleted.",
+                    "Verzoek ingetrokken. Je account is niet verwijderd."
+                  )
+                : text(
+                    "No deletion request is recorded.",
+                    "Er is geen verwijderverzoek vastgelegd."
+                  )}
           </p>
           {row.requestKey ? (
             <p className="break-all text-sm">
-              Request reference: {row.requestKey}
+              {text("Request reference: ", "Referentie van het verzoek: ")}
+              {row.requestKey}
             </p>
           ) : null}
           {row.requestedAt ? (
             <p className="text-sm">
-              Requested:{" "}
+              {text("Requested: ", "Ingediend: ")}
               <time dateTime={row.requestedAt}>
-                {new Date(row.requestedAt).toLocaleString()}
+                {new Date(row.requestedAt).toLocaleString(
+                  language === "nl" ? "nl-NL" : "en-GB"
+                )}
               </time>
             </p>
           ) : null}
           {row.withdrawnAt ? (
             <p className="text-sm">
-              Withdrawn:{" "}
+              {text("Withdrawn: ", "Ingetrokken: ")}
               <time dateTime={row.withdrawnAt}>
-                {new Date(row.withdrawnAt).toLocaleString()}
+                {new Date(row.withdrawnAt).toLocaleString(
+                  language === "nl" ? "nl-NL" : "en-GB"
+                )}
               </time>
             </p>
           ) : null}
           {!row.requestsEnabled ? (
             <p>
-              New request intake is disabled by the operator. Existing pending
-              requests can still be withdrawn.
+              {text(
+                "New request intake is disabled by the operator. Existing pending requests can still be withdrawn.",
+                "Nieuwe verzoeken zijn uitgeschakeld door de beheerder. Bestaande openstaande verzoeken kun je nog intrekken."
+              )}
             </p>
           ) : null}
         </div>
@@ -201,13 +242,38 @@ export function AccountDeletionRequest({
           void status.refetch();
         }}
       >
-        Refresh request status
+        {text("Refresh request status", "Status van het verzoek vernieuwen")}
       </Button>
-      {!accountBlocked && error ? <p role="alert">{error}</p> : null}
+      {!accountBlocked && error ? (
+        <p role="alert">
+          {error.kind === "original" ? (
+            <>
+              {text(
+                "Service message (original): ",
+                "Originele melding van de dienst: "
+              )}
+              <span lang="en">{error.message}</span>
+            </>
+          ) : error.kind === "account_changed" ? (
+            text(
+              "Your account changed. Refresh and inspect the original account's request status; this response is not displayed for another account.",
+              "Je account is gewijzigd. Vernieuw de status en controleer het verzoek van het oorspronkelijke account; dit antwoord wordt niet voor een ander account getoond."
+            )
+          ) : (
+            text(
+              "The request could not be confirmed. Refresh its status before retrying.",
+              "Het verzoek kon niet worden bevestigd. Vernieuw de status voordat je het opnieuw probeert."
+            )
+          )}
+        </p>
+      ) : null}
       <form onSubmit={submit} className="space-y-3">
         <fieldset disabled={blocked} className="space-y-3">
           <Label htmlFor={`deletion-request-password-${accountId}`}>
-            Current password for deletion requests
+            {text(
+              "Current password for deletion requests",
+              "Huidig wachtwoord voor verwijderverzoeken"
+            )}
           </Label>
           <Input
             id={`deletion-request-password-${accountId}`}
@@ -234,8 +300,14 @@ export function AccountDeletionRequest({
               }
             />
             {withdrawing
-              ? "I want to withdraw this pending deletion request"
-              : "I request deletion of this account and understand it is held for operator review"}
+              ? text(
+                  "I want to withdraw this pending deletion request",
+                  "Ik wil dit openstaande verwijderverzoek intrekken"
+                )
+              : text(
+                  "I request deletion of this account and understand it is held for operator review",
+                  "Ik vraag verwijdering van dit account aan en begrijp dat de beheerder het verzoek eerst moet beoordelen"
+                )}
           </Label>
           <Button
             type="submit"
@@ -243,10 +315,13 @@ export function AccountDeletionRequest({
             disabled={blocked || !password || !confirmed}
           >
             {pending
-              ? "Saving request…"
+              ? text("Saving request…", "Verzoek opslaan…")
               : withdrawing
-                ? "Withdraw deletion request"
-                : "Submit deletion request"}
+                ? text(
+                    "Withdraw deletion request",
+                    "Verwijderverzoek intrekken"
+                  )
+                : text("Submit deletion request", "Verwijderverzoek indienen")}
           </Button>
         </fieldset>
       </form>

@@ -18,7 +18,22 @@ The confirmed budget is EUR 100/month initially, including hosting, database,
 mail and optional APIs; target EUR 80 recurring plus EUR 20 reserve. No host,
 provider, account, purchase, public endpoint or live message is created here.
 
-Latest [pool-client fresh packaging](POOL_CLIENT_NODE22_PACKAGE_QUALIFICATION_2026-10-02.md)
+## Current qualification versus historical receipts
+
+The latest merged main checkpoint is `9e15816b2f34b06e69635ea475f2aa55f03c02d2`,
+tree-identical to PR #120's head `8a71007a2e847c91f159f03263ab59c02c7ee04f`.
+Its [full Node 26.12.0 CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39888984086)
+passed 1,043 application units, 736 database cases, build, actual startup/recovery,
+complete customer-load, fresh database-role and HTTPS/session rehearsals. That
+does not qualify the pending maintained browser candidate, real inbox/provider
+actions, an immutable registry publication, or an approved hosted deployment.
+The separate post-merge main CI/CodeQL runs are pending at this checkpoint.
+
+The October 2 paragraphs below are historical artifact-specific receipts, not
+the current supported runtime or claims about the latest source. Their versions,
+counts, failed attempts and scope are deliberately preserved.
+
+Historical [pool-client fresh packaging](POOL_CLIENT_NODE22_PACKAGE_QUALIFICATION_2026-10-02.md)
 passed 987 unit, 724 mandatory database and actual default-startup checks, with
 new exact installed images and matching compiled payloads. New-image connected
 acceptance remains separate; old browser/recovery/load receipts retain their

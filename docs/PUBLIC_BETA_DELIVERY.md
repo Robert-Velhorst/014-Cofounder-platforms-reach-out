@@ -1,5 +1,276 @@
 # Worldwide public beta delivery ledger
 
+## October 23 build-context privacy correction — actual export unqualified
+
+Read-only release review found that backup/data/debug-bundle directories and
+key/recovery artifact extensions were not excluded from the broad Docker build
+context. The local backups directory was empty; no actual leak is established.
+The [correction](BUILD_CONTEXT_SAFETY.md) adds depth-independent exclusions and
+preserves required source/migrations/public examples. It deletes no local data.
+
+An added mandatory CI/full-test gate exports a tiny synthetic scratch context
+through actual BuildKit and requires 14 source paths while refusing 62 private
+artifact paths. It copies only the real ignore rules, not actual source/data or
+secrets. No base image, running container, database or published port is involved;
+uncertain timeout retains scratch rather than assuming the builder stopped.
+The actual export integration has not run locally and remains unqualified.
+Forty focused native configuration/release cases pass after the old command
+sequence assertion was correctly extended without dropping any existing gate.
+All 236 native checks pass, zero failures/skips (9,780.2783 ms). The actual prior
+ignore file is refused by the source contract, not by a locally executed Docker
+export. The API/UI inventories remain unchanged and current.
+Full exact-head image/database/browser/security acceptance and all original
+phases remain incomplete.
+
+## October 23 source identity guard and Oceania recheck — unqualified candidate
+
+The [source identity guard](SECURITY.md#october-23-source-identity-ambiguity-guard--bounded-source-evidence)
+refuses ambiguous labels/hosts and duplicate/reserved IDs instead of inheriting
+first/last-record admission. The real catalogue has no observed collisions and
+599 enumerated existing decisions retain an identical before/after digest.
+All 14 new ambiguity cases pass; substituting the actual old policy only in
+memory makes seven fail, while the seven compatible controls still pass.
+
+The [Oceania primary-source review](PLATFORM_OCEANIA_REVIEW_2026-10-23.md) does not
+justify a new dedicated listing. Independently re-read Antler evidence instead
+enriches its existing `program` record with Australia/Sydney/Melbourne/Brisbane
+discovery, dated advertised cohort/investment details and unresolved contract/
+fee/eligibility limits. MENAP was rechecked without exporting its no-fee/visa
+terms to Australia. The served global privacy page's 2020 update date is explicit.
+No new action alias, record, account, integration or collection/contact permission
+is added; counts remain 70 total, 23 manual-reviewed and 47 discovery-only.
+Lineup and other unresolved leads stay held. Search is not member acceptance.
+
+All 69 focused actual-module cases across ambiguity, existing source policy,
+Spain and six new Oceania cases pass. Four Australian search queries are added
+to the existing browser catalogue stage, not substituted for any of the 34
+required stages or cold probes. A checked-in-source repeat also passes all 69;
+scoped strict TypeScript 6.0.3 over the three production policy/catalogue roots
+returns zero diagnostics, not a full application typecheck. All 232 native
+checks pass with zero failures/skips (9,379.5577 ms). Both source inventories were
+regenerated and compared: the API inventory is unchanged; only two UI input
+hashes and its aggregate digest changed, not any of the 230 UI actions or counts.
+Full exact-head build/database/browser/scan and
+provider/member/hosted acceptance remain unqualified; no phase is promoted.
+
+## October 23 connected account-request candidate — not yet executed
+
+Four mandatory stages now extend the original 24 workflow and six onboarding
+stages, before the unchanged cold-asset probes. They use the same two synthetic
+accounts and owned CI fixtures. The only fixture configuration addition enables
+review-held request intake there; production defaults and all erasure/mail/provider
+workers remain off. No new database, account, secret, dependency manifest,
+resource limit, timeout, admission threshold or retry is introduced.
+
+The [connected candidate](MAINTAINED_BROWSER_JOURNEY.md#account-request-extension--source-defined-not-executed)
+requires English request, refresh/reload, Dutch withdrawal, a new Dutch request
+and English withdrawal. It observes actual tRPC payloads for canonical intent,
+all four SQL revisions/quota attempts, corresponding audit metadata, retained
+accounts/candidate/profile counts and no mail-job increase. The final stage
+requires owner-scoped status plus anonymous/wrong-owner refusals and rejection
+of translated wire intent without further row/attempt/audit changes. Both
+desktop/mobile captures require cleared password/confirmation controls.
+
+Native tests execute the real row/wire assertion helpers against explicit
+fixtures and refuse incomplete/reordered account-rights receipts. Two focused
+tests use the actual locked tRPC client with a fetch double to check its
+serialization. All 30 focused browser-policy cases, all 232 native checks
+(zero failures/skips; 9,122.5797 ms) and all 21 focused application cases
+(the existing 19 markup cases plus two client-serialization cases) passed on
+Node 26.12.0. Those are not HTTP-service, authenticated browser, database or
+erasure results. Actual ordered 34-stage
+execution, compiled UI, screenshots, isolation/teardown and exact-head full
+CI/CodeQL remain required. No phase is promoted by adding a gate.
+
+## October 23 account-deletion request language — markup evidence only
+
+The existing account-deletion request panel now follows the current English/Dutch
+selection for controls, review/withdrawal states, warnings and date formatting.
+Service errors retain their original English text with an explicit language
+annotation and translated label. This is request intake held for operator review,
+not erasure, account suspension, an email send or a promised completion date.
+
+The canonical wire confirmation, owner checks, keyed account boundary, retry keys,
+revision handling, password clearing and five-attempt/15-minute quota remain in
+place. No backend, schema, worker, intake flag or production configuration changed.
+All 15 new actual-panel/shared-UI server-rendered cases and four existing account
+export cases passed using Node 26.12.0 and the locked React 19.3.1 dependencies.
+Hooks are explicit doubles; tests cover both languages, all three request states,
+intake-off pending withdrawal, blocked/stale/refreshing accounts, initially
+unchecked/disabled controls and escaped original errors. They do not execute
+form submission, authentication, database transitions or browser interactions.
+
+Both source-derived inventories were regenerated and reviewed: only the panel's
+hash, hook/action positions and derived digests changed. Totals remain 165 API
+operations, 58 default-admitted/107 denied, and 230 UI actions over 151 files.
+At this earlier markup-only checkpoint, the maintained browser had 24+6 stages followed by
+cold-asset probes; no connected deletion-request language journey was added or
+claimed then. The subsequent source candidate above adds that required journey.
+All 227 native checks also passed, zero failures/skips (9,751.0091 ms),
+including current-source equality for both inventories.
+Full exact-head CI/typecheck/build/database/browser/security acceptance
+remains pending. All original phases remain Partial; this is a publication
+checkpoint, not production readiness.
+
+## October 23 cold-capture accounting repair — not browser acceptance
+
+The [capture correction](MAINTAINED_BROWSER_JOURNEY.md#capture-accounting-correction--unqualified-source-repair)
+closes an actual response-only omission: a static font failure before headers
+could disappear from the captured resource graph. The old function reproduced
+that false pass with explicit synthetic event/DOM doubles, not a browser run.
+The revised gate reconciles every observed static request with its response and
+completion, refuses failures/unfinished work, bounds request retention and body
+accounting and handles an `other`-classified canonical favicon. It removes all
+listeners afterward. API traffic remains outside this static-only probe.
+
+All 25 focused and all 227 native checks passed on Node 26.12.0, zero failures/
+skips (9,654.3188 ms for the full suite). The font-omission negative control
+failed the dedicated regression; the checked-in-source repeat passed. These
+cases do not prove actual Chromium, compiled UI, database, provider or hosted
+acceptance. Quotas, 100-set population, retries, original 24+6 stages, fixture
+limits and public/private action boundaries are unchanged. The real source
+repair needs fresh exact-head CI/CodeQL and screenshot review; no phase is promoted.
+
+## October 23 Spain discovery increment — source candidate, not release acceptance
+
+The [CoFounder Match Spain review](PLATFORM_SPAIN_REVIEW_2026-10-23.md) adds one
+dedicated discovery-only record after direct rendered reads of five public pages
+and the free-use FAQ. Source totals become 70: 23 dedicated, 24 community/channel,
+23 programme routes; 47 discovery-only and the unchanged 23 manual-reviewed.
+No signup, private profile, purchase, provider permission or contact occurred.
+The previously held Spanish-language leads remain held. Pricing/privacy/matching
+statements remain provider declarations, not independently accepted capabilities.
+
+All 12 new actual-module source/policy cases passed on Node 26.12.0. An in-memory
+admission negative control failed seven of them, and the unchanged checked-in
+source passed again. Scoped strict TypeScript 6.0.3 returned zero diagnostics.
+All 219 native checks passed with zero failures/skips (9,628.1081 ms), after the
+stale UI inventory correctly required review of the changed catalogue hash.
+Only its source hash and aggregate digest changed; all 230 UI actions remain
+structurally unchanged. This is not actual browser or provider acceptance.
+
+New focused source/policy tests, the existing SSR and regional-admission suites
+and the maintained browser gate cover the new record's provenance, exact search
+aliases and refused import/outreach boundary. Actual compiled desktop/mobile,
+database and full exact-head CI acceptance are still required. PR #126's prior
+publication head is preserved unchanged; its queued runs are not restarted by
+this separate source branch. All original phases remain Partial.
+
+## October 23 combined candidate: frontend admission and actual browser failure
+
+The combined source preserves all four PR #121–124 heads as ancestors, including
+every original browser stage, private-profile extension, diagnostics and current
+operator documentation. It adds [frontend admission](SECURITY.md#october-23-frontend-admission-candidate--full-cicodeql-pending)
+for two actual open high-severity CodeQL findings and corrects the
+[first real browser failure](MAINTAINED_BROWSER_JOURNEY.md#first-maintained-execution--failed-not-qualified).
+It must qualify as a complete exact-head candidate before consolidation into main;
+no failed original head is merged or retroactively described as passing.
+
+Six new real-HTTP/file-work cases passed twice using the actual Node 26.12.0,
+Express 5.3.0 and rate-limit 8.7.1 artifacts from an isolated tool cache. A source-
+unchanged in-memory negative control removed only the two middleware registrations
+and failed exactly the expected static-path case (200 versus required 429); the
+checked-in-source repeat passed all six. Scoped strict TypeScript 6.0.3 and the
+full-workspace moderate-severity dependency audit passed. All 214 native
+operator/source tests passed on Node 26.12.0, zero failures/skips (9,163.5296 ms).
+These are not the full application/build/browser, new-image or hosted qualification.
+
+PR #121 and #122 actually failed after three browser stages because Chromium used
+the installed non-custom WenQuanYi font for all three CJK alias glyphs, not Noto.
+The inspected failure capture shows the characters. The correction accepts the
+two installed CJK families while keeping exactly three non-custom glyphs and all
+other original/emoji assertions. Both failed runs remain available. Their exact
+owned fixtures were removed, with driver exit 1, runtime/database 0 and no OOM.
+No local Docker/database/browser fixture or provider action was created.
+
+Main `9e15816` separately passed post-merge CI `39893556582` and CodeQL workflow
+`39893556531`; both high CodeQL alerts remain open on that actual main revision.
+Zero open Dependabot/secret alerts were returned by successful read-only queries.
+No alert was dismissed, suppressed or declared resolved by a workflow's green
+status. Full CI/CodeQL, complete browser screenshots and broader acceptance remain
+required for the combined candidate; every original phase remains Partial.
+
+## October 23 maintained private-profile browser extension — unexecuted candidate
+
+The [maintained browser journey](MAINTAINED_BROWSER_JOURNEY.md#required-private-profile-onboarding-extension--not-yet-executed)
+now requires six additional private-profile onboarding stages after all original
+24 stages. It covers all four wizard steps, English/Dutch canonical choices,
+desktop/mobile state, real private saves and SQL/audit observations, unsaved-edit
+retention/documented reload loss, fresh-cookie login, HTTP owner/publication
+refusals and another account's empty editor. Both exact ordered stage lists are
+required before the same fixture may emit a passing receipt.
+
+No production UI/component behavior was changed, and the extension does not create
+a separate fixture/account, add secrets/dependencies, change resource/time/network
+limits or mock API replies. It reuses the validated owned fixture and redacted
+failure path. All 213 native operator/source checks passed on Windows Node 25.2.1,
+zero failures/skips (9,437.3625 ms), including 11 focused policy/source tests.
+Those tests execute pure row assertions and refusal guards, not browser behavior.
+
+The actual extended browser/database journey, teardown and screenshot review
+remain unverified. No local image/browser/DB fixture was created, and the older
+policy-held Windows fixture remains unresolved. Existing PRs #121–123 keep their
+original heads and evidence scope; the original browser PR has begun its GitHub
+run, but has not yet qualified its browser stages. No phase is promoted and no
+real inbox, provider, public deployment, erasure or purchase is authorized here.
+
+## October 23 current operator documentation and WASL qualification
+
+PR #120 was merged as `9e15816b2f34b06e69635ea475f2aa55f03c02d2`, with its tree
+checked identical to exact green head `8a71007a2e847c91f159f03263ab59c02c7ee04f`.
+[Its qualification receipt](PLATFORM_WASL_MENA_REVIEW_2026-10-23.md#subsequent-exact-head-ci-and-merge)
+records 1,043 units, 736 database cases, actual role/TLS and full workload checks.
+Browser candidate PRs #121–122 and separate post-merge main runs remain pending;
+CI qualification is not hosted/customer/provider or whole-goal acceptance.
+
+Current budget, monitoring, recovery and administrator guidance now names the
+pinned Node 26.12.0 runtime. The existing repository-root deployment target is
+linked from the README, operator runbook, matrix and retired-tunnel notice.
+Historical runtime versions and failed-attempt receipts were not relabelled.
+Two new mandatory release-contract checks failed against the earlier prose and
+passed after these edits. All 210 native operator/source checks passed locally
+on Windows Node 25.2.1, zero failures/skips (10,269.984 ms); this is not a new
+supported-runtime application or browser run.
+
+The documentation-governance read-only full audit passed with Python UTF-8 mode
+after its default Windows output encoding could not print a checkmark. All
+actual Markdown links resolved. Optional default governance-role/ADR filenames
+are not adopted here; the audit's missing-role and possible-orphan warnings were
+reviewed without creating duplicate documents or deleting history. This audit
+does not validate prose truth, current runtime behavior or phase completion.
+
+## October 23 browser failure diagnostics and current publication checkpoint
+
+The browser fixture now retains bounded, allowlisted driver failure envelopes
+instead of hiding all stderr. It drops raw Docker output, unknown fields and
+stacks, and redacts generated fixture credentials again in the parent. All 208
+native operator/source tests passed locally, zero failures/skips (9,473.2035 ms).
+No new browser/image/database run or local fixture was created by this change.
+The actual maintained browser gate remains pending in PR #121; this follow-up
+does not replace or restart that candidate's exact-head run.
+
+Current main is `a2cead7075da557f64a81ab32f5101e4d514b894`, merged through
+[PR #119](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/pull/119).
+Its tree was rechecked identical to `61b353cb16fbb384f1303b31019c4c6d4ba16c46`,
+which passed [full CI](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887876731)
+and [CodeQL](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/actions/runs/39887872452).
+Main's separate post-merge runs and the WASL/browser candidate PRs remain pending
+at this checkpoint. Historical pending/local-failure sections below are dated
+receipts, not a claim that the later CI never passed. The retained Windows
+fixture is still unresolved, and every original phase remains Partial.
+
+## October 23 maintained browser workflow candidate — not yet executed
+
+The [24-stage browser journey](MAINTAINED_BROWSER_JOURNEY.md) is now maintained
+as source with a mandatory CI/root-all gate, isolated test-only browser image,
+strict synthetic configuration, ordered receipt checks, bounded owner-verified
+fixtures and separate PNG-only screenshot retention. The original real actions,
+persistence, responsive/language and committed-import/lost-response retry checks
+were retained; fixed credentials and proprietary font assumptions were removed.
+All 207 native checks passed locally. Browser image/build/runtime/screenshot
+acceptance has not run, no new local fixture was created, and no phase, provider
+permission or public-production status is promoted by this source candidate.
+
 ## October 23 read-only grant observation and rehearsal transport fix
 
 Read-only queries against the exact retained synthetic database found that raw
