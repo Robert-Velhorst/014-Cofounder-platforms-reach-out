@@ -278,6 +278,53 @@ consolidation bundle and shared-store exceptions above are outside this complete
 import-archive deletion. Other projects and Docker resources were not modified by
 this follow-up.
 
+## Remaining cache, bundle and checkout — subsequent explicit review
+
+The operator explicitly requested a fresh review of these three co-founder-only
+targets and deletion where safe. The inspected checkout head was
+`6c3b369dc35c9c89bf735b097c4dc0cfef81ce95`; its working tree was clean. No other
+linked worktree or non-shell process referencing the project checkout was found.
+This observation is not an exhaustive open-file-handle test.
+
+- The consolidation bundle passed `git bundle verify`. All thirteen distinct
+  heads (sixteen ref entries) were verified against exact remote refs or ancestry
+  of the published candidate. Its size was 131,473,511 bytes.
+- All nineteen local branch heads were likewise covered by remote refs or the
+  published candidate's history. The stash's working, index and untracked trees
+  contained 795 distinct blobs, all present in the verified published object graph.
+  No new source publication was necessary for those branches/stash trees.
+- The test cache held sixty files, totaling 1,920,274 bytes. All fifty-eight
+  compiled cache entries had inline source maps. Fifty-five embedded originals
+  matched the published graph; the other three were compared with current source.
+  They contained older catalogue/test variants and a Vite variant missing current
+  frontend admission/rate-limit middleware. These are not useful changes to port.
+- `git fsck --full --no-reflogs --unreachable` completed without integrity errors.
+  Including all twenty-seven locally available, remotely verified graph roots left
+  one unreferenced commit absent from that graph: the earlier empty-tree checkpoint
+  attempt, not an additional source snapshot. Of 145 remaining orphan blobs, 133
+  matched entries in the already-reviewed import inventory. The other twelve were
+  intermediate documentation, test and legacy helper candidates; several had no
+  surviving tree-path association and needed content comparison. This audit does
+  not certify every orphan object's exact bytes as disposable or publicly preserved.
+- Two ignored runtime-test secret files were found inside the checkout. Their
+  values were not printed or uploaded. They remain local along with the checkout.
+
+A fresh native deletion command for the exact bundle and test-cache targets was
+**rejected by the execution security layer before execution**. Neither target was
+deleted. No alternate deletion method was attempted. The containing checkout was
+not deleted, because that would also remove the blocked cache through its parent.
+Three source-map copies were temporarily created for comparison in the dedicated
+audit directory. Their separate cleanup command was also rejected before execution;
+those three copies remain locally and no alternative removal was attempted. The
+original cache remains intact. Other projects and Docker were not modified.
+
+Before this documentation update, the checkout contained 2,146 files and
+164,064,380 logical bytes, including its cache and Git storage. That checkout
+figure overlaps the cache figure and must not be added to it. The remaining
+bundle/cache/checkout deletion is therefore still blocked, not complete. The
+operator has already provided scope and deletion authority; asking for the same
+approval again does not resolve an execution-layer restriction.
+
 ## Still required before claiming complete local removal
 
 1. Resolve the earlier execution-layer deletion restriction without bypassing it.
