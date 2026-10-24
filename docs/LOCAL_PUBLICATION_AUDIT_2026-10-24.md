@@ -325,6 +325,63 @@ bundle/cache/checkout deletion is therefore still blocked, not complete. The
 operator has already provided scope and deletion authority; asking for the same
 approval again does not resolve an execution-layer restriction.
 
+## Final orphan-object classification and deletion-route investigation
+
+The follow-up accounted for all 145 remaining candidate blobs:
+
+| Group | Count | Disposition |
+| --- | --- | --- |
+| Blobs matching the already-reviewed imported archive | 133 | Existing import-review dispositions apply; the eleven selected import references remain remotely preserved. No full private archive or superseded source dump was uploaded. |
+| Additional historical TypeScript source variants | 5 | Preserved byte-exactly in the separate archive linked below; no activation in the current app. |
+| Intermediate infrastructure tests | 2 | Both contain unresolved merge markers and fail JavaScript syntax checking. Their resolved current files retain the useful code. No broken snapshots ported. |
+| Intermediate documentation with unresolved merge markers | 4 | Superseded conflict snapshots; not published as current documentation. |
+| Older conflict-free README | 1 | Compared with the current README; obsolete qualification/deployment wording and command inventory were replaced by the more complete current documentation. |
+
+The one additional unreferenced checkpoint commit contains an empty tree, not
+another source snapshot. The test-cache and published branch/stash/bundle findings
+in the preceding section are unchanged.
+
+The five source variants (61,886 bytes) are preserved under
+[`archive/local-preservation-20261024/orphan-source-variants`](https://github.com/Robert-Velhorst/014-Cofounder-platforms-reach-out/tree/1d7f7d38b8531328a757c936e1b4b0f9fd122f03),
+commit `1d7f7d38b8531328a757c936e1b4b0f9fd122f03`. The remote commit's tree,
+all five source blobs and both documentation blobs, sizes and tag target were
+verified after publication. The manifest records original object IDs and SHA-256
+values. Filenames were assigned by content comparison because no original
+surviving tree-path association was available for those five blobs.
+
+An initial content-based guess incorrectly compared one recovered test to
+`engines.test.ts`. The correct current counterpart is `port-safety.test.ts`, which
+already contains all three recovered safety checks, differing only in formatting.
+No duplicate test file was added. The encryption variant predates the current
+file-secret reader; the active implementation was not downgraded. The remaining
+legacy routing/automation/scraping variants are historical reference, not newly
+qualified provider integrations.
+
+All five archived TypeScript files passed built-in TypeScript stripping followed
+by JavaScript syntax checking on local Node v25.2.1. This is neither a type check
+nor execution of the application/test suite. Pattern scans and manual review of
+the explicitly synthetic test secret found no private content to publish in those
+five files. No runtime secrets or conflicting private-key test fixtures were
+uploaded. No dependency installation or Docker build occurred.
+
+For deletion, read-only checks found no read-only attribute, reparse target or
+explicit deny ACL rule on the three exact targets. These checks do not rule out
+every inherited/managed control or open file handle. Local configuration already
+specifies `danger-full-access` and `approval_policy = "never"`; this session also
+forbids permission escalation. The [official approvals documentation](https://learn.chatgpt.com/docs/agent-approvals-security)
+distinguishes sandbox access from action approval and explains that `never`
+disables approval prompts. It does not establish a setting that would override
+the observed pre-execution rejection. No supported in-session permission route
+was found that resolves that rejection.
+
+No ACL/security setting was weakened, no alternate removal tool was used, and no
+parent deletion was attempted as a workaround. The failed deletion commands were
+not repeated in this follow-up. A local exact-target handoff records the source
+preservation evidence, overlap between cache and checkout, excluded shared stores
+and revalidation requirements. An officially authorized execution route is still
+needed; a further chat approval alone does not provide one. **The local checkout,
+bundle, test cache, test secrets and three temporary comparison copies remain.**
+
 ## Still required before claiming complete local removal
 
 1. Resolve the earlier execution-layer deletion restriction without bypassing it.
