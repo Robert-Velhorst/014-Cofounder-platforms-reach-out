@@ -1,0 +1,57 @@
+{
+  "purpose": "Historical byte-exact source variants; not active application code",
+  "reviewedAgainst": "b7fb49b73cd930fc5ad2848e60d13d2fd722925d",
+  "sourceFiles": 5,
+  "entries": [
+    {
+      "file": "outreach-router.ts",
+      "blob": "4111d55c65e68e7d5127ebcc5f6aa0ac82c72d9c",
+      "bytes": 15657,
+      "SHA256": "6f184caaf45c8b9d585b9f7ee7a336e69fd9917a7c2f10df42bd35c14f509054",
+      "currentPublishedPath": "apps/cofounder-discovery/server/outreach-router.ts",
+      "currentPublishedBlob": "7aab91e4caad8a773e9fc18478600c8385fdac80",
+      "originalTreePathKnown": false,
+      "reviewedSyntheticFixture": false
+    },
+    {
+      "file": "platform-automation.ts",
+      "blob": "d9267504f8b635ac581a9dffa5286e979b2667d5",
+      "bytes": 27956,
+      "SHA256": "cb1850b5ca897275b2b31351f93eb0cf5fd00946459e5c31aba6a2a35b42011f",
+      "currentPublishedPath": "apps/cofounder-discovery/server/platform-automation.ts",
+      "currentPublishedBlob": "968a895b184c2c31138464482fc6ebdc166638cf",
+      "originalTreePathKnown": false,
+      "reviewedSyntheticFixture": false
+    },
+    {
+      "file": "port-safety.test.ts",
+      "blob": "88b1f59bb31c41a2a822d20ab0cca4c82097ee6d",
+      "bytes": 2158,
+      "SHA256": "d65171f17657d988fc0226bd8f110d1063919936b5f0e79ea9214756f79df640",
+      "currentPublishedPath": "apps/cofounder-discovery/server/port-safety.test.ts",
+      "currentPublishedBlob": "1bf3d20ef73c4c571fd999510f2393efb12b3fe6",
+      "originalTreePathKnown": false,
+      "reviewedSyntheticFixture": true
+    },
+    {
+      "file": "platform-scrapers.ts",
+      "blob": "42d39c1137d4f970cd8b6fe9df544176685a59ed",
+      "bytes": 13604,
+      "SHA256": "c31d77f6348e1c283899fc8f45371b18b4312b0a62dc71121220a040a3908829",
+      "currentPublishedPath": "apps/cofounder-discovery/server/platform-scrapers.ts",
+      "currentPublishedBlob": "853300d1481055ba2d943e78b63de8449f73ca7c",
+      "originalTreePathKnown": false,
+      "reviewedSyntheticFixture": false
+    },
+    {
+      "file": "encryption.ts",
+      "blob": "16fe77c091f6354f319c2e85ea4e1c163621a6c2",
+      "bytes": 2511,
+      "SHA256": "5aecb83b5bb0e0ce1be047c6e721601b15942548e117fef174b54c1a9c14b72d",
+      "currentPublishedPath": "apps/cofounder-discovery/server/encryption.ts",
+      "currentPublishedBlob": "beb594df9cf192a0534b7943d1364db4219c2d9c",
+      "originalTreePathKnown": false,
+      "reviewedSyntheticFixture": false
+    }
+  ]
+}
