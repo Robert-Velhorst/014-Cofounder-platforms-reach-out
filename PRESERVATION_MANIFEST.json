@@ -1,0 +1,107 @@
+{
+  "Purpose": "Historical reference only; no active application integration",
+  "ArchiveSHA256": "1033690f97cb91c6cda3e1439d9798b747863d43fd037354a98af76e0b2f8d1f",
+  "ArchiveBytes": 23741829,
+  "OriginalFiles": 11,
+  "Files": [
+    {
+      "Path": "reference/advanced_analytics_service.js",
+      "OriginalArchiveEntry": "work/archive-comparison/outreach-strategy-v3/advanced_analytics_service.js",
+      "GitBlob": "902d4ea1c8d23aad5992e8b3461c0ceb145785e7",
+      "Bytes": 22226,
+      "SHA256": "396604f865d9fb2b281065d440ca400229fa250c3f08cdc014b31039bad6a5d3",
+      "SyntaxCheck": "passed",
+      "RuntimeTested": false
+    },
+    {
+      "Path": "reference/ai_conversation_service.js",
+      "OriginalArchiveEntry": "work/archive-comparison/outreach-strategy-v3/ai_conversation_service.js",
+      "GitBlob": "b87acb8e30a877986200822025e23f0f08479974",
+      "Bytes": 16038,
+      "SHA256": "b5c0c54ce3a57d2b5f32f19e9d37e36c6e022393416bf16813b33756ef8893ab",
+      "SyntaxCheck": "passed",
+      "RuntimeTested": false
+    },
+    {
+      "Path": "reference/ai_message_service.js",
+      "OriginalArchiveEntry": "work/archive-comparison/outreach-strategy-v3/ai_message_service.js",
+      "GitBlob": "cb750f7e619acafac269f1266c668546298b7576",
+      "Bytes": 22913,
+      "SHA256": "6b551e91fb1d43b8b1c2207600cd5bd2bed0356fb8d05b06721a8105dd253404",
+      "SyntaxCheck": "passed",
+      "RuntimeTested": false
+    },
+    {
+      "Path": "reference/campaign_management_service.js",
+      "OriginalArchiveEntry": "work/archive-comparison/outreach-strategy-v3/campaign_management_service.js",
+      "GitBlob": "a71d6c2ac9d20e2b5149988ef583e914485b4b29",
+      "Bytes": 23074,
+      "SHA256": "63d9d997ee9963f7b0f5c399b3e3d5e108901a2f7ac22887df46f4483b43cd93",
+      "SyntaxCheck": "passed",
+      "RuntimeTested": false
+    },
+    {
+      "Path": "reference/deduplication_engine.js",
+      "OriginalArchiveEntry": "work/archive-comparison/outreach-strategy-v3/COMPLETE-ENHANCED-OUTREACH-PLATFORM.zip!/deduplication_engine.js",
+      "GitBlob": "d2c1ed08e064364717bd9400fa601d246fde9abd",
+      "Bytes": 24112,
+      "SHA256": "c9cb22aee414db833d1318875f816184f853d311ec22caeccf801359f60ba1ac",
+      "SyntaxCheck": "passed",
+      "RuntimeTested": false
+    },
+    {
+      "Path": "reference/cost_benchmarker.js",
+      "OriginalArchiveEntry": "work/archive-comparison/outreach-strategy-v3/cost_benchmarker.js",
+      "GitBlob": "00dbe144fc9e278a080f3389b69b22822699834a",
+      "Bytes": 27645,
+      "SHA256": "274bf02ab2a326f4792d1de2fa86dd9c7ffbec8f297e80fce65958d0d08a3f43",
+      "SyntaxCheck": "passed",
+      "RuntimeTested": false
+    },
+    {
+      "Path": "reference/ml_matching_service.js",
+      "OriginalArchiveEntry": "work/archive-comparison/outreach-strategy-v3/ml_matching_service.js",
+      "GitBlob": "89bcb442991fa50b21b870f812f250f5f6631c00",
+      "Bytes": 28749,
+      "SHA256": "3c07207375a08731418a2d88183d1422c8dd861a523f3cd37f8a42787ccf7894",
+      "SyntaxCheck": "passed",
+      "RuntimeTested": false
+    },
+    {
+      "Path": "reference/user_profiling_backend.js",
+      "OriginalArchiveEntry": "work/archive-comparison/outreach-strategy-v3/OPTIONS_A_B_COMPLETE.zip!/user_profiling_backend.js",
+      "GitBlob": "9b72e107d2920b2f59183556373cd9b662f9252c",
+      "Bytes": 50796,
+      "SHA256": "8864bb934adfe4ee822e786a91b626e0fe6871dbb9848bc6a58a8759195c06ab",
+      "SyntaxCheck": "passed",
+      "RuntimeTested": false
+    },
+    {
+      "Path": "reference/template_library_service.js",
+      "OriginalArchiveEntry": "work/archive-comparison/outreach-strategy-v3/OPTIONS_A_B_COMPLETE.zip!/template_library_service.js",
+      "GitBlob": "a5810bcc73c070baa6e22ad9e51dbeccacc4ef48",
+      "Bytes": 23696,
+      "SHA256": "2bbf4921224a01792650afe83843935fa45b9329ddf42618f3983ae35ad65568",
+      "SyntaxCheck": "passed",
+      "RuntimeTested": false
+    },
+    {
+      "Path": "reference/message-templates.js",
+      "OriginalArchiveEntry": "work/archive-comparison/outreach-strategy-v3/cofounders-outreach-STARTHAWK-ENHANCED.zip!/cofounders-outreach-starthawk/dashboard/message-templates.js",
+      "GitBlob": "7803704b9330feff992157505e3f43272097cbaa",
+      "Bytes": 21266,
+      "SHA256": "a5965a1ee857541bbd1d1059d164c5ea1a1db889777c73daf6f7175708888a1f",
+      "SyntaxCheck": "passed",
+      "RuntimeTested": false
+    },
+    {
+      "Path": "reference/slicing_pie_equity_calculator.js",
+      "OriginalArchiveEntry": "work/archive-comparison/outreach-strategy-v3/OPTIONS_A_B_COMPLETE.zip!/slicing_pie_equity_calculator.js",
+      "GitBlob": "eccb35a325607d6c52a27125085747cfb9d2450b",
+      "Bytes": 17260,
+      "SHA256": "8fcb3ea36f60bf2ca6fdd75f7265168a3bf1488a8cd714fe623aafcf7ffa9a11",
+      "SyntaxCheck": "passed",
+      "RuntimeTested": false
+    }
+  ]
+}
