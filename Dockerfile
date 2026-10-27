@@ -1,4 +1,4 @@
-FROM debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f AS node-runtime
+FROM debian:trixie-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS node-runtime
 ARG TARGETARCH
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates curl xz-utils libatomic1 \
@@ -39,7 +39,7 @@ RUN pnpm build \
  && pnpm exec esbuild scripts/synthetic-tls-ingress.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/synthetic-tls-ingress.mjs
 CMD ["sh", "-c", "pnpm db:migrate && pnpm test:integration"]
 
-FROM debian:trixie-slim@sha256:a29215f6a35e51e22adffa17f89e9d2ef06214e64a2bad10d765c46aea49f11f AS runtime
+FROM debian:trixie-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS runtime
 ENV NODE_ENV=production
 RUN groupadd --system node && useradd --system --gid node --create-home node
 RUN apt-get update \
