@@ -1,0 +1,38 @@
+name: Qualify full database vendor OS update
+on:
+  push:
+    branches: [qualify/cofounder-database-os-20261028]
+permissions:
+  contents: read
+jobs:
+  database-os:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build with all current vendor packages
+        run: docker build --pull --no-cache --file Dockerfile.hetzner-database --tag cofounder-database-os:qualification .
+      - name: Record actual image and executable without database startup
+        run: |
+          mkdir -p .qualification/database-os
+          git rev-parse HEAD > .qualification/database-os/checkout.txt
+          sha256sum Dockerfile.hetzner-database > .qualification/database-os/dockerfile-sha256.txt
+          docker image inspect cofounder-database-os:qualification > .qualification/database-os/inspect.json
+          docker image save cofounder-database-os:qualification -o .qualification/database-os/image.tar
+          docker run --rm --network none --read-only --cap-drop ALL --security-opt no-new-privileges --entrypoint mysqld cofounder-database-os:qualification --version > .qualification/database-os/mysqld-version.txt
+          python .github/scripts/qualify-database-os.py identity
+      - name: Require the complete unfiltered package audit
+        run: |
+          docker run --rm --read-only --user "$(id -u):$(id -g)" --cap-drop ALL --security-opt no-new-privileges --tmpfs /tmp:rw,noexec,nosuid,size=512m -v "$PWD/.qualification/database-os:/scan:ro" aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c image --cache-dir /tmp/trivy --input /scan/image.tar --scanners vuln --list-all-pkgs --ignorefile /dev/null --format json --exit-code 1 > .qualification/database-os/scan.json
+      - name: Verify actual identity, version, inventory and zero findings
+        if: always()
+        run: python .github/scripts/qualify-database-os.py verify
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: cofounder-database-os
+          path: |
+            .qualification/database-os/*.json
+            .qualification/database-os/*.txt
+          if-no-files-found: error
+          retention-days: 14
