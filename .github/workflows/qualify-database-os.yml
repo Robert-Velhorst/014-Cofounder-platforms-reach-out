@@ -23,7 +23,7 @@ jobs:
           python .github/scripts/qualify-database-os.py identity
       - name: Require the complete unfiltered package audit
         run: |
-          docker run --rm --read-only --user "$(id -u):$(id -g)" --cap-drop ALL --security-opt no-new-privileges --tmpfs /tmp:rw,noexec,nosuid,size=512m -v "$PWD/.qualification/database-os:/scan:ro" aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c image --cache-dir /tmp/trivy --input /scan/image.tar --scanners vuln --list-all-pkgs --ignorefile /dev/null --format json --exit-code 1 > .qualification/database-os/scan.json
+          docker run --rm --read-only --user "$(id -u):$(id -g)" --cap-drop ALL --security-opt no-new-privileges --tmpfs /tmp:rw,noexec,nosuid,size=2048m -v "$PWD/.qualification/database-os:/scan:ro" aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c image --cache-dir /tmp/trivy --input /scan/image.tar --scanners vuln --list-all-pkgs --ignorefile /dev/null --format json --exit-code 1 > .qualification/database-os/scan.json
       - name: Verify actual identity, version, inventory and zero findings
         if: always()
         run: python .github/scripts/qualify-database-os.py verify

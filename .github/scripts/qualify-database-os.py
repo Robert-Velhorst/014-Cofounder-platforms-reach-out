@@ -95,10 +95,17 @@ else:
     assert scan['Metadata']['OS'].get('EOSL',False) is False
     assert re.search(r'\bVer 26[.]10[.]0\b',version), 'Engine changed; review actual stable version before adoption'
     assert scan['Results']
+    os_packages=0
     for result in scan['Results']:
+        assert result.get('Class') in {'os-pkgs','lang-pkgs'} and result.get('Target')
         assert result.get('Packages') and isinstance(result['Packages'],list)
+        if result['Class']=='os-pkgs':
+            assert result.get('Type')=='oracle'
+            os_packages+=len(result['Packages'])
+        assert all(isinstance(pkg.get('Name'),str) and pkg['Name'] and isinstance(pkg.get('Version'),str) and pkg['Version'] for pkg in result['Packages'])
         for name in ['Vulnerabilities','ExperimentalModifiedFindings']:
             assert name not in result or isinstance(result[name],list) and not result[name], 'Unresolved findings: '+name
+    assert os_packages>0, 'Missing actual Oracle OS inventory'
     save('verified.json',{'passed':True,'scope':'exact recorded database OS package image only',
         'actual_mysqld':version,'image_id':identity['config_id'],'findings':0,
         'whole_application_DB_SDK_or_live_data_acceptance':False})
