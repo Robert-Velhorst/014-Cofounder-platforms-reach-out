@@ -52,3 +52,5 @@ sandbox.txt
 
 # Legacy npm root lock; pnpm is canonical
 package-lock.json
+
+artifacts/pnpm-policy/

@@ -9,6 +9,10 @@ overrides:
   dompurify: 3.4.17
   '@esbuild-kit/core-utils>esbuild': 0.28.2
   postcss-selector-parser: 7.1.7
-minimumReleaseAgeExclude:
-- dotenv@18.0.9
-- chart.js@4.6.1
+minimumReleaseAgeExclude: []
+minimumReleaseAge: 1440
+minimumReleaseAgeStrict: true
+minimumReleaseAgeIgnoreMissingTime: false
+strictPeerDependencies: true
+trustLockfile: false
+verifyStoreIntegrity: true
