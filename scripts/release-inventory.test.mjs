@@ -34,6 +34,7 @@ function fixture(fn) {
     "pnpm-lock.yaml",
     "pnpm-workspace.yaml",
     ".npmrc",
+    ".pnpmfile.mjs",
     ".gitattributes",
     "Dockerfile",
     ".dockerignore",

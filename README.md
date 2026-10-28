@@ -289,7 +289,7 @@ The supported app is `apps/cofounder-discovery`, not the historical root demo.
 | ---------- | ------------------------------------------------------------------------------------------------------- |
 | Browser    | React 19, TypeScript, Vite, Wouter, tRPC/React Query                                                    |
 | Server     | Node.js, Express 5, tRPC and validated inputs                                                           |
-| Database   | MySQL (Compose pins 26.7.0), Drizzle schema and versioned migrations                                    |
+| Database   | MySQL (Compose pins 26.10.0), Drizzle schema and versioned migrations                                   |
 | Accounts   | Scrypt passwords, signed HTTP-only cookies and durable sessions                                         |
 | Workspace  | Owner boundaries, account locks, reviewed revisions, atomic audits and retry records                    |
 | Runtime    | Multi-stage Docker image; nonroot, read-only application filesystem                                     |
@@ -358,11 +358,11 @@ failed drain is not a clean restart. See [operator guidance](docs/OPERATOR_RUNBO
 
 ## Developer setup
 
-Use Node 26.12.0 and pinned pnpm 12.14.0. Docker is needed for isolated database and
+Use Node 26.12.1 and pinned pnpm 12.15.0. Docker is needed for isolated database and
 operational checks. On Windows, `npx.cmd` avoids blocked PowerShell shims:
 
 ```powershell
-npx.cmd pnpm@12.14.0 install --frozen-lockfile
+npx.cmd pnpm@12.15.0 install --frozen-lockfile
 ```
 
 Create `apps/cofounder-discovery/.env` from `.env.example` only if no configuration
@@ -386,8 +386,8 @@ disposable. Use the separate integration stack for tests.
 Apply migrations to the development database, then start:
 
 ```powershell
-npx.cmd pnpm@12.14.0 db:migrate
-npx.cmd pnpm@12.14.0 dev
+npx.cmd pnpm@12.15.0 db:migrate
+npx.cmd pnpm@12.15.0 dev
 ```
 
 Development defaults use `http://localhost:3000`; align `PUBLIC_ORIGIN` with the
@@ -443,7 +443,7 @@ revoke permissions on an existing database. Use the
 
 Run from the repo root using the pinned package manager:
 The table abbreviates the invocation as `pnpm`; on Windows with blocked shims,
-replace that prefix with `npx.cmd pnpm@12.14.0` as in the setup commands.
+replace that prefix with `npx.cmd pnpm@12.15.0` as in the setup commands.
 
 | Command                                  | Scope                                                                                                           |
 | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
